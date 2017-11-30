@@ -3,6 +3,7 @@ const logr = require('logr')
 const keychain = require('../../keychain.json')
 
 const SequelizeDatabase = require('../db/SequelizeDatabase.js')
+const RadioHandler = require('./radio/RadioHandler.js')
 
 class MusenClient extends akairo.AkairoClient {
   constructor(options) {
@@ -10,18 +11,24 @@ class MusenClient extends akairo.AkairoClient {
     super(options)
 
     this.db = new SequelizeDatabase(options.database)
-    this.inventories = null
-    this.music = null
+    this.radio = null
   }
 
-  init() {
+  async init() {
     logr.info('Connecting to database...')
-    this.db.init().then(() => {
-      logr.success('OK')
+    const db = await this.db.init()
+    logr.success('OK')
 
-      logr.info('Logging in...')
-      this.login(keychain.token)
-    }).catch(err => { throw err })
+    logr.info('Setting up providers...')
+    this.radio = new RadioHandler(keychain)
+    logr.success('OK')
+
+    logr.info('Loading stations...')
+    await this.radio.init(db)
+    logr.success('OK')
+
+    logr.info('Logging in...')
+    this.login(keychain.token)
   }
 }
 

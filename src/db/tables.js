@@ -59,4 +59,18 @@ module.exports = {
     },
     cacheOnInit: true,
   },
+
+  providers: {
+    schema: {
+      id: {
+        type: Sequelize.STRING,
+        primaryKey: true,
+      },
+      stations: {
+        type: Sequelize.JSON,
+        defaultValue: [],
+      },
+    },
+    cacheOnInit: true,
+  },
 }
