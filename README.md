@@ -1,2 +1,2 @@
 # Musen
-A discord radio bot.
+Discord bot.
