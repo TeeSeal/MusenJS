@@ -1,5 +1,5 @@
 class RadioConnection {
-  constructor(options, voiceChannel, handler) {
+  constructor(handler, voiceChannel, options) {
     this.id = voiceChannel.guild.id
     this.voiceChannel = voiceChannel
     this.station = null
@@ -16,6 +16,7 @@ class RadioConnection {
     if (this.dispatcher) this.dispatcher.end()
     this.station = station
     this.dispatcher = this.conn.playStream(station.stream, { volume: this._volume })
+    return this
   }
 
   setVolume(volume) {

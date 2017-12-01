@@ -8,7 +8,7 @@ const providersPath = path.join(__dirname, 'providers')
 
 class RadioProvider extends HTTPClient {
   resolveStation() { throw new Error('not implemented.') }
-  createStation(options) { return new Station(options, this) }
+  createStation(options) { return new Station(this, options) }
   static get keychainKey() { return '' }
   static get REGEXP() { return /()/ }
   static get aliases() { return [] }

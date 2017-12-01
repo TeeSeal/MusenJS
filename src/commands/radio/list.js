@@ -1,7 +1,7 @@
 const { Command } = require('discord-akairo')
 const { buildEmbed } = require('../../util/Util.js')
 
-class PlayCommand extends Command {
+class ListCommand extends Command {
   constructor() {
     super('list', {
       aliases: ['list', 'stations'],
@@ -26,4 +26,4 @@ class PlayCommand extends Command {
   }
 }
 
-module.exports = PlayCommand
+module.exports = ListCommand

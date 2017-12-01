@@ -1,7 +1,7 @@
 const { buildEmbed } = require('../../util/Util.js')
 
 class Station {
-  constructor(options, provider) {
+  constructor(provider, options) {
     this.id = `${provider.id}-${options.name}`
     this.name = options.name
     this.displayName = options.displayName
@@ -9,11 +9,13 @@ class Station {
     this.startedAt = options.startedAt
     this.thumbnail = options.thumbnail
     this.stream = options.stream
-    this.online = true
-    this.extra = options.extra
+    this.online = options.online || false
+    this.extra = options.extra || {}
 
     this.provider = provider
     this.handler = provider.handler
+
+    this.timeout = setTimeout(this.refresh, this.handler.stationRefreshTimeout)
   }
 
   delete() { return this.handler.deleteStation(this) }
@@ -28,10 +30,14 @@ class Station {
   embed() {
     return buildEmbed({
       title: this.displayName,
-      description: this.nowPlaying,
+      description: this.nowPlaying || 'Offline',
       thumbnail: this.thumbnail,
       color: this.online ? 'green' : 'red',
     })
+  }
+
+  refresh() {
+    return this.handler.refreshStation(this)
   }
 }
 

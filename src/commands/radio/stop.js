@@ -1,6 +1,6 @@
 const { Command } = require('discord-akairo')
 
-class PlayCommand extends Command {
+class StopCommand extends Command {
   constructor() {
     super('stop', {
       aliases: ['stop'],
@@ -8,7 +8,7 @@ class PlayCommand extends Command {
     })
   }
 
-  async exec(msg) {
+  exec(msg) {
     const connection = this.client.radio.connections.get(msg.guild.id)
     if (!connection) return msg.util.error('no active conneciton in this guild.')
     connection.stop()
@@ -16,4 +16,4 @@ class PlayCommand extends Command {
   }
 }
 
-module.exports = PlayCommand
+module.exports = StopCommand

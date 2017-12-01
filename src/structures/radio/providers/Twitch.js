@@ -14,18 +14,27 @@ class Twitch extends RadioProvider {
     this.name = 'Twitch'
   }
 
-  formatData(channelData, streamData, stream) {
+  formatOnlineStream(channelData, streamData, stream) {
     return {
       name: channelData.login,
       displayName: channelData.display_name,
       nowPlaying: streamData.title,
       startedAt: moment(streamData.started_at).format('HH:mm MMM D'),
       thumbnail: channelData.profile_image_url,
+      online: true,
       stream,
       extra: {
         viewerCount: streamData.viewer_count,
         language: streamData.language,
       },
+    }
+  }
+
+  formatOfflineStream(channelData) {
+    return {
+      name: channelData.login,
+      displayName: channelData.display_name,
+      thumbnail: channelData.profile_image_url,
     }
   }
 
@@ -59,9 +68,10 @@ class Twitch extends RadioProvider {
   async resolveStation(channel) {
     const channelData = await this.fetchChannelData(channel)
     const streamData = await this.fetchStreamData(channelData.id)
-    const stream = await this.fetchStream(channel)
+    if (!streamData) return this.createStation(this.formatOfflineStream(channelData))
 
-    return this.createStation(this.formatData(channelData, streamData, stream))
+    const stream = streamData.type === 'live' ? await this.fetchStream(channel) : null
+    return this.createStation(this.formatOnlineStream(channelData, streamData, stream))
   }
 
   static get keychainKey() { return 'twitchClientID' }

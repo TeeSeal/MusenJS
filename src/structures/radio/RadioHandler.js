@@ -3,7 +3,8 @@ const RadioConnection = require('./RadioConnection.js')
 const Collection = require('../Collection.js')
 
 class RadioHandler {
-  constructor(keychain) {
+  constructor(keychain, { stationRefreshTimeout }) {
+    this.stationRefreshTimeout = stationRefreshTimeout * 6e4
     this.providers = RadioProvider.loadAll(keychain, this)
     this.connections = new Collection()
 
@@ -22,6 +23,13 @@ class RadioHandler {
     this.stations = new Collection(resolved.map(station => [station.id, station]))
   }
 
+  async connect(voiceChannel, options) {
+    const connection = new RadioConnection(this, voiceChannel, options)
+    await connection.connect()
+    this.connections.set(connection.id, connection)
+    return connection
+  }
+
   findStation(query) {
     return this.stations.find(station => station.name === query.toLowerCase())
   }
@@ -36,11 +44,12 @@ class RadioHandler {
     return station
   }
 
-  async connect(voiceChannel) {
-    const connection = new RadioConnection({ volume: 25 }, voiceChannel, this)
-    await connection.connect()
-    this.connections.set(connection.id, connection)
-    return connection
+  async refreshStation(station) {
+    const newStation = await station.provider.resolveStation(station.name)
+    if (!newStation) return this.stations.delete(station.id)
+
+    this.stations.set(station.id, newStation)
+    return station
   }
 
   deleteStation(station) {

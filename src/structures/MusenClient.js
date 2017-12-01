@@ -1,6 +1,7 @@
 const akairo = require('discord-akairo')
 const logr = require('logr')
 const keychain = require('../../keychain.json')
+const { stationRefreshTimeout } = require('../../config.json')
 
 const SequelizeDatabase = require('../db/SequelizeDatabase.js')
 const RadioHandler = require('./radio/RadioHandler.js')
@@ -20,7 +21,7 @@ class MusenClient extends akairo.AkairoClient {
     logr.success('OK')
 
     logr.info('Setting up providers...')
-    this.radio = new RadioHandler(keychain)
+    this.radio = new RadioHandler(keychain, { stationRefreshTimeout })
     logr.success('OK')
 
     logr.info('Loading stations...')

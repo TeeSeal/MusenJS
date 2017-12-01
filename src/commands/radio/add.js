@@ -1,9 +1,10 @@
 const { Command } = require('discord-akairo')
 
-class PlayCommand extends Command {
+class AddCommand extends Command {
   constructor() {
     super('add', {
       aliases: ['add'],
+      typing: true,
       args: [
         {
           id: 'name',
@@ -22,4 +23,4 @@ class PlayCommand extends Command {
   }
 }
 
-module.exports = PlayCommand
+module.exports = AddCommand
