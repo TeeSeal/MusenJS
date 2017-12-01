@@ -12,6 +12,7 @@ class RadioConnection {
 
   play(station) {
     if (!this.conn) return
+    if (this.dispatcher) this.dispatcher.end()
     this.station = station
     this.dispatcher = this.conn.playStream(station.stream)
   }
