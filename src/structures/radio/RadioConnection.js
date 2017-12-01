@@ -1,11 +1,12 @@
 class RadioConnection {
-  constructor(options, voiceChannel) {
+  constructor(options, voiceChannel, handler) {
     this.id = voiceChannel.guild.id
     this.voiceChannel = voiceChannel
     this.station = null
     this.conn = null
     this.dispatcher = null
     this._volume = this.convert(options.volume) || 1
+    this.handler = handler
   }
 
   async connect() { this.conn = await this.voiceChannel.join() }

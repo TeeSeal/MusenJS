@@ -53,7 +53,7 @@ class Twitch extends RadioProvider {
 
     return M3U.parse(streams)
       .filter(stream => stream)
-      .find(stream => stream.title.includes('audio_only')).file
+      .find(stream => stream.title.includes('480p')).file
   }
 
   async resolveStation(channel) {
