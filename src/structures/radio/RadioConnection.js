@@ -5,7 +5,7 @@ class RadioConnection {
     this.station = null
     this.conn = null
     this.dispatcher = null
-    this._volume = this.convert(options.volume) || 1
+    this._volume = isNaN(options.volume) ? 1 : this.convert(options.volume)
     this.handler = handler
   }
 
