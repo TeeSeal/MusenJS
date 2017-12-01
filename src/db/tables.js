@@ -38,6 +38,14 @@ module.exports = {
         type: Sequelize.JSON,
         defaultValue: [],
       },
+      maxVolume: {
+        type: Sequelize.INTEGER,
+        defaultValue: 100,
+      },
+      defaultVolume: {
+        type: Sequelize.INTEGER,
+        defaultValue: 25,
+      },
     },
     cacheOnInit: true,
   },

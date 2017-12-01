@@ -37,7 +37,7 @@ class RadioHandler {
   }
 
   async connect(voiceChannel) {
-    const connection = new RadioConnection({ volume: 1 }, voiceChannel, this)
+    const connection = new RadioConnection({ volume: 25 }, voiceChannel, this)
     await connection.connect()
     this.connections.set(connection.id, connection)
     return connection
