@@ -8,10 +8,11 @@ class PlayCommand extends Command {
     })
   }
 
-  async exec(msg) {
-    const station = await this.client.radio.addStation('monstercat')
-    const conn = await msg.member.voiceChannel.join()
-    conn.playStream(station.stream)
+  exec(msg) {
+    return this.client.radio.addStation('monstercat').then(async station => {
+      const conn = await msg.member.voiceChannel.join()
+      conn.playStream(station.stream)
+    }).catch(err => msg.util.error(err.message))
   }
 }
 
