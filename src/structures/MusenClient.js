@@ -24,7 +24,7 @@ class MusenClient extends akairo.AkairoClient {
     logr.success('OK')
 
     logr.info('Loading stations...')
-    await this.radio.init(db)
+    await this.radio.init(db.stations)
     logr.success('OK')
 
     logr.info('Logging in...')

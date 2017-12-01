@@ -13,10 +13,10 @@ class RadioProvider extends HTTPClient {
   static get REGEXP() { return /()/ }
   static get aliases() { return [] }
 
-  static loadAll(keychain) {
+  static loadAll(keychain, handler) {
     const providers = fs.readdirSync(providersPath).map(file => {
       const Provider = require(path.join(providersPath, file))
-      return new Provider(keychain[Provider.keychainKey])
+      return new Provider(keychain[Provider.keychainKey], handler)
     })
 
     return new Collection(providers.map(provider => {

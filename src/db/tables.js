@@ -60,16 +60,14 @@ module.exports = {
     cacheOnInit: true,
   },
 
-  providers: {
+  stations: {
     schema: {
       id: {
         type: Sequelize.STRING,
         primaryKey: true,
       },
-      stations: {
-        type: Sequelize.JSON,
-        defaultValue: [],
-      },
+      name: Sequelize.STRING,
+      providerID: Sequelize.STRING,
     },
     cacheOnInit: true,
   },

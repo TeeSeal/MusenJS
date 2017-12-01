@@ -1,49 +1,47 @@
 const RadioProvider = require('../RadioProvider.js')
 const moment = require('moment')
-const { capitalize } = require('../../../util/Util.js')
 const M3U = require('playlist-parser').M3U
 
 class Twitch extends RadioProvider {
-  constructor(clientID) {
+  constructor(clientID, handler) {
     super({
       baseURL: 'https://api.twitch.tv/helix/',
       headers: { 'Client-Id': clientID },
     })
 
+    this.handler = handler
     this.id = 'twitch'
-    this.aliases = ['twitch', 'tw']
+    this.name = 'Twitch'
   }
 
-  formatData(data) {
-    const thumbnail = data.thumbnail_url.replace(/\{width\}|\{height\}/, '500')
+  formatData(channelData, streamData, stream) {
     return {
-      name: data.name,
-      title: data.title,
-      startedAt: moment(data.started_at).isValid(),
-      thumbnail,
-      stream: data.stream,
+      name: channelData.login,
+      displayName: channelData.display_name,
+      nowPlaying: streamData.title,
+      startedAt: moment(streamData.started_at).format('HH:mm MMM D'),
+      thumbnail: channelData.profile_image_url,
+      stream,
       extra: {
-        viewerCount: data.viewer_count,
-        language: data.language,
+        viewerCount: streamData.viewer_count,
+        language: streamData.language,
       },
     }
   }
 
-  async fetchChannelID(login) {
+  async fetchChannelData(login) {
     const res = await this.get('users', { login })
-    if (res.data.length === 0) return Promise.reject(new Error('couldn\'t find channel.'))
-    return res.data[0].id
+    if (res.data.length === 0) return Promise.reject(new Error('Couldn\'t find channel.'))
+    return res.data[0]
   }
 
-  fetchStreamData(channel) {
-    return this.fetchChannelID(channel)
-      .then(user_id => this.get('streams', { user_id }))
-      .then(res => res.data[0])
+  fetchStreamData(user_id) {
+    return this.get('streams', { user_id }).then(res => res.data[0])
   }
 
   async fetchStream(channel) {
     const accessToken = await this.get(`http://api.twitch.tv/api/channels/${channel}/access_token`)
-    if (!accessToken) return Promise.reject(new Error('couldn\'t find channel.'))
+    if (!accessToken) return Promise.reject(new Error('Couldn\'t find channel.'))
 
     const streams = await this.get(`http://usher.twitch.tv/api/channel/hls/${channel}.m3u8`, {
       player: 'twitchweb',
@@ -51,7 +49,7 @@ class Twitch extends RadioProvider {
       sig: accessToken.sig,
       allow_audio_only: true,
     })
-    if (!streams) return Promise.reject(new Error('couldn\'t fetch stream.'))
+    if (!streams) return Promise.reject(new Error('Couldn\'t fetch stream.'))
 
     return M3U.parse(streams)
       .filter(stream => stream)
@@ -59,12 +57,11 @@ class Twitch extends RadioProvider {
   }
 
   async resolveStation(channel) {
-    const data = await this.fetchStreamData(channel)
-    if (data.type !== 'live') return Promise.reject(new Error('station is not live.'))
-    data.stream = await this.fetchStream(channel)
-    data.name = capitalize(channel)
+    const channelData = await this.fetchChannelData(channel)
+    const streamData = await this.fetchStreamData(channelData.id)
+    const stream = await this.fetchStream(channel)
 
-    return this.createStation(this.formatData(data))
+    return this.createStation(this.formatData(channelData, streamData, stream))
   }
 
   static get keychainKey() { return 'twitchClientID' }
