@@ -45,6 +45,7 @@ class RadioHandler {
   }
 
   async refreshStation(station) {
+    if (this.stations) return
     const newStation = await station.provider.resolveStation(station.name)
     if (!newStation) return this.stations.delete(station.id)
 

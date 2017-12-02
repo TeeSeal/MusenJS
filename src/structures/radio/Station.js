@@ -15,7 +15,7 @@ class Station {
     this.provider = provider
     this.handler = provider.handler
 
-    this.timeout = setTimeout(this.refresh, this.handler.stationRefreshTimeout)
+    setTimeout(() => this.refresh(), this.handler.stationRefreshTimeout)
   }
 
   delete() { return this.handler.deleteStation(this) }
