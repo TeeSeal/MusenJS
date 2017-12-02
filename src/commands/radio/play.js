@@ -34,10 +34,7 @@ class PlayCommand extends Command {
     if (!station.online) return msg.util.error(`the **${station.displayName}** station seems to be offline. Try refreshing it.`)
 
     const connection = await this.client.radio.connect(msg.member.voiceChannel, { volume: 0 })
-    if (!alreadyPlaying) {
-      connection.play(station).fadeVolume(25)
-    }
-
+    connection.play(station).fadeVolume(25)
     return msg.util.send(station.embed())
   }
 }
