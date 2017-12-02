@@ -24,7 +24,11 @@ class RadioHandler {
 
     const resolved = await Promise.all(promises)
     this.stations = new Collection(resolved.map(station => [station.id, station]))
+    this.initFuse()
+    return this
+  }
 
+  initFuse() {
     const formatted = this.stations.map(station => {
       return { id: station.id, name: station.displayName, provider: station.provider.name }
     })
@@ -60,6 +64,7 @@ class RadioHandler {
     if (!station) return null
 
     this.stations.set(station.id, station)
+    this.initFuse()
     this.db.set(station.id, station.toJSON())
     return station
   }
@@ -75,6 +80,7 @@ class RadioHandler {
 
   deleteStation(station) {
     this.stations.delete(station.id)
+    this.initFuse()
     if (!this.db.items.has(station.id)) return
     return this.db.clear(station.id)
   }
