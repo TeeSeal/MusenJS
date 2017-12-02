@@ -29,7 +29,7 @@ class PlayCommand extends Command {
       return msg.util.error('no can do. There are people listening in my current channel.')
     }
 
-    const station = alreadyPlaying ? this.client.radio.connections.get(msg.guild.id).station : this.client.radio.findStation(name)
+    const station = name ? this.client.radio.findStation(name) : this.client.radio.connections.get(msg.guild.id).station
     if (!station) return msg.util.error('no such station.')
     if (!station.online) return msg.util.error(`the **${station.displayName}** station seems to be offline. Try refreshing it.`)
 
