@@ -12,7 +12,7 @@ class ListCommand extends Command {
   exec(msg) {
     const fields = this.client.radio.stations.map(station => {
       return [
-        `${station.displayName} | ${station.provider.name}`,
+        `${station.displayName} | ${station.provider.name}\t`,
         station.online ? '🔵 Online' : '🔴 Offline',
         true,
       ]

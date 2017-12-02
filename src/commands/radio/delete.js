@@ -22,7 +22,7 @@ class DeleteCommand extends Command {
     if (!station) return msg.util.error('no such station.')
 
     station.delete()
-    return msg.util.success('station successfully deleted.')
+    return msg.util.success(`deleted **${station.displayName}** from **${station.provider.name}**.`)
   }
 }
 
