@@ -1,3 +1,5 @@
+const Fuse = require('fuse.js')
+
 const RadioProvider = require('./RadioProvider.js')
 const RadioConnection = require('./RadioConnection.js')
 const Collection = require('../Collection.js')
@@ -9,6 +11,7 @@ class RadioHandler {
     this.connections = new Collection()
 
     this.stations = null
+    this.fuse = null
     this.db = null
   }
 
@@ -21,6 +24,21 @@ class RadioHandler {
 
     const resolved = await Promise.all(promises)
     this.stations = new Collection(resolved.map(station => [station.id, station]))
+
+    const formatted = this.stations.map(station => {
+      return { id: station.id, name: station.displayName, provider: station.provider.name }
+    })
+
+    this.fuse = new Fuse(formatted, {
+      shouldSort: true,
+      threshold: 0.3,
+      location: 0,
+      distance: 100,
+      maxPatternLength: 32,
+      minMatchCharLength: 1,
+      keys: ['name', 'provider'],
+      id: 'id',
+    })
   }
 
   async connect(voiceChannel, options) {
@@ -31,7 +49,9 @@ class RadioHandler {
   }
 
   findStation(query) {
-    return this.stations.find(station => station.name === query.toLowerCase())
+    const id = this.fuse.search(query)[0]
+    if (!id) return null
+    return this.stations.get(id)
   }
 
   async addStation(name) {

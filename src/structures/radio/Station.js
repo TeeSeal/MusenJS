@@ -11,6 +11,7 @@ class Station {
     this.stream = options.stream
     this.online = options.online || false
     this.extra = options.extra || {}
+    this.url = options.url
 
     this.provider = provider
     this.handler = provider.handler
@@ -31,6 +32,7 @@ class Station {
     return buildEmbed({
       title: this.displayName,
       description: this.nowPlaying || 'Offline',
+      url: this.url,
       thumbnail: this.thumbnail,
       color: this.online ? 'green' : 'red',
     })

@@ -5,6 +5,7 @@ class AddCommand extends Command {
     super('add', {
       aliases: ['add'],
       typing: true,
+      ownerOnly: true,
       args: [
         {
           id: 'name',

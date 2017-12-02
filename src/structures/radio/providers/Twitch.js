@@ -21,6 +21,7 @@ class Twitch extends RadioProvider {
       nowPlaying: streamData.title,
       startedAt: moment(streamData.started_at).format('HH:mm MMM D'),
       thumbnail: channelData.profile_image_url,
+      url: `https://twitch.tv/${channelData.login}`,
       online: true,
       stream,
       extra: {
@@ -35,6 +36,7 @@ class Twitch extends RadioProvider {
       name: channelData.login,
       displayName: channelData.display_name,
       thumbnail: channelData.profile_image_url,
+      url: `https://twitch.tv/${channelData.login}`,
     }
   }
 

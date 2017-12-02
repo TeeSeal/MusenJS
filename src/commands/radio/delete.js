@@ -4,6 +4,7 @@ class DeleteCommand extends Command {
   constructor() {
     super('delete', {
       aliases: ['delete'],
+      ownerOnly: true,
       args: [
         {
           id: 'name',
