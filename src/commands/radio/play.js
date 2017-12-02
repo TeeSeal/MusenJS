@@ -20,7 +20,7 @@ class PlayCommand extends Command {
     if (!msg.member.voiceChannel) return msg.util.error('gotta be in a voice channel.')
 
     const alreadyPlaying = this.client.radio.connections.has(msg.guild.id)
-    if (!alreadyPlaying && !name) return msg.util.error('what station do you want to play?')
+    if (!alreadyPlaying && !name) return msg.util.error('gotta name a station.')
 
     if (alreadyPlaying && msg.member.voiceChannel.id === msg.guild.me.voiceChannel.id) {
       return msg.util.error('I\'m already in your channel. Use `switch` to change stations.')
