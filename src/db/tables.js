@@ -74,7 +74,6 @@ module.exports = {
         type: Sequelize.STRING,
         primaryKey: true,
       },
-      name: Sequelize.STRING,
       providerID: Sequelize.STRING,
     },
     cacheOnInit: true,

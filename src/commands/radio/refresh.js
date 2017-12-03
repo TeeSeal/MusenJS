@@ -23,7 +23,7 @@ class RefreshCommand extends Command {
     if (!station) return msg.util.error('no such station.')
 
     const newStation = await station.refresh()
-    return msg.util.success(`refreshed **${newStation.displayName}**.`, newStation.embed())
+    return msg.util.success(`refreshed **${newStation.name}**.`, newStation.embed())
   }
 }
 

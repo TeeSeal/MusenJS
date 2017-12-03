@@ -19,7 +19,7 @@ class RadioHandler {
     this.db = db
     const promises = db.items.map(station => {
       const provider = this.providers.get(station.providerID)
-      return provider.resolveStation(station.name)
+      return provider.resolveStation(station.id)
     })
 
     const resolved = await Promise.all(promises)
@@ -30,7 +30,7 @@ class RadioHandler {
 
   initFuse() {
     const formatted = this.stations.map(station => {
-      return { id: station.id, name: station.displayName, provider: station.provider.name }
+      return { id: station.id, name: station.name, provider: station.provider.name }
     })
 
     this.fuse = new Fuse(formatted, {
@@ -59,7 +59,7 @@ class RadioHandler {
   }
 
   async addStation(name) {
-    const provider = this.providers.first()
+    const provider = this.providers.get('twitch')
     const station = await provider.resolveStation(name.toLowerCase())
     if (!station) return null
 

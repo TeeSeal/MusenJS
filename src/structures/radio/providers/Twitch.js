@@ -16,15 +16,15 @@ class Twitch extends RadioProvider {
 
   formatOnlineStream(channelData, streamData, stream) {
     return {
-      name: channelData.login,
-      displayName: channelData.display_name,
+      id: channelData.login,
+      name: channelData.display_name,
       nowPlaying: streamData.title,
-      startedAt: moment(streamData.started_at).format('HH:mm MMM D'),
       thumbnail: channelData.profile_image_url,
       url: `https://twitch.tv/${channelData.login}`,
       online: true,
       stream,
       extra: {
+        startedAt: moment(streamData.started_at).format('HH:mm MMM D'),
         viewerCount: streamData.viewer_count,
         language: streamData.language,
       },
@@ -33,8 +33,8 @@ class Twitch extends RadioProvider {
 
   formatOfflineStream(channelData) {
     return {
-      name: channelData.login,
-      displayName: channelData.display_name,
+      id: channelData.login,
+      name: channelData.display_name,
       thumbnail: channelData.profile_image_url,
       url: `https://twitch.tv/${channelData.login}`,
     }

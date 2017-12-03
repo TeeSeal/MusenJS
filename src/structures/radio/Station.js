@@ -2,11 +2,9 @@ const { buildEmbed } = require('../../util/Util.js')
 
 class Station {
   constructor(provider, options) {
-    this.id = `${provider.id}-${options.name}`
+    this.id = options.id
     this.name = options.name
-    this.displayName = options.displayName
     this.nowPlaying = options.nowPlaying
-    this.startedAt = options.startedAt
     this.thumbnail = options.thumbnail
     this.stream = options.stream
     this.online = options.online || false
@@ -30,7 +28,7 @@ class Station {
 
   embed() {
     return buildEmbed({
-      title: this.displayName,
+      title: this.name,
       description: this.nowPlaying || 'Offline',
       url: this.url,
       thumbnail: this.thumbnail,
