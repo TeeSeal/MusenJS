@@ -5,7 +5,6 @@ class RadioConnection {
     this.station = null
     this.conn = null
     this.dispatcher = null
-    this.interval = null
     this._volume = isNaN(options.volume) ? 1 : this.convert(options.volume)
     this.handler = handler
   }
@@ -14,18 +13,21 @@ class RadioConnection {
 
   play(station) {
     if (!this.conn) return
-    if (this.dispatcher) this.dispatcher.end()
-    if (this.interval) {
-      clearInterval(this.interval)
-      this.interval = null
+    if (this.dispatcher) {
+      this.dispatcher.removeAllListeners()
+      this.dispatcher.end()
+      this.dispatcher = null
     }
 
     this.station = station
     this.dispatcher = this.conn.playStream(station.stream, { volume: this._volume })
+    this.dispatcher.on('speaking', speaking => { if (!speaking) this.reset() })
+
     return this
   }
 
   async reset() {
+    console.log(`RESETTING ${this.name}`)
     const station = this.station.stream === this.handler.stations.get(this.station.id).stream
       ? await this.station.refresh()
       : this.handler.stations.get(this.station.id)
