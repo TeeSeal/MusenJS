@@ -48,8 +48,12 @@ class PlayCommand extends Command {
       ? this.client.radio.connections.get(msg.guild.id)
       : await this.client.radio.connect(msg.member.voiceChannel, { volume: 0 })
 
-    if (sameStation) connection.station = refreshed
-    else connection.play(refreshed).fadeVolume(25)
+    if (sameStation) {
+      connection.station = refreshed
+    } else {
+      if (alreadyPlaying) await connection.fadeVolume(0)
+      connection.play(refreshed).fadeVolume(25)
+    }
 
     return msg.util.send(refreshed.embed())
   }
