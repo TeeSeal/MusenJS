@@ -22,10 +22,6 @@ class RadioConnection {
 
     this.station = station
     this.dispatcher = this.conn.playStream(station.stream, { volume: this._volume })
-    this.interval = setInterval(() => {
-      if (!this.voiceChannel.guild.me.speaking) this.reset()
-    }, 5e3)
-
     return this
   }
 
