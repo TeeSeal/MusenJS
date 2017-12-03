@@ -5,6 +5,7 @@ class RadioConnection {
     this.station = null
     this.conn = null
     this.dispatcher = null
+    this.interval = null
     this._volume = isNaN(options.volume) ? 1 : this.convert(options.volume)
     this.handler = handler
   }
@@ -14,10 +15,26 @@ class RadioConnection {
   play(station) {
     if (!this.conn) return
     if (this.dispatcher) this.dispatcher.end()
-    this.station = station
+    if (this.interval) {
+      clearInterval(this.interval)
+      this.interval = null
+    }
 
+    this.station = station
     this.dispatcher = this.conn.playStream(station.stream, { volume: this._volume })
+    this.interval = setInterval(() => {
+      if (!this.voiceChannel.guild.me.speaking) this.reset()
+    }, 5e3)
+
     return this
+  }
+
+  async reset() {
+    const station = this.station.stream === this.handler.stations.get(this.station.id).stream
+      ? await this.station.refresh()
+      : this.handler.stations.get(this.station.id)
+
+    return this.play(station)
   }
 
   setVolume(volume) {
@@ -45,6 +62,7 @@ class RadioConnection {
   }
 
   stop() {
+    clearInterval(this.interval)
     this.voiceChannel.leave()
     this.handler.connections.delete(this.id)
   }
