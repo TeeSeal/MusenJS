@@ -10,6 +10,11 @@ class AddCommand extends Command {
         {
           id: 'name',
           match: 'rest',
+        },
+        {
+          id: 'provider',
+          match: 'prefix',
+          prefix: ['p=', 'provider='],
           type: 'lowercase',
         },
       ],
@@ -18,8 +23,8 @@ class AddCommand extends Command {
   }
 
   async exec(msg, args) {
-    const { name } = args
-    const station = await this.client.radio.addStation(name)
+    const { name, provider } = args
+    const station = await this.client.radio.addStation(name, provider)
     return msg.util.success(`Added station **${station.name}** on **${station.provider.name}**.`)
   }
 }

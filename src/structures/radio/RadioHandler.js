@@ -5,10 +5,11 @@ const RadioConnection = require('./RadioConnection.js')
 const Collection = require('../Collection.js')
 
 class RadioHandler {
-  constructor(keychain, { stationRefreshTimeout }) {
+  constructor(keychain, { stationRefreshTimeout, defaultProvider }) {
     this.stationRefreshTimeout = stationRefreshTimeout * 6e4
     this.providers = RadioProvider.loadAll(keychain, this)
     this.connections = new Collection()
+    this.defaultProvider = defaultProvider
 
     this.stations = null
     this.fuse = null
@@ -58,9 +59,10 @@ class RadioHandler {
     return this.stations.get(id)
   }
 
-  async addStation(name) {
-    const provider = this.providers.get('twitch')
-    const station = await provider.resolveStation(name.toLowerCase())
+  async addStation(id, providerID) {
+    if (!this.providers.has(providerID)) providerID = this.defaultProvider
+    const provider = this.providers.get(providerID)
+    const station = await provider.resolveStation(id)
     if (!station) return null
 
     this.stations.set(station.id, station)
