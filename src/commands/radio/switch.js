@@ -29,8 +29,10 @@ class SwitchCommand extends Command {
 
     const connection = this.client.radio.connections.get(msg.guild.id)
     if (connection.dispatcher) await connection.fadeVolume(0)
-    connection.play(station).fadeVolume(25)
-    return msg.util.send(station.embed())
+
+    const refreshed = await station.refresh()
+    connection.play(refreshed).fadeVolume(25)
+    return msg.util.send(refreshed.embed())
   }
 }
 
