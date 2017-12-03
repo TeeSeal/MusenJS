@@ -11,7 +11,7 @@ class InfoCommand extends Command {
           type: 'lowercase',
         },
       ],
-      description: 'Delete ze station',
+      description: 'Get information about a station.',
     })
   }
 

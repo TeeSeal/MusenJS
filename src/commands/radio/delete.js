@@ -12,7 +12,7 @@ class DeleteCommand extends Command {
           type: 'lowercase',
         },
       ],
-      description: 'Delete ze station',
+      description: 'Delete a station.',
     })
   }
 

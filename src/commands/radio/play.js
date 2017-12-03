@@ -11,13 +11,28 @@ class PlayCommand extends Command {
           match: 'rest',
           type: 'lowercase',
         },
+        {
+          id: 'volume',
+          match: 'prefix',
+          prefix: ['v=', 'vol=', 'volume='],
+          type(word, msg) {
+            if (!word || isNaN(word)) return null
+            const num = parseInt(word)
+            const { maxVolume } = this.client.db.guilds.get(msg.guild.id)
+            if (num < 1) return 1
+            if (num > maxVolume) return maxVolume
+            return num
+          },
+        },
       ],
-      description: 'Pley ze station',
+      description: 'Pley a station.',
     })
   }
 
   async exec(msg, args) {
     const { name } = args
+    const volume = args.volume || this.client.db.guilds.get(msg.guild.id).defaultVolume
+
     if (!msg.member.voiceChannel) return msg.util.error('gotta be in a voice channel.')
 
     const alreadyPlaying = this.client.radio.connections.has(msg.guild.id)
@@ -52,7 +67,7 @@ class PlayCommand extends Command {
       connection.station = refreshed
     } else {
       if (alreadyPlaying) await connection.fadeVolume(0)
-      connection.play(refreshed).fadeVolume(25)
+      connection.play(refreshed).fadeVolume(volume)
     }
 
     return msg.util.send(refreshed.embed())

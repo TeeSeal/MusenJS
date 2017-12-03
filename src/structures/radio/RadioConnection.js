@@ -49,7 +49,7 @@ class RadioConnection {
     this.handler.connections.delete(this.id)
   }
 
-  convert(volume) { return volume / 50 }
-  get volume() { return this._volume * 50 }
+  convert(volume) { return volume / 100 }
+  get volume() { return this._volume * 100 }
 }
 module.exports = RadioConnection

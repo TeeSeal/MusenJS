@@ -4,7 +4,7 @@ class StopCommand extends Command {
   constructor() {
     super('stop', {
       aliases: ['stop'],
-      description: 'Stop ze pleyback',
+      description: 'Stop playback',
     })
   }
 

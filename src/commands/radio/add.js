@@ -18,14 +18,14 @@ class AddCommand extends Command {
           type: 'lowercase',
         },
       ],
-      description: 'Add ze station',
+      description: 'Add a new station.',
     })
   }
 
   async exec(msg, args) {
     const { name, provider } = args
     const station = await this.client.radio.addStation(name, provider)
-    return msg.util.success(`Added station **${station.name}** on **${station.provider.name}**.`)
+    return msg.util.success('success.', station.embed())
   }
 }
 

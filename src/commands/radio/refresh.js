@@ -12,7 +12,7 @@ class RefreshCommand extends Command {
           type: 'lowercase',
         },
       ],
-      description: 'Refresh ze station',
+      description: 'Refresh a station.',
     })
   }
 

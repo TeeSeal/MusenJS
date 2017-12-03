@@ -5,7 +5,7 @@ class ListCommand extends Command {
   constructor() {
     super('list', {
       aliases: ['list', 'stations'],
-      description: 'List ze stations',
+      description: 'List all stations.',
       args: [
         {
           id: 'page',

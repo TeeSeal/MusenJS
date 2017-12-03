@@ -4,7 +4,7 @@ class ListCommand extends Command {
   constructor() {
     super('np', {
       aliases: ['np', 'nowplaying'],
-      description: 'List ze stations',
+      description: 'See what\'s playing right now.',
     })
   }
 
