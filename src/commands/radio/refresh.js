@@ -20,8 +20,9 @@ class RefreshCommand extends Command {
     const { name } = args
     if (!name) {
       if (!this.client.radio.connections.has(msg.guild.id)) return msg.util.error('gotta give it a name')
-      const connection = await this.client.radio.connections.get(msg.guild.id).reset()
-      return msg.util.success(`refreshed **${connection.station.name}**.`, connection.station.embed())
+      const station = this.client.radio.connections.get(msg.guild.id).station
+      await station.reset()
+      return msg.util.success(`refreshed **${station.name}**.`, station.embed())
     }
 
     const station = this.client.radio.findStation(name)

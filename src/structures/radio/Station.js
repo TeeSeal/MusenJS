@@ -17,8 +17,7 @@ class Station {
     this.handler = provider.handler
     this.connections = new Collection()
     this.broadcast = null
-
-    this.createBroadcast()
+    this.supervisor = null
   }
 
   delete() { return this.handler.deleteStation(this) }
@@ -41,21 +40,54 @@ class Station {
   }
 
   createBroadcast() {
-    if (this.broadcast) {
-      this.broadcast.removeAllListeners()
-      this.broadcast.end()
-    }
-
+    if (this.broadcast) this.broadcast.destroy()
     this.broadcast = this.handler.client.createVoiceBroadcast().playArbitraryInput(this.stream)
-      .on('warn', logr.warn)
-      .on('error', logr.error)
   }
 
-  playOn(connection) {
+  addConnection(connection) {
     this.connections.set(connection.id, connection)
-    const dispatcher = connection.conn.playBroadcast(this.broadcast)
-    dispatcher.once('end', () => this.connections.delete(connection.id))
-    return dispatcher
+    if (!this.supervisor) this.setSupervisor(connection)
+  }
+
+  removeConnection(connection) {
+    this.connections.delete(connection.id)
+    if (this.supervisor.id === connection.id) {
+      this.supervisor.dispatcher.removeAllListeners()
+
+      if (!this.connections.size) {
+        this.supervisor = null
+      } else {
+        this.setSupervisor(this.connections.first())
+      }
+    }
+
+    if (!this.connections.size) {
+      logr.info(`No connections on ${this.name}. Destroying broadcast.`)
+      this.broadcast.destroy()
+      this.broadcast = null
+    }
+  }
+
+  setSupervisor(connection) {
+    if (!connection.dispatcher) return
+
+    this.supervisor = connection
+    connection.dispatcher.on('speaking', speaking => {
+      if (!speaking) this.reset()
+    })
+  }
+
+  unsetSupervisor() {
+    if (!this.supervisor) return
+    this.supervisor.dispatcher.removeAllListeners()
+    this.supervisor = null
+  }
+
+  reset() {
+    logr.warn(`${this.name} is resetting.`)
+    this.unsetSupervisor()
+    this.createBroadcast()
+    this.connections.forEach(connection => connection.play(this))
   }
 
   async refresh() {

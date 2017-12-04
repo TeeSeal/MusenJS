@@ -13,14 +13,13 @@ class RadioConnection {
 
   play(station) {
     if (!this.conn) return
-    if (this.dispatcher) {
-      this.dispatcher.removeAllListeners()
-      this.dispatcher.end()
-      this.dispatcher = null
-    }
+    if (this.station && this.station.id !== station.id) this.station.removeConnection(this)
+    if (this.dispatcher) this.dispatcher.end()
+    if (!station.broadcast) station.createBroadcast()
 
     this.station = station
-    this.dispatcher = station.playOn(this)
+    this.dispatcher = this.conn.playBroadcast(station.broadcast)
+    station.addConnection(this)
     return this
   }
 
@@ -48,8 +47,9 @@ class RadioConnection {
     })
   }
 
-  stop() {
+  disconnect() {
     this.dispatcher.end()
+    this.station.removeConnection(this)
     this.voiceChannel.leave()
     this.handler.connections.delete(this.id)
   }

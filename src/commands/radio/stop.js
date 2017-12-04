@@ -11,7 +11,7 @@ class StopCommand extends Command {
   exec(msg) {
     const connection = this.client.radio.connections.get(msg.guild.id)
     if (!connection) return msg.util.error('no active conneciton in this guild.')
-    connection.stop()
+    connection.disconnect()
     return msg.util.success('stopped playback')
   }
 }
