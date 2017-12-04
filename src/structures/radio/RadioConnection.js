@@ -48,8 +48,8 @@ class RadioConnection {
   }
 
   disconnect() {
-    this.dispatcher.end()
     this.station.removeConnection(this)
+    this.dispatcher.end()
     this.voiceChannel.leave()
     this.handler.connections.delete(this.id)
   }

@@ -52,13 +52,8 @@ class Station {
   removeConnection(connection) {
     this.connections.delete(connection.id)
     if (this.supervisor.id === connection.id) {
-      this.supervisor.dispatcher.removeAllListeners()
-
-      if (!this.connections.size) {
-        this.supervisor = null
-      } else {
-        this.setSupervisor(this.connections.first())
-      }
+      this.unsetSupervisor()
+      if (this.connections.size) this.setSupervisor(this.connections.first())
     }
 
     if (!this.connections.size) {
@@ -83,8 +78,8 @@ class Station {
     this.supervisor = null
   }
 
-  reset() {
-    logr.warn(`${this.name} is resetting.`)
+  async reset() {
+    logr.warn(`Resetting ${this.name}.`)
     this.unsetSupervisor()
     this.createBroadcast()
     this.connections.forEach(connection => connection.play(this))
