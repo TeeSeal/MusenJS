@@ -3,7 +3,7 @@ const moment = require('moment')
 const M3U = require('playlist-parser').M3U
 
 class Twitch extends RadioProvider {
-  constructor(clientID, handler) {
+  constructor(handler, clientID) {
     super({
       baseURL: 'https://api.twitch.tv/helix/',
       headers: { 'Client-Id': clientID },

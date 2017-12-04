@@ -60,3 +60,4 @@ typings/
 keychain.json
 database.sqlite
 .DS_Store
+test.js

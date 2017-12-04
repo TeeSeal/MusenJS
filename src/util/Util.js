@@ -58,6 +58,15 @@ class Util {
   static randomFrom(array) {
     return array[Math.floor(Math.random() * array.length)]
   }
+
+  static isJSON(string) {
+    try {
+      JSON.parse(string)
+    } catch (err) {
+      return false
+    }
+    return true
+  }
 }
 
 module.exports = new Proxy(Util, {

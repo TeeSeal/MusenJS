@@ -1,5 +1,4 @@
 const { Command } = require('discord-akairo')
-const { stripIndents } = require('../../util/Util.js')
 
 class TestCommand extends Command {
   constructor() {
@@ -27,15 +26,9 @@ class TestCommand extends Command {
     })
   }
 
-  exec(msg, args) {
-    const { a, flag, prefix } = args
-    return msg.channel.send(stripIndents`
-      \`\`\`json
-      a = ${a},
-      flag = ${flag},
-      prefix = ${prefix}
-      \`\`\`
-    `)
+  async exec(msg) {
+    const connection = await msg.member.voiceChannel.join()
+    connection.playArbitraryInput('async:https://listen.moe/stream')
   }
 }
 

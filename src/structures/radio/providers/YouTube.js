@@ -3,7 +3,7 @@ const moment = require('moment')
 const ytdl = require('ytdl-core')
 
 class YouTube extends RadioProvider {
-  constructor(key, handler) {
+  constructor(handler, key) {
     super({
       baseURL: 'https://www.googleapis.com/youtube/v3/',
       defaultParams: { key },
@@ -12,7 +12,6 @@ class YouTube extends RadioProvider {
     this.id = 'youtube'
     this.name = 'YouTube'
     this.handler = handler
-    this.REGEXP = /(https?:\/\/)?(www\.)?youtu(be\.com|\.be)\//
   }
 
   formatOnlineStation(channelData, streamData, stream) {

@@ -32,7 +32,7 @@ class Station {
   embed() {
     return buildEmbed({
       title: this.name,
-      description: this.nowPlaying || 'Offline',
+      description: [this.nowPlaying || 'Offline', `Listeners: **${this.listenerCount}**`].join(' | '),
       url: this.url,
       thumbnail: this.thumbnail,
       color: this.online ? 'green' : 'red',
