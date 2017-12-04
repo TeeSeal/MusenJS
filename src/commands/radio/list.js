@@ -28,7 +28,7 @@ class ListCommand extends Command {
     const items = this.client.radio.stations.map(station => {
       return [
         `${station.name} | ${station.provider.name}\t`,
-        station.online ? '🔵 Online' : '🔴 Offline',
+        [station.online ? '🔵 Online' : '🔴 Offline', `Listeners: ${station.listenerCount}`].join(' | '),
         true,
       ]
     })

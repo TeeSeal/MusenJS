@@ -39,6 +39,13 @@ class Station {
     })
   }
 
+  get listenerCount() {
+    if (!this.connections.size) return 0
+    return this.connections.reduce((count, conn) => {
+      return count + conn.voiceChannel.members.size - 1
+    }, 0)
+  }
+
   createBroadcast() {
     if (this.broadcast) this.broadcast.destroy()
     this.broadcast = this.handler.client.createVoiceBroadcast().playArbitraryInput(this.stream)
