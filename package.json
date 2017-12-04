@@ -1,6 +1,6 @@
 {
   "name": "musen",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "A discord bot.",
   "main": "musen.js",
   "scripts": {
