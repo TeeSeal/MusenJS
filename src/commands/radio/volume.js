@@ -55,7 +55,7 @@ class VolumeCommand extends Command {
 
     const icon = newVolume < volume ? 'volumeDown' : 'volumeUp'
 
-    connection.fadeVolume(newVolume)
+    connection.setVolume(newVolume)
     return msg.util.send(buildEmbed({
       title: station.nowPlaying,
       fields: [

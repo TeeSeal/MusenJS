@@ -28,25 +28,6 @@ class RadioConnection {
     this.dispatcher.setVolume(this._volume)
   }
 
-  fadeVolume(volume) {
-    let current = this._volume
-    this._volume = this.convert(volume)
-    const modifier = current < this._volume ? 0.05 : -0.05
-
-    return new Promise(resolve => {
-      const interval = setInterval(() => {
-        current += modifier
-        this.dispatcher.setVolume(current)
-
-        if (current > (this._volume - 0.05) && current < (this._volume + 0.05)) {
-          this.dispatcher.setVolume(this._volume)
-          clearInterval(interval)
-          setTimeout(resolve, 800)
-        }
-      }, 35)
-    })
-  }
-
   disconnect() {
     this.station.removeConnection(this)
     this.dispatcher.end()
