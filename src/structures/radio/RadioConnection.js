@@ -28,6 +28,11 @@ class RadioConnection {
     this.dispatcher.setVolume(this._volume)
   }
 
+  switchTo(voiceChannel) {
+    this.voiceChannel = voiceChannel
+    return this.connect()
+  }
+
   disconnect() {
     this.station.removeConnection(this)
     this.dispatcher.end()
