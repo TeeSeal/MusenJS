@@ -21,7 +21,7 @@ class MusenClient extends akairo.AkairoClient {
     logr.success('OK')
 
     logr.info('Setting up providers...')
-    this.radio = new RadioHandler(keychain, config)
+    this.radio = new RadioHandler(this, keychain, config)
     logr.success('OK')
 
     logr.info('Loading stations...')

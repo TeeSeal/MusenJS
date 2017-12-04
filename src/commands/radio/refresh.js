@@ -27,8 +27,8 @@ class RefreshCommand extends Command {
     const station = this.client.radio.findStation(name)
     if (!station) return msg.util.error('no such station.')
 
-    const newStation = await station.refresh()
-    return msg.util.success(`refreshed **${newStation.name}**.`, newStation.embed())
+    await station.refresh()
+    return msg.util.success(`refreshed **${station.name}**.`, station.embed())
   }
 }
 

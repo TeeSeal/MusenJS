@@ -20,19 +20,8 @@ class RadioConnection {
     }
 
     this.station = station
-    this.dispatcher = this.conn.playStream(station.stream, { volume: this._volume })
-    this.dispatcher.on('speaking', speaking => { if (!speaking) this.reset() })
-
+    this.dispatcher = station.playOn(this)
     return this
-  }
-
-  async reset() {
-    console.log(`RESETTING ${this.name}`)
-    const station = this.station.stream === this.handler.stations.get(this.station.id).stream
-      ? await this.station.refresh()
-      : this.handler.stations.get(this.station.id)
-
-    return this.play(station)
   }
 
   setVolume(volume) {
@@ -60,7 +49,7 @@ class RadioConnection {
   }
 
   stop() {
-    clearInterval(this.interval)
+    this.dispatcher.end()
     this.voiceChannel.leave()
     this.handler.connections.delete(this.id)
   }

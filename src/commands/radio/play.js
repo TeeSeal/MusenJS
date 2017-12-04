@@ -58,19 +58,19 @@ class PlayCommand extends Command {
 
     if (sameChannel && sameStation) return msg.util.error(`I'm already playing **${station.name}** in your voice channel.`)
 
-    const refreshed = await station.refresh()
+    await station.refresh()
     const connection = sameChannel && alreadyPlaying
       ? this.client.radio.connections.get(msg.guild.id)
       : await this.client.radio.connect(msg.member.voiceChannel, { volume: 0 })
 
     if (sameStation) {
-      connection.station = refreshed
+      connection.station = station
     } else {
       if (alreadyPlaying) await connection.fadeVolume(0)
-      connection.play(refreshed).fadeVolume(volume)
+      connection.play(station).fadeVolume(volume)
     }
 
-    return msg.util.send(refreshed.embed())
+    return msg.util.send(station.embed())
   }
 }
 

@@ -1,4 +1,6 @@
 const { buildEmbed } = require('../../util/Util.js')
+const Collection = require('../Collection.js')
+const logr = require('logr')
 
 class Station {
   constructor(provider, options) {
@@ -13,8 +15,10 @@ class Station {
 
     this.provider = provider
     this.handler = provider.handler
+    this.connections = new Collection()
+    this.broadcast = null
 
-    setTimeout(() => this.refresh(), this.handler.stationRefreshTimeout)
+    this.createBroadcast()
   }
 
   delete() { return this.handler.deleteStation(this) }
@@ -36,8 +40,35 @@ class Station {
     })
   }
 
-  refresh() {
-    return this.handler.refreshStation(this)
+  createBroadcast() {
+    if (this.broadcast) {
+      this.broadcast.removeAllListeners()
+      this.broadcast.end()
+    }
+
+    this.broadcast = this.handler.client.createVoiceBroadcast().playArbitraryInput(this.stream)
+      .on('warn', logr.warn)
+      .on('error', logr.error)
+  }
+
+  playOn(connection) {
+    this.connections.set(connection.id, connection)
+    const dispatcher = connection.conn.playBroadcast(this.broadcast)
+    dispatcher.once('end', () => this.connections.delete(connection.id))
+    return dispatcher
+  }
+
+  async refresh() {
+    const updated = await this.handler.refreshStation(this)
+    if (!updated) return
+
+    this.nowPlaying = updated.nowPlaying
+    this.stream = updated.stream
+    this.online = updated.online || false
+    this.extra = updated.extra
+    this.url = updated.url
+
+    return this
   }
 }
 

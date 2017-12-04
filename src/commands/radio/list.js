@@ -33,7 +33,7 @@ class ListCommand extends Command {
       ]
     })
 
-    if (items.length === 0) return msg.util.error('there aren\'t any stations yet :()')
+    if (items.length === 0) return msg.util.error('there aren\'t any stations yet :(')
 
     msg.util.send(buildEmbed({
       title: 'Station list',

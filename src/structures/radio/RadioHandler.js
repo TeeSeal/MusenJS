@@ -5,7 +5,8 @@ const RadioConnection = require('./RadioConnection.js')
 const Collection = require('../Collection.js')
 
 class RadioHandler {
-  constructor(keychain, { stationRefreshTimeout, defaultProvider }) {
+  constructor(client, keychain, { stationRefreshTimeout, defaultProvider }) {
+    this.client = client
     this.stationRefreshTimeout = stationRefreshTimeout * 6e4
     this.providers = RadioProvider.loadAll(keychain, this)
     this.connections = new Collection()
@@ -75,8 +76,6 @@ class RadioHandler {
     if (!this.stations) return
     const newStation = await station.provider.resolveStation(station.id)
     if (!newStation) return this.stations.delete(station.id)
-
-    this.stations.set(station.id, newStation)
     return newStation
   }
 
