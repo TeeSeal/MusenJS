@@ -14,8 +14,8 @@ class ListenMoe extends RadioProvider {
 
   formatStream(data) {
     return {
-      id: 'listenmoe',
-      name: 'Listen.moe',
+      id: this.id,
+      name: this.name,
       nowPlaying: [data.artist_name, data.song_name].join(' - '),
       thumbnail: 'https://a.safe.moe/B2q07.png',
       url: `https://listen.moe/`,
@@ -30,7 +30,9 @@ class ListenMoe extends RadioProvider {
       const ws = new WebSocket('https://listen.moe/api/v2/socket')
       ws.once('open', () => { this.ws = ws })
       ws.on('message', data => {
+        console.log('[LISTEN.MOE]', data)
         if (!data) return
+        console.log('UPDATING')
         const firstMessage = !this.lastMessage
         this.lastMessage = JSON.parse(data)
         if (!firstMessage) this.handler.stations.get(this.id).refresh()
