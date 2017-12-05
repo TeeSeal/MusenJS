@@ -16,7 +16,7 @@ class ListenMoe extends RadioProvider {
     return {
       id: 'listenmoe',
       name: 'Listen.moe',
-      nowPlaying: data.song_name,
+      nowPlaying: [data.artist_name, data.song_name].join(' - '),
       thumbnail: 'https://a.safe.moe/B2q07.png',
       url: `https://listen.moe/`,
       online: true,
