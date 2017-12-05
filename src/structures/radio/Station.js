@@ -30,9 +30,13 @@ class Station {
   }
 
   embed() {
+    const description = this.nowPlaying
+      ? [this.nowPlaying, `Listeners: **${this.listenerCount}**`].join('\n')
+      : 'Offline'
+
     return buildEmbed({
       title: this.name,
-      description: [this.nowPlaying || 'Offline', `Listeners: **${this.listenerCount}**`].join('\n'),
+      description,
       url: this.url,
       thumbnail: this.thumbnail,
       color: this.online ? 'green' : 'red',

@@ -30,11 +30,11 @@ class ListCommand extends Command {
         ? station.name
         : [station.name, station.provider.name].join(' | ')
 
-      return [
-        title,
-        [station.online ? '🔵' : '🔴', `Listeners: **${station.listenerCount}**`].join(' | '),
-        true,
-      ]
+      const status = station.online
+        ? ['🔵', `Listeners: **${station.listenerCount}**`].join(' | ')
+        : '🔴 Offline'
+
+      return [title, status, true]
     })
 
     if (items.length === 0) return msg.util.error('there aren\'t any stations yet :(')
