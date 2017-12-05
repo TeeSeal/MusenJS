@@ -26,8 +26,12 @@ class ListCommand extends Command {
   exec(msg, args) {
     const { page } = args
     const items = this.client.radio.stations.map(station => {
+      const title = station.name === station.provider.name
+        ? station.name
+        : [station.name, station.provider.name].join(' | ')
+
       return [
-        `${station.name} | ${station.provider.name}\t`,
+        title,
         [station.online ? '🔵' : '🔴', `Listeners: **${station.listenerCount}**`].join(' | '),
         true,
       ]

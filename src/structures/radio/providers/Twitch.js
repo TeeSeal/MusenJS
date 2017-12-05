@@ -1,6 +1,5 @@
 const RadioProvider = require('../RadioProvider.js')
 const moment = require('moment')
-const M3U = require('playlist-parser').M3U
 
 class Twitch extends RadioProvider {
   constructor(handler, clientID) {
@@ -62,9 +61,7 @@ class Twitch extends RadioProvider {
     })
     if (!streams) return Promise.reject(new Error('Couldn\'t fetch stream.'))
 
-    return M3U.parse(streams)
-      .filter(stream => stream)
-      .find(stream => stream.title.includes('audio_only')).file
+    return streams.split('\n').filter(stream => stream).slice(-1)[0]
   }
 
   async resolveStation(channel) {
