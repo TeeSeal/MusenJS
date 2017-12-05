@@ -1,7 +1,5 @@
 const RadioProvider = require('../RadioProvider.js')
-const logr = require('logr')
 const WebSocket = require('ws')
-const { isJSON } = require('../../../util/Util.js')
 
 class ListenMoe extends RadioProvider {
   constructor(handler) {
@@ -31,13 +29,12 @@ class ListenMoe extends RadioProvider {
     return new Promise(resolve => {
       const ws = new WebSocket('https://listen.moe/api/v2/socket')
       ws.once('open', () => { this.ws = ws })
-      ws.on('message', msg => {
-        if (isJSON(msg)) {
-          const firstMessage = !this.lastMessage
-          this.lastMessage = JSON.parse(msg)
-          if (!firstMessage) this.handler.stations.get(this.id).refresh()
-          resolve()
-        }
+      ws.on('message', data => {
+        if (!data) return
+        const firstMessage = !this.lastMessage
+        this.lastMessage = JSON.parse(data)
+        if (!firstMessage) this.handler.stations.get(this.id).refresh()
+        resolve()
       })
     })
   }

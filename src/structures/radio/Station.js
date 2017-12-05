@@ -89,7 +89,7 @@ class Station {
     logr.warn(`Resetting ${this.name}.`)
     this.unsetSupervisor()
     this.createBroadcast()
-    this.connections.forEach(connection => connection.play(this))
+    for (const connection of this.connections.values()) connection.play()
   }
 
   async refresh() {
