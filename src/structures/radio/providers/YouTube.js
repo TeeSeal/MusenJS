@@ -6,7 +6,7 @@ class YouTube extends RadioProvider {
   constructor(handler, key) {
     super({
       baseURL: 'https://www.googleapis.com/youtube/v3/',
-      defaultParams: { key },
+      params: { key },
     })
 
     this.id = 'youtube'

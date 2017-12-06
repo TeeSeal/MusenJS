@@ -47,8 +47,8 @@ class RadioHandler {
     })
   }
 
-  async connect(voiceChannel, options) {
-    const connection = new RadioConnection(this, voiceChannel, options)
+  async connect(voiceChannel, opts) {
+    const connection = new RadioConnection(this, voiceChannel, opts)
     await connection.connect()
     this.connections.set(connection.id, connection)
     return connection

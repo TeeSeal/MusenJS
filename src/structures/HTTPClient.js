@@ -1,33 +1,36 @@
-const axios = require('axios')
+const fetch = require('node-fetch')
+const { URL } = require('url')
 const { version } = require('../../package.json')
 
 class HTTPClient {
-  constructor(options) {
-    this.instance = axios.create({
-      baseURL: options.baseURL,
-      timeout: 5000,
-      headers: Object.assign(
-        { 'User-Agent': `Haku bot v${version} (https://github.com/TeeSeal/Haku)` },
-        options.headers
-      ),
-    })
-
-    this.defaultParams = options.defaultParams || {}
+  constructor(opts) {
+    this.baseURL = opts.baseURL
+    this.params = opts.params || {}
+    this.headers = Object.assign(
+      { 'User-Agent': `Haku bot v${version} (https://github.com/TeeSeal/Haku)` },
+      opts.headers
+    )
   }
 
-  get(url, parameters) {
-    const params = Object.assign({}, this.defaultParams, parameters || {})
-    return this.instance.request({ url, params })
-      .then(res => res.data)
+  get(url, type = 'json', params = {}) {
+    if (type instanceof Object) {
+      params = type
+      type = 'json'
+    }
+
+    return fetch(this.buildURL(url, params), { headers: this.headers })
+      .then(res => type === 'stream' ? res.body : res[type]())
   }
 
-  post(url, options) {
-    return this.request(Object.assign(options, { method: 'post', url }))
-      .then(res => res.data)
-  }
+  buildURL(url, params) {
+    url = new URL(url, this.baseURL)
+    params = Object.assign({}, this.params, params)
 
-  request(options) {
-    return this.instance.request(options)
+    for (const [key, value] of Object.entries(params)) {
+      url.searchParams.append(key, value)
+    }
+
+    return url.toString()
   }
 }
 

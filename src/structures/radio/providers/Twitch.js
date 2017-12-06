@@ -53,7 +53,7 @@ class Twitch extends RadioProvider {
     const accessToken = await this.get(`http://api.twitch.tv/api/channels/${channel}/access_token`)
     if (!accessToken) return Promise.reject(new Error('Couldn\'t find channel.'))
 
-    const streams = await this.get(`http://usher.twitch.tv/api/channel/hls/${channel}.m3u8`, {
+    const streams = await this.get(`http://usher.twitch.tv/api/channel/hls/${channel}.m3u8`, 'text', {
       player: 'twitchweb',
       token: accessToken.token,
       sig: accessToken.sig,

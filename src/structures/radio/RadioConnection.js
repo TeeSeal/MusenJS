@@ -1,11 +1,11 @@
 class RadioConnection {
-  constructor(handler, voiceChannel, options) {
+  constructor(handler, voiceChannel, opts) {
     this.id = voiceChannel.guild.id
     this.voiceChannel = voiceChannel
     this.station = null
     this.conn = null
     this.dispatcher = null
-    this._volume = isNaN(options.volume) ? 1 : this.convert(options.volume)
+    this._volume = isNaN(opts.volume) ? 1 : this.convert(opts.volume)
     this.handler = handler
   }
 

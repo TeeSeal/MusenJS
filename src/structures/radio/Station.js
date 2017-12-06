@@ -3,15 +3,15 @@ const Collection = require('../Collection.js')
 const logr = require('logr')
 
 class Station {
-  constructor(provider, options) {
-    this.id = options.id
-    this.name = options.name
-    this.nowPlaying = options.nowPlaying
-    this.thumbnail = options.thumbnail
-    this.stream = options.stream
-    this.online = options.online || false
-    this.extra = options.extra || {}
-    this.url = options.url
+  constructor(provider, opts) {
+    this.id = opts.id
+    this.name = opts.name
+    this.nowPlaying = opts.nowPlaying
+    this.thumbnail = opts.thumbnail
+    this.stream = opts.stream
+    this.online = opts.online || false
+    this.extra = opts.extra || {}
+    this.url = opts.url
 
     this.provider = provider
     this.handler = provider.handler

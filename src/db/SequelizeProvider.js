@@ -2,12 +2,12 @@ const Collection = require('../structures/Collection.js')
 const { deepFreeze } = require('../util/Util.js')
 
 class SequelizeProvider {
-  constructor(table, options = {}) {
+  constructor(table, opts = {}) {
     this.table = table
-    this.idColumn = options.idColumn || 'id'
-    this.cacheOnInit = options.cacheOnInit || false
-    this.cacheTimeout = this.cacheOnInit ? 0 : options.cacheTimeout || 0
-    this.defaultValues = options.defaultValues ? deepFreeze(options.defaultValues) : {}
+    this.idColumn = opts.idColumn || 'id'
+    this.cacheOnInit = opts.cacheOnInit || false
+    this.cacheTimeout = this.cacheOnInit ? 0 : opts.cacheTimeout || 0
+    this.defaultValues = opts.defaultValues ? deepFreeze(opts.defaultValues) : {}
     this.items = new Collection()
   }
 

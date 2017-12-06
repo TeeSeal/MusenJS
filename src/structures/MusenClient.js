@@ -7,11 +7,11 @@ const SequelizeDatabase = require('../db/SequelizeDatabase.js')
 const RadioHandler = require('./radio/RadioHandler.js')
 
 class MusenClient extends akairo.AkairoClient {
-  constructor(options) {
-    if (!options.database) throw new Error('please specify a database.')
-    super(options)
+  constructor(opts) {
+    if (!opts.database) throw new Error('please specify a database.')
+    super(opts)
 
-    this.db = new SequelizeDatabase(options.database)
+    this.db = new SequelizeDatabase(opts.database)
     this.radio = null
   }
 
@@ -34,13 +34,13 @@ class MusenClient extends akairo.AkairoClient {
 }
 
 Object.assign(akairo.CommandUtil.prototype, {
-  info(content, options) {
+  info(content, opts) {
     const name = this.message.member ? this.message.member.displayName : this.message.author.username
-    return this.send(`**${name}** | ${content}`, options)
+    return this.send(`**${name}** | ${content}`, opts)
   },
 
-  success(content, options) { return this.info(`✅ ${content}`, options) },
-  error(content, options) { return this.info(`❌ ${content}`, options) },
+  success(content, opts) { return this.info(`✅ ${content}`, opts) },
+  error(content, opts) { return this.info(`❌ ${content}`, opts) },
 })
 
 module.exports = MusenClient

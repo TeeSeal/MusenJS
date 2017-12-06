@@ -14,15 +14,15 @@ class SequelizeDatabase {
   }
 
   async init() {
-    for (const [name, options] of Object.entries(tables)) {
-      const table = this._db.define(name, options.schema)
+    for (const [name, opts] of Object.entries(tables)) {
+      const table = this._db.define(name, opts.schema)
 
-      options.defaultValues = {}
-      for (const [key, model] of Object.entries(options.schema)) {
-        if (model.defaultValue) options.defaultValues[key] = model.defaultValue
+      opts.defaultValues = {}
+      for (const [key, model] of Object.entries(opts.schema)) {
+        if (model.defaultValue) opts.defaultValues[key] = model.defaultValue
       }
 
-      this[name] = new SequelizeProvider(table, options)
+      this[name] = new SequelizeProvider(table, opts)
       await this[name].init()
     }
 

@@ -32,15 +32,15 @@ function buildEmbed(obj) { // eslint-disable-line
   embed.description = obj.description || ''
 
   if (obj.paginate) {
-    const options = obj.paginate
-    const paginated = paginate(options.items, options.by)
+    const opts = obj.paginate
+    const paginated = paginate(opts.items, opts.by)
 
-    let page = options.page || 1
+    let page = opts.page || 1
     if (page < 1) page = 1
     if (page > paginated.length) page = paginated.length
 
     if (paginated.length !== 0) {
-      if (Array.isArray(options.items[0])) {
+      if (Array.isArray(opts.items[0])) {
         embed.fields = embed.fields.concat(parseFields(paginated[page - 1]))
       } else {
         embed.description += `\n${paginated[page - 1].join('\n')}`
@@ -50,7 +50,7 @@ function buildEmbed(obj) { // eslint-disable-line
     if (paginated.length > 1) {
       embed.footer = {
         text: stripIndents`
-          Page: ${page}/${paginated.length} | Use: '${options.commandName} page=<integer>' to view another page.
+          Page: ${page}/${paginated.length} | Use: '${opts.commandName} page=<integer>' to view another page.
         `,
       }
     }
