@@ -1,11 +1,14 @@
 {
   "parserOptions": {
-    "ecmaVersion": 2017
+    "ecmaVersion": 2017,
+    "ecmaFeatures": {
+      "experimentalObjectRestSpread": true
+    }
   },
   "env": {
     "es6": true,
     "node": true
-    },
+  },
   "extends": "eslint:recommended",
   "rules": {
     "no-extra-parens": ["warn", "all", { "nestedBinaryExpressions": false }],
@@ -61,15 +64,18 @@
     "func-style": ["error", "declaration", { "allowArrowFunctions": true }],
     "indent": ["error", 2],
     "key-spacing": "error",
-    "keyword-spacing": ["error", {
-      "overrides": {
-        "if": { "after": true },
-        "for": { "after": true },
-        "while": { "after": true },
-        "catch": { "after": true },
-        "switch": { "after": true }
+    "keyword-spacing": [
+      "error",
+      {
+        "overrides": {
+          "if": { "after": true },
+          "for": { "after": true },
+          "while": { "after": true },
+          "catch": { "after": true },
+          "switch": { "after": true }
+        }
       }
-    }],
+    ],
     "max-depth": "error",
     "max-nested-callbacks": ["error", { "max": 4 }],
     "max-statements-per-line": ["error", { "max": 2 }],
@@ -79,7 +85,10 @@
     "no-inline-comments": "error",
     "no-lonely-if": "error",
     "no-mixed-operators": "error",
-    "no-multiple-empty-lines": ["error", { "max": 2, "maxEOF": 1, "maxBOF": 0 }],
+    "no-multiple-empty-lines": [
+      "error",
+      { "max": 2, "maxEOF": 1, "maxBOF": 0 }
+    ],
     "no-new-object": "error",
     "no-spaced-func": "error",
     "no-trailing-spaces": "error",
@@ -91,7 +100,11 @@
     "operator-linebreak": ["error", "before"],
     "padded-blocks": ["error", "never"],
     "quote-props": ["error", "as-needed"],
-    "quotes": ["warn", "single", { "avoidEscape": true, "allowTemplateLiterals": true }],
+    "quotes": [
+      "warn",
+      "single",
+      { "avoidEscape": true, "allowTemplateLiterals": true }
+    ],
     "semi-spacing": "error",
     "semi": ["error", "never"],
     "space-before-blocks": "error",

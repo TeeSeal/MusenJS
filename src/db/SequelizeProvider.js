@@ -7,7 +7,9 @@ class SequelizeProvider {
     this.idColumn = opts.idColumn || 'id'
     this.cacheOnInit = opts.cacheOnInit || false
     this.cacheTimeout = this.cacheOnInit ? 0 : opts.cacheTimeout || 0
-    this.defaultValues = opts.defaultValues ? deepFreeze(opts.defaultValues) : {}
+    this.defaultValues = opts.defaultValues
+      ? deepFreeze(opts.defaultValues)
+      : {}
     this.items = new Collection()
   }
 
@@ -16,7 +18,9 @@ class SequelizeProvider {
 
     if (this.cacheOnInit) {
       const rows = await this.table.all()
-      for (const row of rows) this.items.set(row[this.idColumn], sanitize(row.dataValues))
+      for (const row of rows) {
+        this.items.set(row[this.idColumn], sanitize(row.dataValues))
+      }
     }
 
     return this
@@ -41,7 +45,8 @@ class SequelizeProvider {
 
   async fetch(id, key, defaultValue) {
     if (!this.items.has(id)) {
-      const row = await this.table.findCreateFind({ where: { [this.idColumn]: id } })
+      const row = await this.table
+        .findCreateFind({ where: { [this.idColumn]: id } })
         .then(r => r[0])
 
       this.items.set(id, sanitize(row.dataValues))

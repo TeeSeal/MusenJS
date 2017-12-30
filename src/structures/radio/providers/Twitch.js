@@ -41,7 +41,9 @@ class Twitch extends RadioProvider {
 
   async fetchChannelData(login) {
     const res = await this.get('users', { login })
-    if (res.data.length === 0) return Promise.reject(new Error('Couldn\'t find channel.'))
+    if (res.data.length === 0) {
+      return Promise.reject(new Error("Couldn't find channel."))
+    }
     return res.data[0]
   }
 
@@ -50,30 +52,46 @@ class Twitch extends RadioProvider {
   }
 
   async fetchStream(channel) {
-    const accessToken = await this.get(`http://api.twitch.tv/api/channels/${channel}/access_token`)
-    if (!accessToken) return Promise.reject(new Error('Couldn\'t find channel.'))
+    const accessToken = await this.get(
+      `http://api.twitch.tv/api/channels/${channel}/access_token`
+    )
+    if (!accessToken) return Promise.reject(new Error("Couldn't find channel."))
 
-    const streams = await this.get(`http://usher.twitch.tv/api/channel/hls/${channel}.m3u8`, 'text', {
-      player: 'twitchweb',
-      token: accessToken.token,
-      sig: accessToken.sig,
-      allow_audio_only: true,
-    })
-    if (!streams) return Promise.reject(new Error('Couldn\'t fetch stream.'))
+    const streams = await this.get(
+      `http://usher.twitch.tv/api/channel/hls/${channel}.m3u8`,
+      'text',
+      {
+        player: 'twitchweb',
+        token: accessToken.token,
+        sig: accessToken.sig,
+        allow_audio_only: true,
+      }
+    )
+    if (!streams) return Promise.reject(new Error("Couldn't fetch stream."))
 
-    return streams.split('\n').filter(stream => stream).slice(-1)[0]
+    return streams
+      .split('\n')
+      .filter(stream => stream)
+      .slice(-1)[0]
   }
 
   async resolveStation(channel) {
     const channelData = await this.fetchChannelData(channel)
     const streamData = await this.fetchStreamData(channelData.id)
-    if (!streamData) return this.createStation(this.formatOfflineStream(channelData))
+    if (!streamData) {
+      return this.createStation(this.formatOfflineStream(channelData))
+    }
 
-    const stream = streamData.type === 'live' ? await this.fetchStream(channel) : null
-    return this.createStation(this.formatOnlineStream(channelData, streamData, stream))
+    const stream
+      = streamData.type === 'live' ? await this.fetchStream(channel) : null
+    return this.createStation(
+      this.formatOnlineStream(channelData, streamData, stream)
+    )
   }
 
-  static get keychainKey() { return 'twitchClientID' }
+  static get keychainKey() {
+    return 'twitchClientID'
+  }
 }
 
 module.exports = Twitch

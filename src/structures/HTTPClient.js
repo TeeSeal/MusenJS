@@ -18,13 +18,15 @@ class HTTPClient {
       type = 'json'
     }
 
-    return fetch(this.buildURL(url, params), { headers: this.headers })
-      .then(res => type === 'stream' ? res.body : res[type]())
+    const link = this.buildURL(url, params)
+    return fetch(link, { headers: this.headers }).then(
+      res => type === 'stream' ? res.body : res[type]()
+    )
   }
 
   buildURL(url, params) {
     url = new URL(url, this.baseURL)
-    params = Object.assign({}, this.params, params)
+    params = { ...this.params, ...params }
 
     for (const [key, value] of Object.entries(params)) {
       url.searchParams.append(key, value)

@@ -9,11 +9,13 @@ class RadioConnection {
     this.handler = handler
   }
 
-  async connect() { this.conn = await this.voiceChannel.join() }
+  async connect() {
+    this.conn = await this.voiceChannel.join()
+  }
 
   play(station) {
     if (!this.conn) return
-    if (this.station && this.station.id !== station.id) this.station.removeConnection(this)
+    if (this.station && this.station.id !== station.id) { this.station.removeConnection(this) }
     if (this.dispatcher) this.dispatcher.end()
     if (!station.broadcast) station.createBroadcast()
 
@@ -40,7 +42,11 @@ class RadioConnection {
     this.handler.connections.delete(this.id)
   }
 
-  convert(volume) { return volume / 100 }
-  get volume() { return this._volume * 100 }
+  convert(volume) {
+    return volume / 100
+  }
+  get volume() {
+    return this._volume * 100
+  }
 }
 module.exports = RadioConnection

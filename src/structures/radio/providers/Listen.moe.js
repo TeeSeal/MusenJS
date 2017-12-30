@@ -28,7 +28,9 @@ class ListenMoe extends RadioProvider {
   initWebSocket() {
     return new Promise(resolve => {
       const ws = new WebSocket('https://listen.moe/api/v2/socket')
-      ws.once('open', () => { this.ws = ws })
+      ws.once('open', () => {
+        this.ws = ws
+      })
       ws.on('message', data => {
         if (!data) return
         const firstMessage = !this.lastMessage

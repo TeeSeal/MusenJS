@@ -2,8 +2,16 @@ class Collection extends Map {
   constructor(iterable) {
     super(iterable)
 
-    Object.defineProperty(this, '_array', { value: null, writable: true, configurable: true })
-    Object.defineProperty(this, '_keyArray', { value: null, writable: true, configurable: true })
+    Object.defineProperty(this, '_array', {
+      value: null,
+      writable: true,
+      configurable: true,
+    })
+    Object.defineProperty(this, '_keyArray', {
+      value: null,
+      writable: true,
+      configurable: true,
+    })
   }
 
   set(key, val) {
@@ -19,12 +27,16 @@ class Collection extends Map {
   }
 
   array() {
-    if (!this._array || this._array.length !== this.size) this._array = Array.from(this.values())
+    if (!this._array || this._array.length !== this.size) {
+      this._array = Array.from(this.values())
+    }
     return this._array
   }
 
   keyArray() {
-    if (!this._keyArray || this._keyArray.length !== this.size) this._keyArray = Array.from(this.keys())
+    if (!this._keyArray || this._keyArray.length !== this.size) {
+      this._keyArray = Array.from(this.keys())
+    }
     return this._keyArray
   }
 
@@ -58,7 +70,9 @@ class Collection extends Map {
 
   findAll(prop, value) {
     if (typeof prop !== 'string') throw new TypeError('Key must be a string.')
-    if (typeof value === 'undefined') throw new Error('Value must be specified.')
+    if (typeof value === 'undefined') {
+      throw new Error('Value must be specified.')
+    }
     const results = []
     for (const item of this.values()) {
       if (item[prop] === value) results.push(item)
@@ -68,7 +82,9 @@ class Collection extends Map {
 
   find(propOrFn, value) {
     if (typeof propOrFn === 'string') {
-      if (typeof value === 'undefined') throw new Error('Value must be specified.')
+      if (typeof value === 'undefined') {
+        throw new Error('Value must be specified.')
+      }
       for (const item of this.values()) {
         if (item[propOrFn] === value) return item
       }
@@ -85,7 +101,9 @@ class Collection extends Map {
 
   findKey(propOrFn, value) {
     if (typeof propOrFn === 'string') {
-      if (typeof value === 'undefined') throw new Error('Value must be specified.')
+      if (typeof value === 'undefined') {
+        throw new Error('Value must be specified.')
+      }
       for (const [key, val] of this) {
         if (val[propOrFn] === value) return key
       }
@@ -101,7 +119,11 @@ class Collection extends Map {
   }
 
   exists(prop, value) {
-    if (prop === 'id') throw new RangeError('Don"t use .exists() with IDs. Instead, use .has(id).')
+    if (prop === 'id') {
+      throw new RangeError(
+        'Don"t use .exists() with IDs. Instead, use .has(id).'
+      )
+    }
     return Boolean(this.find(prop, value))
   }
 
@@ -151,7 +173,9 @@ class Collection extends Map {
     let accumulator
     if (typeof initialValue !== 'undefined') {
       accumulator = initialValue
-      for (const [key, val] of this) accumulator = fn(accumulator, val, key, this)
+      for (const [key, val] of this) {
+        accumulator = fn(accumulator, val, key, this)
+      }
     } else {
       let first = true
       for (const [key, val] of this) {
@@ -192,7 +216,9 @@ class Collection extends Map {
     if (this.size !== collection.size) return false
     return !this.find((value, key) => {
       const testVal = collection.get(key)
-      return testVal !== value || (testVal === undefined && !collection.has(key))
+      return (
+        testVal !== value || (testVal === undefined && !collection.has(key))
+      )
     })
   }
 

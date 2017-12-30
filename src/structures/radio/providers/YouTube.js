@@ -42,11 +42,11 @@ class YouTube extends RadioProvider {
     return this.get('channels', {
       id,
       part: 'snippet',
-      fields: 'items(id, snippet(title, thumbnails(high)))',
+      fields: 'items(id,snippet(title,thumbnails(high)))',
     }).then(res => res.items[0])
   }
 
-  findChannelIDByName(q) {
+  findChannelIdByName(q) {
     return this.get('search', {
       q,
       part: 'id',
@@ -65,11 +65,26 @@ class YouTube extends RadioProvider {
   }
 
   fetchVideoData(id) {
-    return this.get(`videos`, {
+    return this.get('videos', {
       id,
-      fields: 'items(id, snippet(channelId, title, liveBroadcastContent), liveStreamingDetails(actualStartTime, concurrentViewers))',
+      fields:
+        'items(id,snippet(channelId,title,liveBroadcastContent),liveStreamingDetails(actualStartTime,concurrentViewers))',
       part: 'snippet,liveStreamingDetails',
     }).then(res => res.items[0])
+  }
+
+  fetchStream(id) {
+    return new Promise(resolve => {
+      const stream = ytdl(id)
+        .once('data', () => {
+          stream.removeAllListeners('error')
+          resolve(stream)
+        })
+        .once('error', () => {
+          stream.removeAllListeners('response')
+          resolve(null)
+        })
+    })
   }
 
   async resolveStation(query) {
@@ -78,31 +93,47 @@ class YouTube extends RadioProvider {
       query = query.split('/').slice(-1)[0]
     }
 
-    if (!/^[a-zA-Z0-9-_]{24}$/.test(query)) query = await this.findChannelIDByName(query)
+    if (!/^[a-zA-Z0-9-_]{24}$/.test(query)) {
+      query = await this.findChannelIdByName(query)
+    }
     if (!query) return null
 
     const channelData = await this.fetchChannelData(query)
     const latestStreamID = await this.findLatestStreamID(query)
-    if (!latestStreamID) return this.createStation(this.formatOfflineStation(channelData))
+    if (!latestStreamID) {
+      return this.createStation(this.formatOfflineStation(channelData))
+    }
 
     const streamData = await this.fetchVideoData(latestStreamID)
-    const stream = ytdl(streamData.id)
-    return this.createStation(this.formatOnlineStation(channelData, streamData, stream))
+    const stream = await this.fetchStream(streamData.id)
+    if (!stream) return null
+
+    return this.createStation(
+      this.formatOnlineStation(channelData, streamData, stream)
+    )
   }
 
   async resolveStationFromVideo(query) {
     const videoID = YouTube.extractVideoID(query)
     const streamData = await this.fetchVideoData(videoID)
-    const channelData = await this.fetchChannelData(streamData.snippet.channelId)
+    const channelData = await this.fetchChannelData(
+      streamData.snippet.channelId
+    )
     const stream = ytdl(streamData.id)
-    return this.createStation(this.formatOnlineStation(channelData, streamData, stream))
+    return this.createStation(
+      this.formatOnlineStation(channelData, streamData, stream)
+    )
   }
 
   static extractVideoID(url) {
-    return url.match(/^.*(youtu.be\/|v\/|e\/|u\/\w+\/|embed\/|v=)([^#&?]*).*/)[2]
+    return url.match(
+      /^.*(youtu.be\/|v\/|e\/|u\/\w+\/|embed\/|v=)([^#&?]*).*/
+    )[2]
   }
 
-  static get keychainKey() { return 'googleAPIKey' }
+  static get keychainKey() {
+    return 'googleAPIKey'
+  }
 }
 
 module.exports = YouTube

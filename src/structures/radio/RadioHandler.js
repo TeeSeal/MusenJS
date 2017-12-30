@@ -25,14 +25,20 @@ class RadioHandler {
     })
 
     const resolved = await Promise.all(promises)
-    this.stations = new Collection(resolved.map(station => [station.id, station]))
+    this.stations = new Collection(
+      resolved.map(station => [station.id, station])
+    )
     this.initFuse()
     return this
   }
 
   initFuse() {
     const formatted = this.stations.map(station => {
-      return { id: station.id, name: station.name, provider: station.provider.name }
+      return {
+        id: station.id,
+        name: station.name,
+        provider: station.provider.name,
+      }
     })
 
     this.fuse = new Fuse(formatted, {

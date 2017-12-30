@@ -20,7 +20,9 @@ class Station {
     this.supervisor = null
   }
 
-  delete() { return this.handler.deleteStation(this) }
+  delete() {
+    return this.handler.deleteStation(this)
+  }
   toJSON() {
     return {
       id: this.id,
@@ -52,7 +54,9 @@ class Station {
 
   createBroadcast() {
     if (this.broadcast) this.broadcast.destroy()
-    this.broadcast = this.handler.client.createVoiceBroadcast().playArbitraryInput(this.stream)
+    this.broadcast = this.handler.client
+      .createVoiceBroadcast()
+      .playArbitraryInput(this.stream)
   }
 
   addConnection(connection) {
