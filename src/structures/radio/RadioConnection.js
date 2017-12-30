@@ -15,12 +15,14 @@ class RadioConnection {
 
   play(station) {
     if (!this.conn) return
-    if (this.station && this.station.id !== station.id) { this.station.removeConnection(this) }
+    if (this.station && this.station.id !== station.id) {
+      this.station.removeConnection(this)
+    }
     if (this.dispatcher) this.dispatcher.end()
     if (!station.broadcast) station.createBroadcast()
 
     this.station = station
-    this.dispatcher = this.conn.playBroadcast(station.broadcast)
+    this.dispatcher = this.conn.playBroadcast(station.broadcast, { volume: this._volume })
     station.addConnection(this)
     return this
   }
