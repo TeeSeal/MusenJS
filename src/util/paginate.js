@@ -1,9 +1,11 @@
-const { pageItemCount } = require('../../config.json')
+const { pageItemCount } = require('../config')
 
 module.exports = function paginate(arr, countOverwrite) {
   const count = countOverwrite || pageItemCount
-  return arr.map((item, index) => {
-    if (index % count !== 0) return null
-    return arr.slice(index, index + count)
-  }).filter(page => page)
+  return arr
+    .map((item, index) => {
+      if (index % count !== 0) return null
+      return arr.slice(index, index + count)
+    })
+    .filter(page => page)
 }

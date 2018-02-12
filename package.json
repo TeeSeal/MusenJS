@@ -1,11 +1,11 @@
 {
   "name": "musen",
-  "version": "0.3.2",
-  "description": "A discord bot.",
-  "main": "musen.js",
+  "version": "2.0.0",
+  "description": "The ultimate Discord music bot!",
+  "main": "index.js",
   "scripts": {
-    "start": "node musen.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/index.js",
+    "lint": "npx eslint ."
   },
   "repository": {
     "type": "git",
@@ -22,21 +22,22 @@
   },
   "homepage": "https://github.com/TeeSeal/Musen#readme",
   "dependencies": {
+    "axios": "^0.17.1",
     "common-tags": "^1.5.1",
-    "discord-akairo": "github:1computer1/discord-akairo",
-    "discord.js": "github:hydrabolt/discord.js",
+    "discord-akairo": "1computer1/discord-akairo",
+    "discord.js": "hydrabolt/discord.js",
     "fuse.js": "^3.2.0",
-    "logr": "github:teeseal/logr",
+    "logr": "teeseal/logr",
     "moment": "^2.19.3",
-    "moment-duration-format": "^1.3.0",
-    "node-fetch": "^1.7.3",
-    "opusscript": "0.0.4",
-    "sequelize": "^4.26.0",
+    "moment-duration-format": "^2.2.1",
+    "opusscript": "^0.0.6",
+    "pluralize": "^7.0.0",
+    "sequelize": "^4.28.7",
     "sqlite3": "^3.1.13",
-    "ws": "^3.3.2",
-    "ytdl-core": "^0.18.3"
+    "ytdl-core": "^0.20.1"
   },
   "devDependencies": {
+    "dotenv": "^5.0.0",
     "eslint": "^4.12.1"
   }
 }

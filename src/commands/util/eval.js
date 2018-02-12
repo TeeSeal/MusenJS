@@ -6,6 +6,7 @@ class EvalCommand extends Command {
   constructor() {
     super('eval', {
       aliases: ['eval'],
+      ownerOnly: true,
       description: 'Evaluate some code.',
       args: [
         {
@@ -34,7 +35,10 @@ class EvalCommand extends Command {
     const lang = getLang(evaled)
     let output = clean(evaled)
     if (output.includes(this.client.token)) {
-      output = output.replace(new RegExp(escapeRegExp(this.client.token), 'g'), '--- token was here ---')
+      output = output.replace(
+        new RegExp(escapeRegExp(this.client.token), 'g'),
+        '--- token was here ---'
+      )
     }
 
     if (noOutput) return
@@ -64,7 +68,9 @@ function clean(thing) {
     return line.length > 100 ? `${line.slice(0, 100)}...` : line
   })
 
-  while (output.length < 500 && lines[0] && output.split('\n').length < 21) output += `${lines.shift()}\n`
+  while (output.length < 500 && lines[0] && output.split('\n').length < 21) {
+    output += `${lines.shift()}\n`
+  }
   if (lines[0]) output += '. . .'
   return output
 }

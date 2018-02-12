@@ -1,5 +1,6 @@
 const { Inhibitor } = require('discord-akairo')
-const { getDBData } = require('../util/Util.js')
+const { getDBData } = require('../util')
+const db = require('../db')
 
 class DisabledInhibitor extends Inhibitor {
   constructor() {
@@ -7,16 +8,26 @@ class DisabledInhibitor extends Inhibitor {
   }
 
   exec(msg) {
-    const scopes = msg.guild ? ['globally', 'guild', 'channel'] : ['globally']
+    if (msg.author.id === this.client.user.id) return false
+    const scopes = ['globally']
+    if (msg.guild) scopes.push('guild', 'channel')
 
     for (const scope of scopes) {
-      const [table, id, formattedScope] = getDBData(msg, scope)
+      const { modelName, formattedScope, id } = getDBData(msg, scope)
+      const model = db[modelName]
+      const disabled
+        = modelName === 'Setting'
+          ? model.get('disabled')
+          : model.get(id, 'disabled')
 
-      if (this.client.db[table].get(id, 'disabled').includes(msg.util.command.id)) {
-        msg.util.error(`**${msg.util.command.id}** is disabled ${formattedScope}.`)
+      if (disabled.includes(msg.util.command.id)) {
+        msg.util.error(
+          `**${msg.util.command.id}** is disabled ${formattedScope}.`
+        )
         return true
       }
     }
+
     return false
   }
 }

@@ -1,5 +1,5 @@
 const { Listener } = require('discord-akairo')
-const { stripIndents } = require('../util/Util.js')
+const { stripIndents } = require('../util')
 const logr = require('logr')
 
 class ErrorListener extends Listener {

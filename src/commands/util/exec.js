@@ -20,11 +20,13 @@ class ExecCommand extends Command {
     const { command } = args
     if (!command) return msg.util.error('give me something to run.')
 
-    return execute(command).then(({ stdout, stderr }) => {
-      return msg.util.send(stderr || stdout, { code: true })
-    }).catch(err => {
-      return msg.util.send(err, { code: true })
-    })
+    return execute(command)
+      .then(({ stdout, stderr }) => {
+        return msg.util.send(stderr || stdout, { code: true })
+      })
+      .catch(err => {
+        return msg.util.send(err, { code: true })
+      })
   }
 }
 

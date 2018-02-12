@@ -1,5 +1,6 @@
 const { Inhibitor } = require('discord-akairo')
-const { getDBData } = require('../util/Util.js')
+const { getDBData } = require('../util')
+const db = require('../db')
 
 class BlacklistInhibitor extends Inhibitor {
   constructor() {
@@ -8,13 +9,22 @@ class BlacklistInhibitor extends Inhibitor {
 
   exec(msg) {
     if (msg.author.id === this.client.user.id) return false
-    const scopes = msg.guild ? ['globally', 'guild', 'channel'] : ['globally']
+    const scopes = ['globally']
+    if (msg.guild) scopes.push('guild', 'channel')
 
     for (const scope of scopes) {
-      const [table, id] = getDBData(msg, scope)
+      const { modelName, id } = getDBData(msg, scope)
+      const model = db[modelName]
+      const disabled
+        = modelName === 'Setting'
+          ? model.get('blacklist')
+          : model.get(id, 'blacklist')
 
-      if (this.client.db[table].get(id, 'blacklist').includes(msg.author.id)) return true
+      if (disabled.includes(msg.author.id)) {
+        return true
+      }
     }
+
     return false
   }
 }
