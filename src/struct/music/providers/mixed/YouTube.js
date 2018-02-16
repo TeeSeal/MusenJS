@@ -112,14 +112,14 @@ class YouTube extends MusicProvider {
     const opts = playable.live ? undefined : { filter: 'audioonly' }
     return new Promise(resolve => {
       const stream = ytdl(playable.id, opts)
-        .once('data', () => {
+        .once(playable.live ? 'data' : 'response', () => {
           playable.stream = stream
           stream.removeAllListeners('error')
           resolve(stream)
         })
         .once('error', () => {
           playable.stream = null
-          stream.removeAllListeners('data')
+          stream.removeAllListeners('response')
           resolve(null)
         })
     })
