@@ -1,13 +1,13 @@
 const MusicProvider = require('../../MusicProvider')
 
 class SoundCloud extends MusicProvider {
-  constructor(clientID) {
+  constructor() {
     super({
       baseURL: 'https://api.soundcloud.com/',
       params: { client_id: process.env.SOUNDCLOUD_CLIENT_ID }
     })
 
-    this.clientID = clientID
+    this.clientID = process.env.SOUNDCLOUD_CLIENT_ID
     this.aliases = ['soundcloud', 'sc']
     this.REGEXP = /^https:\/\/soundcloud\.com\//
   }
