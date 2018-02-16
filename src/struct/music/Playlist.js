@@ -1,181 +1,162 @@
 const { shuffle } = require('../../util')
-const Embed = require('../MusenEmbed')
+const { EventEmitter } = require('events')
 
-const embeds = {
-  outOfSongs: new Embed()
-    .addField('We\'re out of songs.', 'Better queue up some more!')
-    .setIcon(Embed.icons.CLEAR)
-    .setColor(Embed.colors.RED),
-
-  playing(song, volume) {
-    return new Embed()
-      .setTitle(song.title)
-      .setURL(song.url)
-      .addField(
-        'Now playing.',
-        `Duration: ${song.durationString} | Volume: ${volume}%`
-      )
-      .setAuthor(song.member)
-      .setIcon(Embed.icons.PLAY)
-      .setColor(Embed.colors.GREEN)
-  },
-
-  skipping(song) {
-    return new Embed()
-      .setTitle(song.title)
-      .setURL(song.url)
-      .addField('An issue occured playing this song.', 'Skipping it.')
-      .setAuthor(song.member)
-      .setIcon(Embed.icons.SKIP)
-      .setColor(Embed.colors.CYAN)
-  },
-}
-
-class Playlist {
-  constructor(msg, guildOptions, handler) {
+class Playlist extends EventEmitter {
+  constructor({ guild: { id }, channel }, guildOptions, handler) {
+    super()
+    this.id = id
     this.handler = handler
-    this.id = msg.guild.id
-    this.maxSongDuration = guildOptions.maxSongDuration * 60
-    this.songLimit = guildOptions.songLimit
+
     this.queue = []
-    this.channel = msg.channel
-    this.voiceChannel = msg.member.voiceChannel
-    this.song = null
+    this.channel = channel
+
+    this.playable = null
     this.connection = null
-    this.defaultVolume = this.convert(guildOptions.defaultVolume) || 0.5
-    this._volume = this.defaultVolume
     this.paused = false
+    this.stopped = false
+    this.started = false
+
+    this._volume = this.convertVolume(guildOptions.defaultVolume)
+    this.itemLimit = guildOptions.songLimit
   }
 
-  async connectAndPlay() {
-    this.connection = await this.voiceChannel.join()
-    this.play(this.queue.shift())
+  async connect(voiceChannel) {
+    this.connection = await voiceChannel.join()
+    return this
   }
 
-  filter(songs) {
+  play() {
+    this.playNext(this.queue.shift())
+    this.started = true
+    return this
+  }
+
+  filter(playables) {
     const removed = []
-    const filtered = songs.filter(song => {
-      if (song.member.id === song.member.client.ownerID) return true
+    const added = playables
 
-      if (song.duration > this.maxSongDuration * 6e4) {
-        removed.push({
-          song,
-          reason: `duration. (max. **${this.maxSongDuration / 60}** min.)`,
-        })
-        return false
-      }
-
-      return true
-    })
-
-    const diff = this.queue.length + filtered.length - this.songLimit
+    const diff = this.queue.length + added.length - this.itemLimit
     if (diff > 0) {
-      for (const song of filtered.splice(filtered.length - diff, diff)) {
+      for (const playable of added.splice(added.length - diff, diff)) {
         removed.push({
-          song,
-          reason: `playlist song limit reached. (max. **${
-            this.songLimit
-          }** songs)`,
+          playable,
+          reason: `playlist item limit reached. (max. **${
+            this.itemLimit
+          }** items)`
         })
       }
     }
 
-    return [filtered, removed]
+    return { added, removed }
   }
 
-  async play(song) {
-    if (!song) {
-      this.channel.send(embeds.outOfSongs)
+  async playNext(playable) {
+    if (this.stopped) return
+
+    if (!playable) {
+      this.emit('out')
       return this.destroy()
     }
 
-    this.song = song
-    this._volume = this.convert(song.volume) || this.defaultVolume
-    this.channel.send(embeds.playing(song, this.volume))
+    this.playable = playable
+    this._volume = this.convertVolume(playable.volume) || this.defaultVolume
 
-    const dispatcher = await song.play(this.connection, {
-      volume: this._volume,
+    const dispatcher = await playable.play(this.connection, {
+      volume: this._volume
     })
 
     if (!dispatcher) {
-      this.channel.send(embeds.skipping(song))
-      return setTimeout(() => this.play(this.queue.shift()), 10)
+      this.emit('unavailable', playable)
+      this.playNext(this.queue.shift())
     }
 
-    dispatcher.on('end', reason => {
-      if (reason === 'stop') return this.destroy()
-      return setTimeout(() => this.play(this.queue.shift()), 10)
+    this.emit('playing', playable)
+    dispatcher.on('finish', () => {
+      this.emit('end', playable)
+      return setTimeout(() => this.playNext(this.queue.shift()), 10)
     })
   }
 
-  add(songs) {
-    const [added, removed] = this.filter(songs)
-    this.queue.push(...added)
-
-    if (!this.song) {
-      if (added.length === 0) this.destroy()
-      else this.connectAndPlay()
-    }
-
-    return [added, removed]
+  add(playables) {
+    const result = this.filter(playables)
+    this.queue.push(...result.added)
+    return result
   }
 
   shuffle() {
     shuffle(this.queue)
+    return this.queue
   }
 
   pause() {
-    this.song.dispatcher.pause()
+    this.playable.dispatcher.pause()
     this.paused = true
+    this.emit('pause')
+    return this
   }
 
   resume() {
-    this.song.dispatcher.resume()
+    this.playable.dispatcher.resume()
     this.paused = false
+    this.emit('resume')
+    return this
   }
 
   setVolume(volume) {
-    this._volume = this.convert(volume)
-    this.song.dispatcher.setVolume(this._volume)
+    this._volume = this.convertVolume(volume)
+    this.playable.dispatcher.setVolume(this._volume)
+    this.emit('volume', this.volume)
+    return this.volume
   }
 
   fadeVolume(volume) {
     let current = this._volume
-    this._volume = this.convert(volume)
+    this._volume = this.convertVolume(volume)
     const modifier = current < this._volume ? 0.05 : -0.05
 
     return new Promise(resolve => {
       const interval = setInterval(() => {
         current += modifier
-        this.song.dispatcher.setVolume(current)
+        this.playable.dispatcher.setVolume(current)
 
         if (current > this._volume - 0.05 && current < this._volume + 0.05) {
-          this.song.dispatcher.setVolume(this._volume)
+          this.playable.dispatcher.setVolume(this._volume)
           clearInterval(interval)
-          setTimeout(resolve, 800)
+
+          setTimeout(() => {
+            this.emit('volume', this.volume)
+            resolve(this.volume)
+          }, 800)
         }
       }, 35)
     })
   }
 
-  async skip() {
-    await this.fadeVolume(0)
-    this.song.dispatcher.end('skip')
+  skip() {
+    const playable = this.playable
+    playable.dispatcher.end('skip')
+    this.emit('skip', playable)
+    return playable
   }
 
   stop() {
     this.queue = []
-    this.song.dispatcher.end('stop')
+    this.stopped = true
+    this.playable.dispatcher.end('stop')
+    this.destroy()
+    return this
   }
 
   destroy() {
-    this.voiceChannel.leave()
+    if (this.connection) this.connection.channel.leave()
     this.handler.playlists.delete(this.id)
+    this.emit('destroy')
   }
 
-  convert(volume) {
+  convertVolume(volume) {
     return volume / 50
   }
+
   get volume() {
     return this._volume * 50
   }

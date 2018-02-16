@@ -7,35 +7,35 @@ module.exports = (sequelize, DataTypes) => {
     {
       id: {
         type: DataTypes.STRING,
-        primaryKey: true,
+        primaryKey: true
       },
       prefix: {
         type: DataTypes.STRING,
-        defaultValue: prefix,
+        defaultValue: prefix
       },
       blacklist: {
         type: DataTypes.JSON,
-        defaultValue: [],
+        defaultValue: []
       },
       disabled: {
         type: DataTypes.JSON,
-        defaultValue: [],
+        defaultValue: []
       },
       defaultVolume: {
         type: DataTypes.INTEGER,
-        defaultValue: 25,
+        defaultValue: 25
       },
       maxVolume: {
         type: DataTypes.INTEGER,
-        defaultValue: 100,
+        defaultValue: 100
       },
       maxSongDuration: {
         type: DataTypes.INTEGER,
-        defaultValue: 15,
+        defaultValue: 15
       },
       songLimit: {
         type: DataTypes.INTEGER,
-        defaultValue: 100,
+        defaultValue: 100
       },
       eightBall: {
         type: DataTypes.JSON,
@@ -49,17 +49,17 @@ module.exports = (sequelize, DataTypes) => {
           'Nuh-huh.',
           'Very doubtful.',
           'Nah.',
-          'My sources say no.',
-        ],
-      },
+          'My sources say no.'
+        ]
+      }
     },
     {
       hooks: {
         afterSync() {
           cacheAll.call(this)
           setDefaults.call(this)
-        },
-      },
+        }
+      }
     }
   )
 

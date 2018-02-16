@@ -5,7 +5,7 @@ class CommandFinishedListener extends Listener {
   constructor() {
     super('commandFinished', {
       emitter: 'commandHandler',
-      event: 'commandFinished',
+      event: 'commandFinished'
     })
   }
 

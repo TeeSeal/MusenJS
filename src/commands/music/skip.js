@@ -10,7 +10,7 @@ class SkipCommand extends Command {
     super('skip', {
       aliases: ['skip'],
       channelRestriction: 'guild',
-      description: 'Skip the currently palying song.',
+      description: 'Skip the currently palying song.'
     })
   }
 
@@ -24,22 +24,24 @@ class SkipCommand extends Command {
       )
     }
 
-    const { song } = playlist
+    const { playable } = playlist
 
     if (
       msg.member.permissions.has('MANAGE_GUILD')
-      || song.member.id === msg.member.id
+      || playable.member.id === msg.member.id
       || msg.member.voiceChannel.members.size === 2
     ) {
-      return new Embed(msg.channel)
-        .setTitle(song.title)
+
+      await playlist.fadeVolume(0)
+      new Embed(msg.channel)
+        .setTitle(playable.title)
         .addField('✅ Skipped.', '\u200b')
-        .setURL(song.url)
+        .setURL(playable.url)
         .setAuthor(msg.member)
         .setIcon(Embed.icons.SKIP)
         .setColor(Embed.colors.CYAN)
         .send()
-        .then(() => playlist.skip())
+      return playlist.skip()
     }
 
     if (voteSkips.has(msg.guild.id)) {
@@ -53,13 +55,13 @@ class SkipCommand extends Command {
     const votesNeeded = Math.ceil(members.size / 2)
 
     const embed = await new Embed(msg.channel)
-      .setTitle(song.title)
+      .setTitle(playable.title)
       .addField(
         'VOTESKIP',
         `Click the ✅ to vote.\n${votesNeeded
           + 1} votes needed.\nVote will end in 30 seconds.`
       )
-      .setURL(song.url)
+      .setURL(playable.url)
       .setAuthor(msg.member)
       .setIcon(Embed.icons.SKIP)
       .setColor(Embed.colors.CYAN)
@@ -70,7 +72,7 @@ class SkipCommand extends Command {
       { '✅': 'yes' },
       {
         users: members.map(m => m.id),
-        time: 3e4,
+        time: 3e4
       }
     )
 
@@ -78,7 +80,7 @@ class SkipCommand extends Command {
       if (poll.votes.get('yes').size >= votesNeeded) poll.stop()
     })
 
-    poll.once('end', votes => {
+    poll.once('end', async votes => {
       const success = votes.get('yes').size >= votesNeeded
       voteSkips.delete(msg.guild.id)
 
@@ -86,7 +88,10 @@ class SkipCommand extends Command {
         .clearFields()
         .addField(success ? '✅ Skipped.' : '❌ Voteskip failed.', '\u200b')
 
-      if (success) playlist.skip()
+      if (success) {
+        await playlist.fadeVolume(0)
+        playlist.skip()
+      }
       return embed.edit()
     })
   }

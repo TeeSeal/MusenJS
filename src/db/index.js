@@ -8,7 +8,7 @@ const sequelize = new Sequelize({
   dialect: 'sqlite',
   logging: false,
   storage: 'src/db/database.sqlite',
-  operatorsAliases: Sequelize.Op,
+  operatorsAliases: Sequelize.Op
 })
 
 const models = fs.readdirSync(path.join(__dirname, 'models'))

@@ -7,7 +7,7 @@ class ResumeCommand extends Command {
     super('resume', {
       aliases: ['resume'],
       channelRestriction: 'guild',
-      description: 'Resume paused playback.',
+      description: 'Resume paused playback.'
     })
   }
 
@@ -23,11 +23,11 @@ class ResumeCommand extends Command {
     if (!playlist.paused) return msg.util.error('playback is not paused.')
 
     playlist.resume()
-    const { song } = playlist
+    const { playable } = playlist
 
     return new Embed(msg.channel)
-      .setTitle(song.title)
-      .setURL(song.url)
+      .setTitle(playable.title)
+      .setURL(playable.url)
       .setAuthor(msg.member)
       .addField('Playback resumed.', '\u200b')
       .setIcon(Embed.icons.PLAY)

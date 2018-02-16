@@ -9,7 +9,7 @@ async function afterSync() {
 
     const [row] = await this.findCreateFind({
       where: { name },
-      defaults: { name, value: stringValue, type: typeof value },
+      defaults: { name, value: stringValue, type: typeof value }
     })
 
     this.collection.set(row[this.pk], row)
@@ -22,13 +22,13 @@ module.exports = (sequelize, DataTypes) => {
     {
       name: {
         type: DataTypes.STRING,
-        primaryKey: true,
+        primaryKey: true
       },
       value: DataTypes.STRING,
-      type: DataTypes.STRING,
+      type: DataTypes.STRING
     },
     {
-      hooks: { afterSync },
+      hooks: { afterSync }
     }
   )
 
@@ -52,7 +52,7 @@ module.exports = (sequelize, DataTypes) => {
         res[setting.name] = setting.parsedValue()
       }
       return res
-    },
+    }
   })
 
   return Setting

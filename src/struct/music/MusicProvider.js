@@ -1,14 +1,15 @@
 const Collection = require('../Collection')
 const HTTPClient = require('../HTTPClient')
-const fs = require('fs')
-const path = require('path')
-
-const providersPath = path.join(__dirname, 'providers')
+const Playable = require('./Playable')
+const { join } = require('path')
+const { recursiveReadDirSync } = require('../../util')
 
 class MusicProvider extends HTTPClient {
-  resolveResource() {
+  resolvePlayables() {
     throw new Error('not implemented.')
   }
+
+  static get Playable() { return Playable }
 
   static get REGEXP() {
     throw new Error('not implemented.')
@@ -19,8 +20,9 @@ class MusicProvider extends HTTPClient {
   }
 
   static loadAll() {
-    const providers = fs.readdirSync(providersPath).map(file => {
-      const Provider = require(path.join(providersPath, file))
+    const providersDir = join(__dirname, 'providers')
+    const providers = recursiveReadDirSync(providersDir).map(file => {
+      const Provider = require(file)
       return new Provider()
     })
 

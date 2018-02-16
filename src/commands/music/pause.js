@@ -7,7 +7,7 @@ class PauseCommand extends Command {
     super('pause', {
       aliases: ['pause'],
       channelRestriction: 'guild',
-      description: 'Pause sound playback',
+      description: 'Pause sound playback'
     })
   }
 
@@ -23,12 +23,12 @@ class PauseCommand extends Command {
     if (playlist.paused) return msg.util.error('playback is already paused.')
 
     playlist.pause()
-    const { song } = playlist
+    const { playable } = playlist
 
     return new Embed(msg.channel)
-      .setTitle(song.title)
+      .setTitle(playable.title)
       .addField('Playback paused.', '\u200b')
-      .setURL(song.url)
+      .setURL(playable.url)
       .setAuthor(msg.member)
       .setIcon(Embed.icons.PAUSE)
       .setColor(Embed.colors.YELLOW)

@@ -8,10 +8,10 @@ class HelpCommand extends Command {
       args: [
         {
           id: 'command',
-          type: 'command',
-        },
+          type: 'command'
+        }
       ],
-      description: 'Get help.',
+      description: 'Get help.'
     })
   }
 

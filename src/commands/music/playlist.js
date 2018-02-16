@@ -14,28 +14,25 @@ class PlaylistCommand extends Command {
           match: 'prefix',
           prefix: ['page=', 'p='],
           type: parserInRange(0),
-          default: 0,
+          default: 0
         },
         {
           id: 'name',
-          type: 'lowercase',
-        },
+          type: 'lowercase'
+        }
       ],
-      description: 'Shows the current playlist.',
+      description: 'Shows the current playlist.'
     })
   }
 
   exec(msg, { page }) {
     const playlist = Music.playlists.get(msg.guild.id)
-    const [song, queue] = playlist
-      ? [playlist.song, playlist.queue]
-      : [null, null]
-
     if (!playlist) {
       return msg.util.error('nothing is currently playing.')
     }
 
-    const items = [`**Now playing:** ${song.linkString}`].concat(
+    const { playable, queue } = playlist
+    const items = [`**Now playing:** ${playable.linkString}`].concat(
       queue.map(s => `• ${s.linkString}`)
     )
 

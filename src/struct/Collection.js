@@ -5,12 +5,12 @@ class Collection extends Map {
     Object.defineProperty(this, '_array', {
       value: null,
       writable: true,
-      configurable: true,
+      configurable: true
     })
     Object.defineProperty(this, '_keyArray', {
       value: null,
       writable: true,
-      configurable: true,
+      configurable: true
     })
   }
 

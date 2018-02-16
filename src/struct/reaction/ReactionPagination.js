@@ -19,7 +19,7 @@ class ReactionPagination extends EventEmitter {
       this.message,
       {
         '⬅': 'left',
-        '➡': 'right',
+        '➡': 'right'
       },
       this.opts
     )

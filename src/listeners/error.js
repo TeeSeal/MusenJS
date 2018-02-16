@@ -6,7 +6,7 @@ class ErrorListener extends Listener {
   constructor() {
     super('error', {
       emitter: 'commandHandler',
-      event: 'error',
+      event: 'error'
     })
   }
 

@@ -1,4 +1,4 @@
-const MusicProvider = require('../MusicProvider')
+const MusicProvider = require('../../MusicProvider')
 const moment = require('moment')
 const ytdl = require('ytdl-core')
 
@@ -6,44 +6,47 @@ class YouTube extends MusicProvider {
   constructor() {
     super({
       baseURL: 'https://www.googleapis.com/youtube/v3/',
-      params: { key: process.env.GOOGLE_API_KEY },
+      params: { key: process.env.GOOGLE_API_KEY }
     })
 
     this.aliases = ['youtube', 'yt', 'tube']
     this.REGEXP = /(https?:\/\/)?(www\.)?youtu(be\.com|\.be)\//
   }
 
-  formatSong(video) {
+  generatePlayable(video, opts) {
     const duration = moment
       .duration(video.contentDetails.duration)
       .asMilliseconds()
     const url = `https://www.youtube.com/watch?v=${video.id}`
-    return {
-      id: video.id,
-      title: video.snippet.title,
-      thumbnail: video.snippet.thumbnails.maxres
-        ? video.snippet.thumbnails.maxres.url
-        : video.snippet.thumbnails.high.url,
-      duration,
-      url,
+    return new MusicProvider.Playable(
+      {
+        id: video.id,
+        title: video.snippet.title,
+        thumbnail: video.snippet.thumbnails.maxres
+          ? video.snippet.thumbnails.maxres.url
+          : video.snippet.thumbnails.high.url,
+        duration,
+        url,
 
-      fetchStream() {
-        if (this.stream) return this.stream
-        return new Promise(resolve => {
-          const stream = ytdl(this.url, { filter: 'audioonly' })
-            .once('response', () => {
-              this.stream = stream
-              stream.removeAllListeners('error')
-              resolve(stream)
-            })
-            .once('error', () => {
-              this.stream = null
-              stream.removeAllListeners('response')
-              resolve(null)
-            })
-        })
+        fetchStream() {
+          if (this.stream) return this.stream
+          return new Promise(resolve => {
+            const stream = ytdl(this.url, { filter: 'audioonly' })
+              .once('response', () => {
+                this.stream = stream
+                stream.removeAllListeners('error')
+                resolve(stream)
+              })
+              .once('error', () => {
+                this.stream = null
+                stream.removeAllListeners('response')
+                resolve(null)
+              })
+          })
+        }
       },
-    }
+      opts
+    )
   }
 
   getByID(id) {
@@ -52,7 +55,7 @@ class YouTube extends MusicProvider {
         id,
         fields:
           'items(id,snippet(title,thumbnails(maxres(url),high(url))),contentDetails(duration))',
-        part: 'snippet,contentDetails',
+        part: 'snippet,contentDetails'
       }
     })
   }
@@ -63,7 +66,7 @@ class YouTube extends MusicProvider {
         playlistId,
         maxResults: 50,
         fields: 'items(contentDetails(videoId))',
-        part: 'contentDetails',
+        part: 'contentDetails'
       }
     })
   }
@@ -74,7 +77,7 @@ class YouTube extends MusicProvider {
         q: query,
         maxResults: 1,
         part: 'id',
-        type: 'video',
+        type: 'video'
       }
     })
   }
@@ -91,7 +94,7 @@ class YouTube extends MusicProvider {
     if (!query) return null
 
     const { data: { items: [video] } } = await this.getByID(query)
-    return [this.formatSong(video)]
+    return [video]
   }
 
   async resolvePlaylist(query) {
@@ -99,22 +102,24 @@ class YouTube extends MusicProvider {
       query = YouTube.extractPlaylistID(query)
     }
 
-    const { data: { items: playlistItems } } = await this.getPlaylistItems(query)
-    if (!playlistItems) return null
+    const { data: { items: playlistItems } } = await this.getPlaylistItems(
+      query
+    )
+    if (!playlistItems) return this.resolveVideo(query)
 
     const id = playlistItems.map(video => video.contentDetails.videoId).join()
-    const { data: { items: videos } } = await this.getByID(id)
-
-    return videos.map(this.formatSong)
+    return this.getByID(id).then(res => res.data.items)
   }
 
-  async resolveResource(query) {
-    if (query.includes('/playlist?') || /^[a-zA-Z0-9-_]{12,}$/.test(query)) {
-      const result = await this.resolvePlaylist(query)
-      if (result) return result
-    }
+  async resolvePlayables(query, opts) {
+    const videos =
+      query.includes('/playlist?') || /^[a-zA-Z0-9-_]{12,}$/.test(query)
+        ? await this.resolvePlaylist(query)
+        : await this.resolveVideo(query)
 
-    return this.resolveVideo(query)
+    if (!videos) return null
+
+    return videos.map(video => this.generatePlayable(video, opts))
   }
 
   static extractVideoID(url) {
@@ -125,10 +130,6 @@ class YouTube extends MusicProvider {
 
   static extractPlaylistID(url) {
     return url.match(/list=([\w\-_]+)/)[1]
-  }
-
-  static get keychainKey() {
-    return 'googleAPIKey'
   }
 }
 

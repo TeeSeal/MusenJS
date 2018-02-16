@@ -16,13 +16,13 @@ class RepeatCommand extends Command {
             if (num < 1) return 1
             if (num > 100) return 100
             return num
-          },
+          }
         },
         {
           id: 'end',
           match: 'flag',
-          prefix: '-end',
-        },
+          prefix: '-end'
+        }
       ],
       description: stripIndents`
         Replay the currently playing track.
@@ -35,7 +35,7 @@ class RepeatCommand extends Command {
         **Usage:**
         \`repeat 5\` => will repeat the currently playing track 5 times.
         \`repeat 5 -end\` => will add the currently playing track to the end of the queue 5 times.
-      `,
+      `
     })
   }
 
@@ -53,7 +53,7 @@ class RepeatCommand extends Command {
       times = playlist.songLimit - playlist.queue.length - 1
     }
 
-    const arr = Array(times).fill(playlist.song)
+    const arr = Array(times).fill(playlist.playable)
     playlist.queue = end
       ? playlist.queue.concat(arr)
       : arr.concat(playlist.queue)

@@ -9,9 +9,9 @@ class ReloadCommand extends Command {
       args: [
         {
           id: 'command',
-          type: 'command',
-        },
-      ],
+          type: 'command'
+        }
+      ]
     })
   }
 

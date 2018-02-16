@@ -6,7 +6,7 @@ const reserved = ['enable']
 const permCheck = {
   globally: member => member.id === member.client.ownerID,
   guild: member => member.permissions.has('MANAGE_GUILD'),
-  channel: member => member.permissions.has('MANAGE_CHANNLES'),
+  channel: member => member.permissions.has('MANAGE_CHANNLES')
 }
 
 class DisableCommand extends Command {
@@ -27,13 +27,13 @@ class DisableCommand extends Command {
             const result = this.handler.findCommand(word)
             if (result) return result
             return this.handler.categories.get(word)
-          },
+          }
         },
         {
           id: 'scope',
           type: ['globally', 'guild', 'channel'],
-          default: 'guild',
-        },
+          default: 'guild'
+        }
       ],
       description: stripIndents`
         Disable a command.
@@ -45,7 +45,7 @@ class DisableCommand extends Command {
         \`disable ping\` => disables the ping command in the guild.
         \`disable ping channel\` => disables the ping command in the channel.
         \`disable !music\` => disables all music commands in the guild.
-      `,
+      `
     })
   }
 

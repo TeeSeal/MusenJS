@@ -41,7 +41,7 @@ class MusenEmbed extends PaginatedEmbed {
       GOLD: 16758861,
       ORANGE: 16029762,
       SCARLET: 13369446,
-      WHITE: 15921906,
+      WHITE: 15921906
     }
   }
 
@@ -58,7 +58,7 @@ class MusenEmbed extends PaginatedEmbed {
       VOLUME_UP: 'volumeUp.png',
       VOLUME_DOWN: 'volumeDown.png',
       POLL: 'poll.png',
-      STOP: 'stop.png',
+      STOP: 'stop.png'
     }
   }
 }

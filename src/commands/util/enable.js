@@ -5,7 +5,7 @@ const db = require('../../db')
 const permCheck = {
   globally: member => member.id === member.client.ownerID,
   guild: member => member.permissions.has('MANAGE_GUILD'),
-  channel: member => member.permissions.has('MANAGE_CHANNLES'),
+  channel: member => member.permissions.has('MANAGE_CHANNLES')
 }
 
 class EnableCommand extends Command {
@@ -26,13 +26,13 @@ class EnableCommand extends Command {
             const result = this.handler.findCommand(word)
             if (result) return result
             return this.handler.categories.get(word)
-          },
+          }
         },
         {
           id: 'scope',
           type: ['globally', 'guild', 'channel'],
-          default: 'guild',
-        },
+          default: 'guild'
+        }
       ],
       description: stripIndents`
         Enable a disabled command.
@@ -44,7 +44,7 @@ class EnableCommand extends Command {
         \`enable ping\` => enables the ping command in the guild.
         \`enable ping channel\` => enables the ping command in the channel.
         \`enable !music\` => enables all music commands in the guild.
-      `,
+      `
     })
   }
 

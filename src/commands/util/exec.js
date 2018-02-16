@@ -10,9 +10,9 @@ class ExecCommand extends Command {
       args: [
         {
           id: 'command',
-          match: 'rest',
-        },
-      ],
+          match: 'rest'
+        }
+      ]
     })
   }
 

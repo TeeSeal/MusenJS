@@ -7,7 +7,7 @@ const colors = {
   CYAN: 6750207,
   GOLD: 16758861,
   ORANGE: 16029762,
-  SCARLET: 13369446,
+  SCARLET: 13369446
 }
 
 module.exports = colors

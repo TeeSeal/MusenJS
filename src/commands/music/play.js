@@ -15,13 +15,13 @@ class PlayCommand extends Command {
         {
           id: 'rand',
           match: 'flag',
-          prefix: '-shuffle',
+          prefix: '-shuffle'
         },
         {
           id: 'queries',
           match: 'rest',
           type: line => line.split(';').map(q => q.trim()),
-          default: [],
+          default: []
         },
         {
           id: 'volume',
@@ -31,7 +31,8 @@ class PlayCommand extends Command {
             const parse = parserInRange(0, Guild.get(msg.guild.id).maxVolume)
             return parse(word)
           },
-        },
+          default: msg => Guild.get(msg.guild.id).defaultVolume
+        }
       ],
       description: stripIndents`
         Play some music.
@@ -59,20 +60,20 @@ class PlayCommand extends Command {
 
         You may also input multiple queries in a single command by separating them with \`;\`.
         Example: \`play <YOUTUBE_VIDEO>; <SOUNDCLOUD_PLAYLIST>; some search query; other search query ~soundcloud\`
-      `,
+      `
     })
   }
 
   async exec(msg, { queries, rand, volume }) {
     if (queries.length === 0) {
-      return msg.util.error('give me something to look for, yo..')
+      return msg.util.error('give me something to look for.')
     }
     if (!msg.member.voiceChannel) {
       return msg.util.error('you need to be in a voice channel.')
     }
     if (
-      msg.guild.me.voiceChannel
-      && msg.member.voiceChannel.id !== msg.guild.me.voiceChannel.id
+      msg.guild.me.voiceChannel &&
+      msg.member.voiceChannel.id !== msg.guild.me.voiceChannel.id
     ) {
       return msg.util.error(
         'you have to be in the voice channel I\'m currently in.'
@@ -82,18 +83,19 @@ class PlayCommand extends Command {
     const guildOptions = Guild.get(msg.guild.id)
     const playlist = Music.getPlaylist(msg, guildOptions)
 
-    const songs = await Music.resolveSongs(queries, {
+    const playables = await Music.resolvePlayables(queries, {
       member: msg.member,
-      volume,
+      volume
     })
-    if (!songs) return msg.util.error('couldn\'t find resource.')
-    if (rand) shuffle(songs)
 
-    const [added, removed] = playlist.add(songs)
+    if (!playables) return msg.util.error('couldn\'t find resource.')
+    if (rand) shuffle(playables)
+    const { added, removed } = playlist.add(playables)
 
     if (removed.length) {
       const items = removed.map(
-        obj => `• ${obj.song.linkString}\n**Reason:** ${obj.reason}`
+        ({ playable, reason }) =>
+          `• ${playable.formattedTitle}\n**Reason:** ${reason}`
       )
 
       await new Embed(msg.channel)
@@ -105,12 +107,12 @@ class PlayCommand extends Command {
         .send()
     }
 
-    if (added.length === 0) {
+    if (!added.length) {
+      playlist.destroy()
       return msg.util.error('nothing was added to the playlist.')
     }
 
-    const items = added.map(song => `• ${song.linkString}`)
-
+    const items = added.map(playable => `• ${playable.formattedTitle}`)
     const embed = new Embed(msg.channel)
       .setTitle('Added to playlist:')
       .setDescription(items)
@@ -120,7 +122,45 @@ class PlayCommand extends Command {
 
     if (added.length === 1) embed.setImage(added[0].thumbnail)
 
-    return embed.send()
+    await embed.send()
+
+    if (!playlist.started) this.attachEventHandlers(playlist, msg.channel)
+    await playlist.connect(msg.member.voiceChannel)
+    return playlist.play()
+  }
+
+  attachEventHandlers(playlist, channel) {
+    playlist
+      .on('playing', playable =>
+        new Embed(channel)
+          .setTitle(playable.title)
+          .setURL(playable.url)
+          .addField(
+            'Now playing.',
+            `Duration: ${playable.durationString} | Volume: ${playable.volume}%`
+          )
+          .setAuthor(playable.member)
+          .setIcon(Embed.icons.PLAY)
+          .setColor(Embed.colors.GREEN)
+          .send()
+      )
+      .on('out', () =>
+        new Embed(channel)
+          .addField('We\'re out of songs.', 'Better queue up some more!')
+          .setIcon(Embed.icons.CLEAR)
+          .setColor(Embed.colors.RED)
+          .send()
+      )
+      .on('unavailable', playable =>
+        new Embed(channel)
+          .setTitle(playable.title)
+          .setURL(playable.url)
+          .addField('An issue occured playing this playable.', 'Skipping it.')
+          .setAuthor(playable.member)
+          .setIcon(Embed.icons.SKIP)
+          .setColor(Embed.colors.CYAN)
+          .send()
+      )
   }
 }
 

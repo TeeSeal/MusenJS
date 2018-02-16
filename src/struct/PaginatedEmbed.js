@@ -137,7 +137,7 @@ class PaginatedEmbed extends MessageEmbed {
 
     new ReactionPagination(this.message, this.pagination.items, {
       current: this.pagination.page,
-      users: this.users,
+      users: this.users
     })
       .on('switch', (page, number) => {
         this.changePage(page, number)
@@ -155,7 +155,7 @@ class PaginatedEmbed extends MessageEmbed {
     if (Array.isArray(this._description)) {
       this.pagination = PaginatedEmbed.parsePagination({
         items: this._description,
-        page: this.page,
+        page: this.page
       })
       return
     }
@@ -168,13 +168,13 @@ class PaginatedEmbed extends MessageEmbed {
       maxLength: this.textLimit,
       char: ' ',
       append: '...',
-      prepend: '...',
+      prepend: '...'
     })
 
     this.pagination = PaginatedEmbed.parsePagination({
       items: chunks,
       page: this.page,
-      by: 1,
+      by: 1
     })
   }
 
@@ -193,7 +193,7 @@ class PaginatedEmbed extends MessageEmbed {
     this.pagination = PaginatedEmbed.parsePagination({
       items: this._fields,
       page: this.page,
-      by: this.fieldLimit,
+      by: this.fieldLimit
     })
   }
 
@@ -211,7 +211,7 @@ class PaginatedEmbed extends MessageEmbed {
     if (page >= paginated.length) page = paginated.length - 1
     const result = {
       totalSize: opts.items.length,
-      page,
+      page
     }
 
     result.type = Array.isArray(items[0]) ? 'fields' : 'description'

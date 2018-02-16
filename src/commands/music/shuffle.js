@@ -7,7 +7,7 @@ class ShuffleCommand extends Command {
     super('shuffle', {
       aliases: ['shuffle'],
       channelRestriction: 'guild',
-      description: 'Shuffle the current playlist.',
+      description: 'Shuffle the current playlist.'
     })
   }
 

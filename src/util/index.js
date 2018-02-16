@@ -1,5 +1,6 @@
 const tags = require('common-tags')
-const path = require('path')
+const fs = require('fs')
+const { join } = require('path')
 
 const Color = require('./Color')
 const paginate = require('./paginate')
@@ -9,18 +10,14 @@ class Util {
     throw new Error('this class may not be instantiated.')
   }
 
-  static get rootDir() {
-    return __dirname
-      .split(path.sep)
-      .slice(0, -1)
-      .join(path.sep)
-  }
   static get COLOR() {
     return Color
   }
+
   static get paginate() {
     return paginate
   }
+
   static capitalize(string) {
     return string[0].toUpperCase() + string.slice(1)
   }
@@ -31,13 +28,13 @@ class Util {
       guild: {
         modelName: 'Guild',
         formattedScope: 'in this guild',
-        id: msg.guild.id,
+        id: msg.guild.id
       },
       channel: {
         modelName: 'Channel',
         formattedScope: 'in this channel',
-        id: msg.channel.id,
-      },
+        id: msg.channel.id
+      }
     }[scope]
   }
 
@@ -62,6 +59,27 @@ class Util {
     }
 
     return array
+  }
+
+  static flatten(arr, depth = 0) {
+    return depth != 1
+      ? arr.reduce(
+        (a, v) => a.concat(Array.isArray(v) ? Util.flatten(v, depth - 1) : v),
+        []
+      )
+      : arr.reduce((a, v) => a.concat(v), [])
+  }
+
+  static recursiveReadDirSync(path) {
+    const files = fs.readdirSync(path)
+
+    return Util.flatten(
+      files.map(file =>
+        fs.statSync(join(path, file)).isDirectory()
+          ? Util.recursiveReadDirSync(join(path, file))
+          : join(path, file)
+      )
+    )
   }
 
   static deepFreeze(obj) {
@@ -91,5 +109,5 @@ class Util {
 module.exports = new Proxy(Util, {
   get: (target, name) => {
     return name in target ? target[name] : tags[name]
-  },
+  }
 })

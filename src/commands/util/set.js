@@ -14,26 +14,26 @@ class SetCommand extends Command {
           id: 'maxSongDuration',
           match: 'prefix',
           prefix: ['duration=', 'length=', 'd='],
-          type: parserInRange(1, 240),
+          type: parserInRange(1, 240)
         },
         {
           id: 'defaultVolume',
           match: 'prefix',
           prefix: ['volume=', 'vol='],
-          type: parserInRange(1, 100),
+          type: parserInRange(1, 100)
         },
         {
           id: 'maxVolume',
           match: 'prefix',
           prefix: ['maxVolume=', 'maxVol=', 'mv='],
-          type: parserInRange(1, 100),
+          type: parserInRange(1, 100)
         },
         {
           id: 'songLimit',
           match: 'prefix',
           prefix: ['songLimit=', 'songs=', 'maxSongs=', 'sl='],
-          type: parserInRange(1, 100),
-        },
+          type: parserInRange(1, 100)
+        }
       ],
       description: stripIndents`
         Set some default values for the guild.
@@ -46,7 +46,7 @@ class SetCommand extends Command {
         **Usage:**
         \`set duration=20 volume=30 maxVolume=70\` => sets the values.
         \`set duration=20 v=30 mv=70\` => shortcuts.
-      `,
+      `
     })
   }
 
@@ -58,7 +58,7 @@ class SetCommand extends Command {
 
     const {
       defaultVolume: dbDefaultVolume,
-      maxVolume: dbMaxVolume,
+      maxVolume: dbMaxVolume
     } = Guild.get(msg.guild.id)
     const playlist = Music.playlists.get(msg.guild.id)
     const obj = {}

@@ -1,5 +1,5 @@
 const { Command } = require('discord-akairo')
-const { stripIndents } = require('../../util')
+const { stripIndents, parserInRange } = require('../../util')
 const Embed = require('../../struct/MusenEmbed')
 const Music = require('../../struct/music')
 const { Guild } = require('../../db')
@@ -13,14 +13,10 @@ class VolumeCommand extends Command {
         {
           id: 'newVolume',
           type(word, msg) {
-            if (!word || isNaN(word)) return null
-            const num = parseInt(word)
-            const { maxVolume } = Guild.get(msg.guild.id)
-            if (num < 1) return 1
-            if (num > maxVolume) return maxVolume
-            return num
-          },
-        },
+            const parse = parserInRange(0, Guild.get(msg.guild.id).maxVolume)
+            return parse(word)
+          }
+        }
       ],
       description: stripIndents`
         Change playback volume.
@@ -28,7 +24,7 @@ class VolumeCommand extends Command {
 
         **Usage:**
         \`volume 30\` => sets the volume to 30%.
-      `,
+      `
     })
   }
 

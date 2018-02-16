@@ -7,7 +7,7 @@ class PlayingCommand extends Command {
     super('playing', {
       aliases: ['playing', 'nowplaying', 'np', 'time'],
       channelRestriction: 'guild',
-      description: 'Show details on the currently palying song.',
+      description: 'Show details on the currently palying song.'
     })
   }
 
@@ -15,13 +15,13 @@ class PlayingCommand extends Command {
     const playlist = Music.playlists.get(msg.guild.id)
 
     if (!playlist) return msg.util.error('nothing is currently playing.')
-    const { song } = playlist
+    const { playable } = playlist
 
     return new Embed(msg.channel)
-      .setTitle(song.title)
-      .setURL(song.url)
+      .setTitle(playable.title)
+      .setURL(playable.url)
       .setAuthor(msg.member)
-      .addField(song.time, `Volume: ${playlist.volume}%`)
+      .addField(playable.time, `Volume: ${playlist.volume}%`)
       .setIcon(Embed.icons.TIME)
       .setColor(Embed.colors.PURPLE)
       .send()

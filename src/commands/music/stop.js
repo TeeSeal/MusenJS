@@ -10,7 +10,7 @@ class StopCommand extends Command {
     super('stop', {
       aliases: ['stop', 'stfu'],
       channelRestriction: 'guild',
-      description: 'Stop playback and disconnect.',
+      description: 'Stop playback and disconnect.'
     })
   }
 
@@ -20,9 +20,8 @@ class StopCommand extends Command {
     if (!playlist) return msg.util.error('nothing is currently playing.')
 
     if (msg.member.permissions.has('MANAGE_GUILD')) {
-      return msg.util
-        .success('alright, crashing the party.')
-        .then(() => playlist.stop())
+      playlist.stop()
+      return msg.util.success('alright, crashing the party.')
     }
 
     if (msg.member.voiceChannel.id !== msg.guild.me.voiceChannel.id) {
@@ -64,7 +63,7 @@ class StopCommand extends Command {
       { '✅': 'yes' },
       {
         users: members.map(m => m.id),
-        time: 3e4,
+        time: 3e4
       }
     )
 

@@ -6,24 +6,24 @@ module.exports = (sequelize, DataTypes) => {
     {
       id: {
         type: DataTypes.STRING,
-        primaryKey: true,
+        primaryKey: true
       },
       blacklist: {
         type: DataTypes.JSON,
-        defaultValue: [],
+        defaultValue: []
       },
       disabled: {
         type: DataTypes.JSON,
-        defaultValue: [],
-      },
+        defaultValue: []
+      }
     },
     {
       hooks: {
         afterSync() {
           cacheAll.call(this)
           setDefaults.call(this)
-        },
-      },
+        }
+      }
     }
   )
 

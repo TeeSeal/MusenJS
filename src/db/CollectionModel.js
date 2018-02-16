@@ -79,7 +79,7 @@ function remove(id, key) {
 
   return this.upsert({
     [this.pk]: id,
-    [key]: null,
+    [key]: null
   })
 }
 
@@ -97,7 +97,7 @@ function extend(model, cacheTimeout = 0) {
     delete: remove,
     clear,
     collection: new Collection(),
-    cacheTimeout,
+    cacheTimeout
   })
   return model
 }
@@ -105,5 +105,5 @@ function extend(model, cacheTimeout = 0) {
 module.exports = {
   cacheAll,
   setDefaults,
-  extend,
+  extend
 }

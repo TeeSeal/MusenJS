@@ -1,37 +1,21 @@
-const Song = require('./Song')
-const Playlist = require('./Playlist')
 const MusicProvider = require('./MusicProvider')
+const Playlist = require('./Playlist')
 const { Setting } = require('../../db')
 
 const providers = MusicProvider.loadAll()
 const playlists = new Map()
 
-class MusicHandler {
-  static resolveSongs(queries, opts) {
-    return Promise.all(
-      queries.map(async query => {
-        const provider
-          = providers.find(prov => {
-            if (query.includes('~')) {
-              const alias = query.split(' ').find(word => word.startsWith('~'))
+class Music {
+  static resolvePlayables(queries, opts) {
+    const promises = queries.map(async query => {
+      const provider = Music.resolveProvider(query)
+      const playables = await provider.resolvePlayables(query, opts)
+      return playables || []
+    })
 
-              if (prov.aliases.includes(alias.slice(1))) {
-                const words = query.split(' ')
-                words.splice(words.indexOf(alias), 1)
-                query = words.join(' ')
-                return true
-              }
-            }
-
-            return prov.REGEXP.test(query)
-          }) || providers.get(Setting.get('defaultMusicProvider'))
-
-        const songs = await provider.resolveResource(query)
-
-        if (!songs || songs.length === 0) return []
-        return songs.map(song => new Song(song, opts))
-      })
-    ).then(arr => arr.reduce((a1, a2) => a1.concat(a2), []))
+    return Promise.all(promises).then(arr =>
+      arr.reduce((a1, a2) => a1.concat(a2), [])
+    )
   }
 
   static getPlaylist(msg, opts) {
@@ -47,6 +31,25 @@ class MusicHandler {
   static get playlists() {
     return playlists
   }
+
+  static resolveProvider(query) {
+    const found = providers.find(prov => {
+      if (query.includes('~')) {
+        const alias = query.split(' ').find(word => word.startsWith('~'))
+
+        if (prov.aliases.includes(alias.slice(1))) {
+          const words = query.split(' ')
+          words.splice(words.indexOf(alias), 1)
+          query = words.join(' ')
+          return true
+        }
+      }
+
+      return prov.REGEXP.test(query)
+    })
+
+    return found || providers.get(Setting.get('defaultMusicProvider'))
+  }
 }
 
-module.exports = MusicHandler
+module.exports = Music
