@@ -109,17 +109,20 @@ class YouTube extends MusicProvider {
   }
 
   async fetchStream(playable) {
-    const opts = playable.live ? undefined : { filter: 'audioonly' }
+    const [opts, eventName] = playable.live
+      ? [undefined, 'data']
+      : [{ filter: 'audioonly' }, 'response']
+
     return new Promise(resolve => {
       const stream = ytdl(playable.id, opts)
-        .once(playable.live ? 'data' : 'response', () => {
+        .once(eventName, () => {
           playable.stream = stream
           stream.removeAllListeners('error')
           resolve(stream)
         })
         .once('error', () => {
           playable.stream = null
-          stream.removeAllListeners('response')
+          stream.removeAllListeners(eventName)
           resolve(null)
         })
     })
