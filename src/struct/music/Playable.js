@@ -2,21 +2,20 @@ const moment = require('moment')
 require('moment-duration-format')
 
 class Playable {
-  constructor(data, opts = {}) {
+  constructor(data, provider, opts = {}) {
+    this.provider = provider
+
     this.id = data.id
     this.title = data.title
     this.thumbnail = data.thumbnail
     this.live = data.live || false
     this.duration = this.live ? Infinity : data.duration
     this.url = data.url
+    this.stream = data.stream
 
     this.member = opts.member
     this.volume = opts.volume
-
     this.dispatcher = null
-    this.stream = data.stream
-
-    if (data.fetchStream) this.fetchStream = data.fetchStream
   }
 
   async play(connection, opts) {
@@ -52,7 +51,8 @@ class Playable {
   }
 
   fetchStream() {
-    return this.stream
+    if (this.stream) return this.stream
+    return this.provider.fetchStream(this)
   }
 
   static formatDuration(time) {

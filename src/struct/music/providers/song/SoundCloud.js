@@ -22,6 +22,7 @@ class SoundCloud extends MusicProvider {
         duration: track.duration,
         url: track.permalink_url
       },
+      this,
       opts
     )
   }

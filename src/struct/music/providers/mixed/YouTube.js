@@ -18,6 +18,7 @@ class YouTube extends MusicProvider {
       .duration(video.contentDetails.duration)
       .asMilliseconds()
     const url = `https://www.youtube.com/watch?v=${video.id}`
+
     return new MusicProvider.Playable(
       {
         id: video.id,
@@ -26,25 +27,10 @@ class YouTube extends MusicProvider {
           ? video.snippet.thumbnails.maxres.url
           : video.snippet.thumbnails.high.url,
         duration,
-        url,
-
-        fetchStream() {
-          if (this.stream) return this.stream
-          return new Promise(resolve => {
-            const stream = ytdl(this.url, { filter: 'audioonly' })
-              .once('response', () => {
-                this.stream = stream
-                stream.removeAllListeners('error')
-                resolve(stream)
-              })
-              .once('error', () => {
-                this.stream = null
-                stream.removeAllListeners('response')
-                resolve(null)
-              })
-          })
-        }
+        live: duration == 0 ? true : false,
+        url
       },
+      this,
       opts
     )
   }
@@ -120,6 +106,23 @@ class YouTube extends MusicProvider {
     if (!videos) return null
 
     return videos.map(video => this.generatePlayable(video, opts))
+  }
+
+  async fetchStream(playable) {
+    const opts = playable.live ? undefined : { filter: 'audioonly' }
+    return new Promise(resolve => {
+      const stream = ytdl(playable.id, opts)
+        .once('data', () => {
+          playable.stream = stream
+          stream.removeAllListeners('error')
+          resolve(stream)
+        })
+        .once('error', () => {
+          playable.stream = null
+          stream.removeAllListeners('data')
+          resolve(null)
+        })
+    })
   }
 
   static extractVideoID(url) {

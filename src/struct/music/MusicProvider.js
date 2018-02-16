@@ -9,7 +9,9 @@ class MusicProvider extends HTTPClient {
     throw new Error('not implemented.')
   }
 
-  static get Playable() { return Playable }
+  static get Playable() {
+    return Playable
+  }
 
   static get REGEXP() {
     throw new Error('not implemented.')
