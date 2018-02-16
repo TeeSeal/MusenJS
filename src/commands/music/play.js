@@ -112,10 +112,9 @@ class PlayCommand extends Command {
       return msg.util.error('nothing was added to the playlist.')
     }
 
-    const items = added.map(playable => `• ${playable.formattedTitle}`)
     const embed = new Embed(msg.channel)
       .setTitle('Added to playlist:')
-      .setDescription(items)
+      .setDescription(added.map(playable => `• ${playable.formattedTitle}`))
       .setAuthor(msg.member)
       .setIcon(Embed.icons.PLAYLIST_ADD)
       .setColor(Embed.colors.BLUE)
@@ -124,9 +123,11 @@ class PlayCommand extends Command {
 
     await embed.send()
 
-    if (!playlist.started) this.attachEventHandlers(playlist, msg.channel)
-    await playlist.connect(msg.member.voiceChannel)
-    return playlist.play()
+    if (!playlist.started) {
+      this.attachEventHandlers(playlist, msg.channel)
+      await playlist.connect(msg.member.voiceChannel)
+      playlist.play()
+    }
   }
 
   attachEventHandlers(playlist, channel) {
