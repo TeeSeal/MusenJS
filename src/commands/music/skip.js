@@ -33,7 +33,7 @@ class SkipCommand extends Command {
     ) {
 
       await playlist.fadeVolume(0)
-      new Embed(msg.channel)
+      await new Embed(msg.channel)
         .setTitle(playable.title)
         .addField('✅ Skipped.', '\u200b')
         .setURL(playable.url)
@@ -41,6 +41,7 @@ class SkipCommand extends Command {
         .setIcon(Embed.icons.SKIP)
         .setColor(Embed.colors.CYAN)
         .send()
+
       return playlist.skip()
     }
 

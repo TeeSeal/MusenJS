@@ -32,8 +32,8 @@ class PlaylistCommand extends Command {
     }
 
     const { playable, queue } = playlist
-    const items = [`**Now playing:** ${playable.linkString}`].concat(
-      queue.map(s => `• ${s.linkString}`)
+    const items = [`🔊 ${playable.formattedTitle}`].concat(
+      queue.map(s => `• ${s.formattedTitle}`)
     )
 
     return new Embed(msg.channel)
