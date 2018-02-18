@@ -138,7 +138,7 @@ class PlayCommand extends Command {
           .setURL(playable.url)
           .addField(
             'Now playing.',
-            `Duration: ${playable.durationString} | Volume: ${playable.volume}%`
+            `${playable.formattedDuration} | Volume: ${playable.volume}%`
           )
           .setAuthor(playable.member)
           .setIcon(Embed.icons.PLAY)

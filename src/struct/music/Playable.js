@@ -42,6 +42,10 @@ class Playable {
     return `${this.link} (${this.durationString})`
   }
 
+  get formattedDuration() {
+    return this.live ? '🔴 Live' : `Duration: ${this.durationString}`
+  }
+
   get time() {
     const total = Playable.format(this.duration)
     const current = Playable.format(this.dispatcher.time)
