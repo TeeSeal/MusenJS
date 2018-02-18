@@ -8,8 +8,9 @@ const playlists = new Map()
 class Music {
   static resolvePlayables(queries, opts) {
     const promises = queries.map(async query => {
-      const provider = Music.resolveProvider(query)
-      const playables = await provider.resolvePlayables(query, opts)
+      const words = query.split(' ')
+      const provider = Music.resolveProvider(words)
+      const playables = await provider.resolvePlayables(words.join(' '), opts)
       return playables || []
     })
 
@@ -32,20 +33,18 @@ class Music {
     return playlists
   }
 
-  static resolveProvider(query) {
-    const found = providers.find(prov => {
-      if (query.includes('~')) {
-        const alias = query.split(' ').find(word => word.startsWith('~'))
+  static resolveProvider(words) {
+    const found = providers.find(provider => {
+      if (words.some(word => word.startsWith('~'))) {
+        const alias = words.find(word => word.startsWith('~'))
 
-        if (prov.aliases.includes(alias.slice(1))) {
-          const words = query.split(' ')
+        if (provider.aliases.includes(alias.slice(1))) {
           words.splice(words.indexOf(alias), 1)
-          query = words.join(' ')
           return true
         }
       }
 
-      return prov.REGEXP.test(query)
+      return provider.REGEXP.test(words)
     })
 
     return found || providers.get(Setting.get('defaultMusicProvider'))
