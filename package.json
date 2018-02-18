@@ -26,12 +26,10 @@
     "common-tags": "^1.5.1",
     "discord-akairo": "1computer1/discord-akairo",
     "discord.js": "hydrabolt/discord.js",
-    "fuse.js": "^3.2.0",
     "logr": "teeseal/logr",
     "moment": "^2.19.3",
     "moment-duration-format": "^2.2.1",
     "node-opus": "^0.2.7",
-    "pluralize": "^7.0.0",
     "sequelize": "^4.28.7",
     "sqlite3": "^3.1.13",
     "ytdl-core": "^0.20.1"
