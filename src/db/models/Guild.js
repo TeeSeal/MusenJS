@@ -29,28 +29,9 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         defaultValue: 100
       },
-      maxSongDuration: {
-        type: DataTypes.INTEGER,
-        defaultValue: 15
-      },
       songLimit: {
         type: DataTypes.INTEGER,
         defaultValue: 100
-      },
-      eightBall: {
-        type: DataTypes.JSON,
-        defaultValue: [
-          'Yes.',
-          'Absolutely.',
-          'Most likely.',
-          'Without a doubt.',
-          'It is certain.',
-          'My sources say no.',
-          'Nuh-huh.',
-          'Very doubtful.',
-          'Nah.',
-          'My sources say no.'
-        ]
       }
     },
     {
