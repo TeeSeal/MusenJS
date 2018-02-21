@@ -44,15 +44,15 @@ class StopCommand extends Command {
     )
     const votesNeeded = Math.ceil(members.size / 2)
 
-    const { song } = playlist
+    const { playable } = playlist
     const embed = await new Embed(msg.channel)
-      .setTitle(song.title)
+      .setTitle(playable.title)
       .addField(
         'VOTESTOP',
         `Click the ✅ to vote.\n${votesNeeded
           + 1} votes needed.\nVote will end in 30 seconds.`
       )
-      .setURL(song.url)
+      .setURL(playable.url)
       .setAuthor(msg.member)
       .setIcon(Embed.icons.STOP)
       .setColor(Embed.colors.RED)
