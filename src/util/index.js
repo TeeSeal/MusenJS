@@ -3,7 +3,7 @@ const fs = require('fs')
 const { join } = require('path')
 
 const Color = require('./Color')
-const paginate = require('./paginate')
+const { pageItemCount } = require('../config')
 
 class Util {
   constructor() {
@@ -12,10 +12,6 @@ class Util {
 
   static get COLOR() {
     return Color
-  }
-
-  static get paginate() {
-    return paginate
   }
 
   static capitalize(string) {
@@ -103,6 +99,16 @@ class Util {
       if (!isNaN(max) && num > max) return max
       return num
     }
+  }
+
+  static paginate(arr, countOverwrite) {
+    const count = countOverwrite || pageItemCount
+    return arr
+      .map((item, index) => {
+        if (index % count !== 0) return null
+        return arr.slice(index, index + count)
+      })
+      .filter(page => page)
   }
 }
 
