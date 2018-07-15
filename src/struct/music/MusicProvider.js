@@ -1,4 +1,4 @@
-const Collection = require('../Collection')
+const { Collection } = require('discord.js')
 const HTTPClient = require('../HTTPClient')
 const Playable = require('./Playable')
 const { join } = require('path')

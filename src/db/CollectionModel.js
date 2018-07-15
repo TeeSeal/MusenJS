@@ -1,4 +1,4 @@
-const Collection = require('../struct/Collection.js')
+const { Collection } = require('discord.js')
 const { deepFreeze } = require('../util')
 
 // ---- HOOKS ----
