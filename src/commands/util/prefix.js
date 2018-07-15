@@ -3,7 +3,7 @@ const { stripIndents } = require('../../util')
 const { Guild } = require('../../db')
 
 class PrefixCommand extends Command {
-  constructor() {
+  constructor () {
     super('prefix', {
       aliases: ['prefix', 'pre'],
       channelRestriction: 'guild',
@@ -17,7 +17,7 @@ class PrefixCommand extends Command {
     })
   }
 
-  exec(msg, args) {
+  exec (msg, args) {
     const { prefix } = args
     if (!prefix) {
       return msg.util.info(stripIndents`

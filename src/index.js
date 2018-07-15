@@ -16,7 +16,7 @@ const client = new AkairoClient({
   listenerDirectory: 'src/listeners/'
 })
 
-async function init() {
+async function init () {
   try {
     logr.info('Connecting to database...')
     await sequelize.sync()
@@ -40,17 +40,17 @@ process.on('unhandledRejection', err => {
 })
 
 Object.assign(CommandUtil.prototype, {
-  info(content, opts) {
+  info (content, opts) {
     const name = this.message.member
       ? this.message.member.displayName
       : this.message.author.username
     return this.send(`**${name}** | ${content}`, opts)
   },
 
-  success(content, opts) {
+  success (content, opts) {
     return this.info(`✅ ${content}`, opts)
   },
-  error(content, opts) {
+  error (content, opts) {
     return this.info(`❌ ${content}`, opts)
   }
 })

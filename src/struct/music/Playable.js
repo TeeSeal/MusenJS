@@ -2,7 +2,7 @@ const moment = require('moment')
 require('moment-duration-format')
 
 class Playable {
-  constructor(data, provider, opts = {}) {
+  constructor (data, provider, opts = {}) {
     this.provider = provider
 
     this.id = data.id
@@ -18,7 +18,7 @@ class Playable {
     this.dispatcher = null
   }
 
-  async play(connection, opts) {
+  async play (connection, opts) {
     const stream = await this.fetchStream()
     if (!stream) return null
 
@@ -26,27 +26,27 @@ class Playable {
     return this.dispatcher
   }
 
-  toString() {
+  toString () {
     return this.title
   }
 
-  get durationString() {
+  get durationString () {
     return this.live ? 'live' : Playable.formatDuration(this.duration)
   }
 
-  get link() {
+  get link () {
     return `[${this.title}](${this.url})`
   }
 
-  get formattedTitle() {
+  get formattedTitle () {
     return `${this.link} (${this.durationString})`
   }
 
-  get formattedDuration() {
+  get formattedDuration () {
     return this.live ? '🔴 Live' : `Duration: ${this.durationString}`
   }
 
-  get time() {
+  get time () {
     const total = Playable.formatDuration(this.duration)
     const current = Playable.formatDuration(this.dispatcher.time)
     const left = Playable.formatDuration(this.duration - this.dispatcher.time + 1000)
@@ -54,12 +54,12 @@ class Playable {
     return `${current} / ${total}  |  ${left} left`
   }
 
-  fetchStream() {
+  fetchStream () {
     if (this.stream) return this.stream
     return this.provider.fetchStream(this)
   }
 
-  static formatDuration(time) {
+  static formatDuration (time) {
     const duration = moment.duration(time)
     if (duration.minutes() > 0) return duration.format('hh:mm:ss')
     return `00:${duration.format('ss')}`

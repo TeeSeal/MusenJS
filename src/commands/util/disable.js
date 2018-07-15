@@ -10,14 +10,14 @@ const permCheck = {
 }
 
 class DisableCommand extends Command {
-  constructor() {
+  constructor () {
     super('disable', {
       aliases: ['disable'],
       channelRestriction: 'guild',
       args: [
         {
           id: 'toDisable',
-          type(word) {
+          type (word) {
             if (word.startsWith('!')) {
               word = word.slice(1)
               const result = this.handler.categories.get(word)
@@ -49,7 +49,7 @@ class DisableCommand extends Command {
     })
   }
 
-  exec(msg, args) {
+  exec (msg, args) {
     const { toDisable, scope } = args
     if (!toDisable) {
       return msg.util.error('you need to specfy a command/category to disable.')
@@ -66,8 +66,8 @@ class DisableCommand extends Command {
     }
 
     const model = db[modelName]
-    const disabled
-      = modelName === 'Setting'
+    const disabled =
+      modelName === 'Setting'
         ? model.get('disabled')
         : model.get(id, 'disabled')
 

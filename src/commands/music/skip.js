@@ -6,7 +6,7 @@ const Music = require('../../struct/music')
 const voteSkips = new Set()
 
 class SkipCommand extends Command {
-  constructor() {
+  constructor () {
     super('skip', {
       aliases: ['skip'],
       channelRestriction: 'guild',
@@ -14,7 +14,7 @@ class SkipCommand extends Command {
     })
   }
 
-  async exec(msg) {
+  async exec (msg) {
     const playlist = Music.playlists.get(msg.guild.id)
 
     if (!playlist) return msg.util.error('nothing is currently playing.')
@@ -27,11 +27,10 @@ class SkipCommand extends Command {
     const { playable } = playlist
 
     if (
-      msg.member.permissions.has('MANAGE_GUILD')
-      || playable.member.id === msg.member.id
-      || msg.member.voiceChannel.members.size === 2
+      msg.member.permissions.has('MANAGE_GUILD') ||
+      playable.member.id === msg.member.id ||
+      msg.member.voiceChannel.members.size === 2
     ) {
-
       await playlist.fadeVolume(0)
       await new Embed(msg.channel)
         .setTitle(playable.title)
@@ -59,8 +58,8 @@ class SkipCommand extends Command {
       .setTitle(playable.title)
       .addField(
         'VOTESKIP',
-        `Click the ✅ to vote.\n${votesNeeded
-          + 1} votes needed.\nVote will end in 30 seconds.`
+        `Click the ✅ to vote.\n${votesNeeded +
+          1} votes needed.\nVote will end in 30 seconds.`
       )
       .setURL(playable.url)
       .setAuthor(msg.member)

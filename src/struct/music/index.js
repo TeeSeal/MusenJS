@@ -6,7 +6,7 @@ const providers = MusicProvider.loadAll()
 const playlists = new Map()
 
 class Music {
-  static resolvePlayables(queries, opts) {
+  static resolvePlayables (queries, opts) {
     const promises = queries.map(async query => {
       const words = query.split(' ')
       const provider = Music.resolveProvider(words)
@@ -19,7 +19,7 @@ class Music {
     )
   }
 
-  static getPlaylist(msg, opts) {
+  static getPlaylist (msg, opts) {
     if (playlists.has(msg.guild.id)) {
       return playlists.get(msg.guild.id)
     }
@@ -29,11 +29,11 @@ class Music {
     return playlist
   }
 
-  static get playlists() {
+  static get playlists () {
     return playlists
   }
 
-  static resolveProvider(words) {
+  static resolveProvider (words) {
     const found = providers.find(provider => {
       if (words.some(word => word.startsWith('~'))) {
         const alias = words.find(word => word.startsWith('~'))

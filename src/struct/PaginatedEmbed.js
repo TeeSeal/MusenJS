@@ -4,12 +4,11 @@ const { paginate } = require('../util')
 const ReactionPagination = require('./reaction/ReactionPagination')
 
 class PaginatedEmbed extends MessageEmbed {
-  constructor(channel) {
+  constructor (channel) {
     super()
     this.channel = channel
     this.message = null
     this.sent = false
-
 
     this.users = null
     this.pagination = null
@@ -21,7 +20,7 @@ class PaginatedEmbed extends MessageEmbed {
   }
 
   // Message actions
-  async send() {
+  async send () {
     if (!this.channel) throw new Error('No channel given.')
     if (this.sent) return this.edit()
     this.handlePagination()
@@ -31,55 +30,55 @@ class PaginatedEmbed extends MessageEmbed {
     return this
   }
 
-  async edit() {
+  async edit () {
     if (!this.sent) return this.send()
     await this.message.edit(this)
     return this
   }
 
   // Settings
-  addUser(user) {
+  addUser (user) {
     if (!this.users) this.users = []
     this.users.push(user)
   }
 
-  setUsers(users) {
+  setUsers (users) {
     this.users = users
   }
 
-  setTextLimit(number) {
+  setTextLimit (number) {
     if (number > 2000 || number < 1) return this
     this.textLimit = number
     return this
   }
 
-  setFieldLimit(number) {
+  setFieldLimit (number) {
     if (number > 20 || number < 1) return this
     this.fieldLimit = number
     return this
   }
 
-  setPage(number) {
+  setPage (number) {
     if (isNaN(number)) return this
     this.page = number - 1
     return this
   }
 
   // Overloaded methods
-  setDescription(description, sup = false) {
+  setDescription (description, sup = false) {
     if (sup || !this.channel) super.setDescription(description)
     else this._description = description
     return this
   }
 
-  addField(name, value, inline = false) {
+  addField (name, value, inline = false) {
     if (!this.channel) super.addField(name, value, inline)
     else this._fields.push([name, value, inline])
     return this
   }
 
   // Util methods
-  addFields(fields, sup = false) {
+  addFields (fields, sup = false) {
     for (const field of fields) {
       if (sup) super.addField(...field)
       else this.addField(...field)
@@ -88,40 +87,40 @@ class PaginatedEmbed extends MessageEmbed {
     return this
   }
 
-  setFields(fields, sup = false) {
+  setFields (fields, sup = false) {
     this.clearFields()
     this.addFields(fields, sup)
     return this
   }
 
-  clearFields() {
+  clearFields () {
     this.fields = []
     return this
   }
 
   // Main pagination methods
-  handlePagination() {
+  handlePagination () {
     this.checkDescription()
     this.checkFields()
     this.changePage()
   }
 
-  changePage(page, number) {
+  changePage (page, number) {
     if (!this.pagination) return
     if (!page && !number) {
       number = this.pagination.page
       page = this.pagination.items[number]
     }
 
-    const method
-      = this.pagination.type === 'fields' ? 'setFields' : 'setDescription'
+    const method =
+      this.pagination.type === 'fields' ? 'setFields' : 'setDescription'
 
     this[method](this.pagination.items[number], true)
     this.setPaginationFooter(number)
     this.pagination.page = number
   }
 
-  setPaginationFooter(number, tooltip = true) {
+  setPaginationFooter (number, tooltip = true) {
     if (this.pagination.items.length < 2) return
 
     const { items, totalSize } = this.pagination
@@ -132,7 +131,7 @@ class PaginatedEmbed extends MessageEmbed {
     this.setFooter(footer)
   }
 
-  listen() {
+  listen () {
     if (this.pagination.items.length < 2) return
 
     new ReactionPagination(this.message, this.pagination.items, {
@@ -150,7 +149,7 @@ class PaginatedEmbed extends MessageEmbed {
   }
 
   // Paginatino checks
-  checkDescription() {
+  checkDescription () {
     if (!this._description) return
     if (Array.isArray(this._description)) {
       this.pagination = PaginatedEmbed.parsePagination({
@@ -178,7 +177,7 @@ class PaginatedEmbed extends MessageEmbed {
     })
   }
 
-  checkFields() {
+  checkFields () {
     if (!this._fields) return
     if (this._fields.length <= this.fieldLimit) {
       return this.setFields(this._fields, true)
@@ -198,7 +197,7 @@ class PaginatedEmbed extends MessageEmbed {
   }
 
   // Static helpers
-  static parsePagination(opts) {
+  static parsePagination (opts) {
     if (!opts.items) return null
 
     const items = Array.from(opts.items)

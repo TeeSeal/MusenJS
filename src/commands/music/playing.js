@@ -3,7 +3,7 @@ const Embed = require('../../struct/MusenEmbed')
 const Music = require('../../struct/music')
 
 class PlayingCommand extends Command {
-  constructor() {
+  constructor () {
     super('playing', {
       aliases: ['playing', 'nowplaying', 'np', 'time'],
       channelRestriction: 'guild',
@@ -11,7 +11,7 @@ class PlayingCommand extends Command {
     })
   }
 
-  exec(msg) {
+  exec (msg) {
     const playlist = Music.playlists.get(msg.guild.id)
 
     if (!playlist) return msg.util.error('nothing is currently playing.')

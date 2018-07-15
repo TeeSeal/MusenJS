@@ -3,7 +3,7 @@ const { inspect } = require('util')
 const { stripIndents } = require('common-tags')
 
 class EvalCommand extends Command {
-  constructor() {
+  constructor () {
     super('eval', {
       aliases: ['eval'],
       ownerOnly: true,
@@ -22,11 +22,11 @@ class EvalCommand extends Command {
     })
   }
 
-  async exec(msg, args) {
+  async exec (msg, args) {
     const { code, noOutput } = args
     let evaled
     try {
-      evaled = eval(code)
+      evaled = eval(code) // eslint-disable-line no-eval
     } catch (err) {
       evaled = `${err.name}: ${err.message}`
     }
@@ -55,11 +55,11 @@ class EvalCommand extends Command {
   }
 }
 
-function getLang(thing) {
+function getLang (thing) {
   return typeof thing === 'string' ? '' : 'js'
 }
 
-function clean(thing) {
+function clean (thing) {
   let inspected = typeof thing === 'string' ? thing : inspect(thing)
   if (inspected.length < 500) return inspected
 
@@ -75,7 +75,7 @@ function clean(thing) {
   return output
 }
 
-function escapeRegExp(str) {
+function escapeRegExp (str) {
   return str.replace(/-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&')
 }
 

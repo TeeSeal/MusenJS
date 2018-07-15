@@ -1,5 +1,5 @@
 class Collection extends Map {
-  constructor(iterable) {
+  constructor (iterable) {
     super(iterable)
 
     Object.defineProperty(this, '_array', {
@@ -14,61 +14,61 @@ class Collection extends Map {
     })
   }
 
-  set(key, val) {
+  set (key, val) {
     this._array = null
     this._keyArray = null
     return super.set(key, val)
   }
 
-  delete(key) {
+  delete (key) {
     this._array = null
     this._keyArray = null
     return super.delete(key)
   }
 
-  array() {
+  array () {
     if (!this._array || this._array.length !== this.size) {
       this._array = Array.from(this.values())
     }
     return this._array
   }
 
-  keyArray() {
+  keyArray () {
     if (!this._keyArray || this._keyArray.length !== this.size) {
       this._keyArray = Array.from(this.keys())
     }
     return this._keyArray
   }
 
-  first() {
+  first () {
     return this.values().next().value
   }
 
-  firstKey() {
+  firstKey () {
     return this.keys().next().value
   }
 
-  last() {
+  last () {
     const arr = this.array()
     return arr[arr.length - 1]
   }
 
-  lastKey() {
+  lastKey () {
     const arr = this.keyArray()
     return arr[arr.length - 1]
   }
 
-  random() {
+  random () {
     const arr = this.array()
     return arr[Math.floor(Math.random() * arr.length)]
   }
 
-  randomKey() {
+  randomKey () {
     const arr = this.keyArray()
     return arr[Math.floor(Math.random() * arr.length)]
   }
 
-  findAll(prop, value) {
+  findAll (prop, value) {
     if (typeof prop !== 'string') throw new TypeError('Key must be a string.')
     if (typeof value === 'undefined') {
       throw new Error('Value must be specified.')
@@ -80,7 +80,7 @@ class Collection extends Map {
     return results
   }
 
-  find(propOrFn, value) {
+  find (propOrFn, value) {
     if (typeof propOrFn === 'string') {
       if (typeof value === 'undefined') {
         throw new Error('Value must be specified.')
@@ -99,7 +99,7 @@ class Collection extends Map {
     }
   }
 
-  findKey(propOrFn, value) {
+  findKey (propOrFn, value) {
     if (typeof propOrFn === 'string') {
       if (typeof value === 'undefined') {
         throw new Error('Value must be specified.')
@@ -118,7 +118,7 @@ class Collection extends Map {
     }
   }
 
-  exists(prop, value) {
+  exists (prop, value) {
     if (prop === 'id') {
       throw new RangeError(
         'Don"t use .exists() with IDs. Instead, use .has(id).'
@@ -127,7 +127,7 @@ class Collection extends Map {
     return Boolean(this.find(prop, value))
   }
 
-  filter(fn, thisArg) {
+  filter (fn, thisArg) {
     if (thisArg) fn = fn.bind(thisArg)
     const results = new this.constructor()
     for (const [key, val] of this) {
@@ -136,7 +136,7 @@ class Collection extends Map {
     return results
   }
 
-  filterArray(fn, thisArg) {
+  filterArray (fn, thisArg) {
     if (thisArg) fn = fn.bind(thisArg)
     const results = []
     for (const [key, val] of this) {
@@ -145,7 +145,7 @@ class Collection extends Map {
     return results
   }
 
-  map(fn, thisArg) {
+  map (fn, thisArg) {
     if (thisArg) fn = fn.bind(thisArg)
     const arr = new Array(this.size)
     let i = 0 // eslint-disable-line id-length
@@ -153,7 +153,7 @@ class Collection extends Map {
     return arr
   }
 
-  some(fn, thisArg) {
+  some (fn, thisArg) {
     if (thisArg) fn = fn.bind(thisArg)
     for (const [key, val] of this) {
       if (fn(val, key, this)) return true
@@ -161,7 +161,7 @@ class Collection extends Map {
     return false
   }
 
-  every(fn, thisArg) {
+  every (fn, thisArg) {
     if (thisArg) fn = fn.bind(thisArg)
     for (const [key, val] of this) {
       if (!fn(val, key, this)) return false
@@ -169,7 +169,7 @@ class Collection extends Map {
     return true
   }
 
-  reduce(fn, initialValue) {
+  reduce (fn, initialValue) {
     let accumulator
     if (typeof initialValue !== 'undefined') {
       accumulator = initialValue
@@ -190,11 +190,11 @@ class Collection extends Map {
     return accumulator
   }
 
-  clone() {
+  clone () {
     return new this.constructor(this)
   }
 
-  concat(...collections) {
+  concat (...collections) {
     const newColl = this.clone()
     for (const coll of collections) {
       for (const [key, val] of coll) newColl.set(key, val)
@@ -202,7 +202,7 @@ class Collection extends Map {
     return newColl
   }
 
-  deleteAll() {
+  deleteAll () {
     const returns = []
     for (const item of this.values()) {
       if (item.delete) returns.push(item.delete())
@@ -210,7 +210,7 @@ class Collection extends Map {
     return returns
   }
 
-  equals(collection) {
+  equals (collection) {
     if (!collection) return false
     if (this === collection) return true
     if (this.size !== collection.size) return false
@@ -222,17 +222,17 @@ class Collection extends Map {
     })
   }
 
-  toJSON() {
+  toJSON () {
     const obj = {}
     for (const [id, item] of this.entries()) obj[id] = item
     return obj
   }
 
-  join(sep) {
+  join (sep) {
     return this.array().join(sep)
   }
 
-  static fromObject(obj) {
+  static fromObject (obj) {
     const coll = new Collection()
     for (const key of Object.keys(obj)) coll.set(key, obj[key])
     return coll

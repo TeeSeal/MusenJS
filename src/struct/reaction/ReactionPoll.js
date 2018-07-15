@@ -2,7 +2,7 @@ const { EventEmitter } = require('events')
 const ReactionKeyboard = require('./ReactionKeyboard')
 
 class ReactionPoll extends EventEmitter {
-  constructor(message, emojis, opts = {}) {
+  constructor (message, emojis, opts = {}) {
     if (!emojis) throw new Error('you need to specify emojis to use.')
     super()
 
@@ -17,7 +17,7 @@ class ReactionPoll extends EventEmitter {
     this.collect()
   }
 
-  collect() {
+  collect () {
     this.keyboard = new ReactionKeyboard(
       this.message,
       this.emojiToEvent,
@@ -41,11 +41,11 @@ class ReactionPoll extends EventEmitter {
     })
   }
 
-  stop() {
+  stop () {
     this.keyboard.stop()
   }
 
-  static handleEmojis(emojis) {
+  static handleEmojis (emojis) {
     if (!Array.isArray(emojis)) {
       return { emojiToEvent: emojis, events: Object.values(emojis) }
     }

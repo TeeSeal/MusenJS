@@ -6,7 +6,7 @@ const Music = require('../../struct/music')
 const voteStops = new Set()
 
 class StopCommand extends Command {
-  constructor() {
+  constructor () {
     super('stop', {
       aliases: ['stop', 'stfu'],
       channelRestriction: 'guild',
@@ -14,7 +14,7 @@ class StopCommand extends Command {
     })
   }
 
-  async exec(msg) {
+  async exec (msg) {
     const playlist = Music.playlists.get(msg.guild.id)
 
     if (!playlist) return msg.util.error('nothing is currently playing.')
@@ -49,8 +49,8 @@ class StopCommand extends Command {
       .setTitle(playable.title)
       .addField(
         'VOTESTOP',
-        `Click the ✅ to vote.\n${votesNeeded
-          + 1} votes needed.\nVote will end in 30 seconds.`
+        `Click the ✅ to vote.\n${votesNeeded +
+          1} votes needed.\nVote will end in 30 seconds.`
       )
       .setURL(playable.url)
       .setAuthor(msg.member)

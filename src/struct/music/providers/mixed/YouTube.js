@@ -3,7 +3,7 @@ const moment = require('moment')
 const ytdl = require('ytdl-core')
 
 class YouTube extends MusicProvider {
-  constructor() {
+  constructor () {
     super({
       baseURL: 'https://www.googleapis.com/youtube/v3/',
       params: { key: process.env.GOOGLE_API_KEY }
@@ -13,7 +13,7 @@ class YouTube extends MusicProvider {
     this.REGEXP = /(https?:\/\/)?(www\.)?youtu(be\.com|\.be)\//
   }
 
-  generatePlayable(video, opts) {
+  generatePlayable (video, opts) {
     const duration = moment
       .duration(video.contentDetails.duration)
       .asMilliseconds()
@@ -27,7 +27,7 @@ class YouTube extends MusicProvider {
           ? video.snippet.thumbnails.maxres.url
           : video.snippet.thumbnails.high.url,
         duration,
-        live: duration == 0 ? true : false,
+        live: duration === 0,
         url
       },
       this,
@@ -35,7 +35,7 @@ class YouTube extends MusicProvider {
     )
   }
 
-  getByID(id) {
+  getByID (id) {
     return this.get('videos', {
       params: {
         id,
@@ -46,7 +46,7 @@ class YouTube extends MusicProvider {
     })
   }
 
-  getPlaylistItems(playlistId) {
+  getPlaylistItems (playlistId) {
     return this.get('playlistItems', {
       params: {
         playlistId,
@@ -57,7 +57,7 @@ class YouTube extends MusicProvider {
     })
   }
 
-  search(query) {
+  search (query) {
     return this.get('search', {
       params: {
         q: query,
@@ -68,7 +68,7 @@ class YouTube extends MusicProvider {
     })
   }
 
-  async resolveVideo(query) {
+  async resolveVideo (query) {
     if (/^(https?:\/\/)?(www\.)?youtu\.?be(\.com)?\/.+$/.test(query)) {
       query = YouTube.extractVideoID(query)
     }
@@ -83,7 +83,7 @@ class YouTube extends MusicProvider {
     return [video]
   }
 
-  async resolvePlaylist(query) {
+  async resolvePlaylist (query) {
     if (query.includes('/playlist?')) {
       query = YouTube.extractPlaylistID(query)
     }
@@ -97,7 +97,7 @@ class YouTube extends MusicProvider {
     return this.getByID(id).then(res => res.data.items)
   }
 
-  async resolvePlayables(query, opts) {
+  async resolvePlayables (query, opts) {
     const videos =
       query.includes('/playlist?') || /^[a-zA-Z0-9-_]{12,}$/.test(query)
         ? await this.resolvePlaylist(query)
@@ -108,7 +108,7 @@ class YouTube extends MusicProvider {
     return videos.map(video => this.generatePlayable(video, opts))
   }
 
-  async fetchStream(playable) {
+  async fetchStream (playable) {
     const [opts, eventName] = playable.live
       ? [undefined, 'data']
       : [{ filter: 'audioonly' }, 'response']
@@ -128,13 +128,13 @@ class YouTube extends MusicProvider {
     })
   }
 
-  static extractVideoID(url) {
+  static extractVideoID (url) {
     return url.match(
       /^.*(youtu.be\/|v\/|e\/|u\/\w+\/|embed\/|v=)([^#&?]*).*/
     )[2]
   }
 
-  static extractPlaylistID(url) {
+  static extractPlaylistID (url) {
     return url.match(/list=([\w\-_]+)/)[1]
   }
 }

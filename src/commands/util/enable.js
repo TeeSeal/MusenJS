@@ -9,14 +9,14 @@ const permCheck = {
 }
 
 class EnableCommand extends Command {
-  constructor() {
+  constructor () {
     super('enable', {
       aliases: ['enable'],
       channelRestriction: 'guild',
       args: [
         {
           id: 'toEnable',
-          type(word) {
+          type (word) {
             if (word.startsWith('!')) {
               word = word.slice(1)
               const result = this.handler.categories.get(word)
@@ -48,7 +48,7 @@ class EnableCommand extends Command {
     })
   }
 
-  exec(msg, args) {
+  exec (msg, args) {
     const { toEnable, scope } = args
     if (!toEnable) {
       return msg.util.error('you need to specfy a command to enable.')
@@ -62,8 +62,8 @@ class EnableCommand extends Command {
     }
 
     const model = db[modelName]
-    const disabled
-      = modelName === 'Setting'
+    const disabled =
+      modelName === 'Setting'
         ? model.get('disabled')
         : model.get(id, 'disabled')
 

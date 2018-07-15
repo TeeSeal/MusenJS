@@ -2,7 +2,7 @@ const { shuffle } = require('../../util')
 const { EventEmitter } = require('events')
 
 class Playlist extends EventEmitter {
-  constructor({ guild: { id }, channel }, guildOptions, handler) {
+  constructor ({ guild: { id }, channel }, guildOptions, handler) {
     super()
     this.id = id
     this.handler = handler
@@ -20,18 +20,18 @@ class Playlist extends EventEmitter {
     this.itemLimit = guildOptions.songLimit
   }
 
-  async connect(voiceChannel) {
+  async connect (voiceChannel) {
     this.connection = await voiceChannel.join()
     return this
   }
 
-  play() {
+  play () {
     this.playNext(this.queue.shift())
     this.started = true
     return this
   }
 
-  filter(playables) {
+  filter (playables) {
     const removed = []
     const added = playables
 
@@ -50,7 +50,7 @@ class Playlist extends EventEmitter {
     return { added, removed }
   }
 
-  async playNext(playable) {
+  async playNext (playable) {
     if (this.stopped) return
 
     if (!playable) {
@@ -77,39 +77,39 @@ class Playlist extends EventEmitter {
     })
   }
 
-  add(playables) {
+  add (playables) {
     const result = this.filter(playables)
     this.queue.push(...result.added)
     return result
   }
 
-  shuffle() {
+  shuffle () {
     shuffle(this.queue)
     return this.queue
   }
 
-  pause() {
+  pause () {
     this.playable.dispatcher.pause()
     this.paused = true
     this.emit('pause')
     return this
   }
 
-  resume() {
+  resume () {
     this.playable.dispatcher.resume()
     this.paused = false
     this.emit('resume')
     return this
   }
 
-  setVolume(volume) {
+  setVolume (volume) {
     this._volume = this.convertVolume(volume)
     this.playable.dispatcher.setVolume(this._volume)
     this.emit('volume', this.volume)
     return this.volume
   }
 
-  fadeVolume(volume) {
+  fadeVolume (volume) {
     let current = this._volume
     this._volume = this.convertVolume(volume)
     const modifier = current < this._volume ? 0.05 : -0.05
@@ -132,14 +132,14 @@ class Playlist extends EventEmitter {
     })
   }
 
-  skip() {
+  skip () {
     const playable = this.playable
     playable.dispatcher.end('skip')
     this.emit('skip', playable)
     return playable
   }
 
-  stop() {
+  stop () {
     this.queue = []
     this.stopped = true
     this.playable.dispatcher.end('stop')
@@ -147,17 +147,17 @@ class Playlist extends EventEmitter {
     return this
   }
 
-  destroy() {
+  destroy () {
     if (this.connection) this.connection.channel.leave()
     this.handler.playlists.delete(this.id)
     this.emit('destroy')
   }
 
-  convertVolume(volume) {
+  convertVolume (volume) {
     return volume / 50
   }
 
-  get volume() {
+  get volume () {
     return this._volume * 50
   }
 }

@@ -1,14 +1,14 @@
 const MusicProvider = require('../../MusicProvider.js')
 
 class ListenMoe extends MusicProvider {
-  constructor() {
+  constructor () {
     super({ baseURL: 'https://listen.moe/api' })
 
     this.aliases = ['listenmoe', 'listen', 'lm']
     this.REGEXP = /listen\.moe/i
   }
 
-  generatePlayable(opts) {
+  generatePlayable (opts) {
     return new MusicProvider.Playable(
       {
         id: 'listenmoe',
@@ -23,7 +23,7 @@ class ListenMoe extends MusicProvider {
     )
   }
 
-  async resolvePlayables(_, opts) {
+  async resolvePlayables (_, opts) {
     return [this.generatePlayable(opts)]
   }
 }

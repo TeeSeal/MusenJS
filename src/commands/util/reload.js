@@ -1,7 +1,7 @@
 const { Command } = require('discord-akairo')
 
 class ReloadCommand extends Command {
-  constructor() {
+  constructor () {
     super('reload', {
       aliases: ['reload', 'rld'],
       description: 'Reload a command.',
@@ -15,7 +15,7 @@ class ReloadCommand extends Command {
     })
   }
 
-  exec(msg, args) {
+  exec (msg, args) {
     const { command } = args
     if (!command) return msg.util.error('couldn\'t find command.')
     command.reload()

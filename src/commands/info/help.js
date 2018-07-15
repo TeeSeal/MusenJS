@@ -2,7 +2,7 @@ const { Command } = require('discord-akairo')
 const { stripIndents } = require('../../util')
 
 class HelpCommand extends Command {
-  constructor() {
+  constructor () {
     super('help', {
       aliases: ['help'],
       args: [
@@ -16,7 +16,7 @@ class HelpCommand extends Command {
   }
 
   // TODO: Rewrite with MusenEmbed.
-  exec(msg, args) {
+  exec (msg, args) {
     const { command } = args
     if (command) return msg.util.send(command.description)
     const channel = msg.channel.type === 'dm' ? msg.channel : msg.author

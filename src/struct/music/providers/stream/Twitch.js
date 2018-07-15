@@ -1,7 +1,7 @@
 const MusicProvider = require('../../MusicProvider.js')
 
 class Twitch extends MusicProvider {
-  constructor() {
+  constructor () {
     super({
       baseURL: 'https://api.twitch.tv/helix/',
       headers: { 'Client-Id': process.env.TWITCH_CLIENT_ID }
@@ -11,7 +11,7 @@ class Twitch extends MusicProvider {
     this.REGEXP = /(https?:\/\/)?(www\.)?twitch\.tv\//
   }
 
-  generatePlayable(data, opts) {
+  generatePlayable (data, opts) {
     return new MusicProvider.Playable(
       {
         id: data.login,
@@ -25,7 +25,7 @@ class Twitch extends MusicProvider {
     )
   }
 
-  async fetchChannelData(login) {
+  async fetchChannelData (login) {
     const { data: res } = await this.get('users', { params: { login } })
     if (res.data.length === 0) {
       return null
@@ -33,11 +33,11 @@ class Twitch extends MusicProvider {
     return res.data[0]
   }
 
-  fetchStreamData(user_id) {
+  fetchStreamData (user_id) { // eslint-disable-line camelcase
     return this.get('streams', { params: { user_id } }).then(res => res.data.data[0])
   }
 
-  async fetchStream(playable) {
+  async fetchStream (playable) {
     const channel = playable.id
     const { data: accessToken } = await this.get(
       `http://api.twitch.tv/api/channels/${channel}/access_token`
@@ -63,7 +63,7 @@ class Twitch extends MusicProvider {
       .pop()
   }
 
-  async resolvePlayables(url, opts) {
+  async resolvePlayables (url, opts) {
     const channelName = this.REGEXP.test(url)
       ? Twitch.extractChannelName(url)
       : url
@@ -79,7 +79,7 @@ class Twitch extends MusicProvider {
     return [this.generatePlayable(channelData, opts)]
   }
 
-  static extractChannelName(url) {
+  static extractChannelName (url) {
     return url.match(/twitch.tv\/(\w+)/)[1]
   }
 }

@@ -4,7 +4,7 @@ const Music = require('../../struct/music')
 const { Guild } = require('../../db')
 
 class SetCommand extends Command {
-  constructor() {
+  constructor () {
     super('set', {
       aliases: ['default', 'def', 'set'],
       channelRestriction: 'guild',
@@ -50,7 +50,7 @@ class SetCommand extends Command {
     })
   }
 
-  exec(msg, args) {
+  exec (msg, args) {
     const { maxSongDuration, defaultVolume, maxVolume, songLimit } = args
     if (!Object.keys(args).some(key => args[key])) {
       return msg.util.error('what are you trying to update?')
@@ -104,7 +104,7 @@ class SetCommand extends Command {
   }
 }
 
-function getExpression(obj) {
+function getExpression (obj) {
   const arr = Object.keys(obj).map(key => `**${key}**(${obj[key]})`)
   if (arr.length === 1) return arr[0]
   const last = arr.pop()

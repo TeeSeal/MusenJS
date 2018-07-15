@@ -2,14 +2,14 @@ const { Listener } = require('discord-akairo')
 const logr = require('logr')
 
 class ReadyListener extends Listener {
-  constructor() {
+  constructor () {
     super('ready', {
       emitter: 'client',
       event: 'ready'
     })
   }
 
-  exec() {
+  exec () {
     logr.success(`All systems online! Logged in as ${this.client.user.tag}.`)
   }
 }

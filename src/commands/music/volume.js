@@ -5,14 +5,14 @@ const Music = require('../../struct/music')
 const { Guild } = require('../../db')
 
 class VolumeCommand extends Command {
-  constructor() {
+  constructor () {
     super('volume', {
       aliases: ['volume', 'vol'],
       channelRestriction: 'guild',
       args: [
         {
           id: 'newVolume',
-          type(word, msg) {
+          type (word, msg) {
             const parse = parserInRange(0, Guild.get(msg.guild.id).maxVolume)
             return parse(word)
           }
@@ -28,7 +28,7 @@ class VolumeCommand extends Command {
     })
   }
 
-  exec(msg, args) {
+  exec (msg, args) {
     const { newVolume } = args
     const playlist = Music.playlists.get(msg.guild.id)
 
@@ -52,8 +52,8 @@ class VolumeCommand extends Command {
         .send()
     }
 
-    const icon
-      = newVolume < volume ? Embed.icons.VOLUME_UP : Embed.icons.VOLUME_DOWN
+    const icon =
+      newVolume < volume ? Embed.icons.VOLUME_UP : Embed.icons.VOLUME_DOWN
 
     playlist.fadeVolume(newVolume)
 

@@ -3,14 +3,14 @@ const { stripIndents } = require('../util')
 const logr = require('logr')
 
 class ErrorListener extends Listener {
-  constructor() {
+  constructor () {
     super('error', {
       emitter: 'commandHandler',
       event: 'error'
     })
   }
 
-  exec(err, msg, cmd) {
+  exec (err, msg, cmd) {
     logr.error(err)
 
     const owner = this.client.users.get(this.client.akairoOptions.ownerID)

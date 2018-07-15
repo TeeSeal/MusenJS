@@ -36,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       hooks: {
-        afterSync() {
+        afterSync () {
           cacheAll.call(this)
           setDefaults.call(this)
         }

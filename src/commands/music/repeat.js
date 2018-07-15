@@ -3,7 +3,7 @@ const { stripIndents } = require('../../util')
 const Music = require('../../struct/music')
 
 class RepeatCommand extends Command {
-  constructor() {
+  constructor () {
     super('repeat', {
       aliases: ['repeat', 'replay'],
       channelRestriction: 'guild',
@@ -39,7 +39,7 @@ class RepeatCommand extends Command {
     })
   }
 
-  exec(msg, { times, end }) {
+  exec (msg, { times, end }) {
     const playlist = Music.playlists.get(msg.guild.id)
 
     if (!playlist) return msg.util.error('nothing is currently playing.')

@@ -5,7 +5,7 @@ const Embed = require('../../struct/MusenEmbed')
 const Music = require('../../struct/music')
 
 class PlayCommand extends Command {
-  constructor() {
+  constructor () {
     super('play', {
       aliases: ['play', 'yt'],
       channelRestriction: 'guild',
@@ -27,7 +27,7 @@ class PlayCommand extends Command {
           id: 'volume',
           match: 'prefix',
           prefix: ['volume=', 'vol=', 'v='],
-          type(word, msg) {
+          type (word, msg) {
             const parse = parserInRange(0, Guild.get(msg.guild.id).maxVolume)
             return parse(word)
           },
@@ -64,7 +64,7 @@ class PlayCommand extends Command {
     })
   }
 
-  async exec(msg, { queries, rand, volume }) {
+  async exec (msg, { queries, rand, volume }) {
     if (queries.length === 0) {
       return msg.util.error('give me something to look for.')
     }
@@ -130,7 +130,7 @@ class PlayCommand extends Command {
     }
   }
 
-  attachEventHandlers(playlist, channel) {
+  attachEventHandlers (playlist, channel) {
     playlist
       .on('playing', playable =>
         new Embed(channel)

@@ -1,7 +1,7 @@
 const { EventEmitter } = require('events')
 
 class ReactionKeyboard extends EventEmitter {
-  constructor(message, emojiToEvent, { users, time, remove }) {
+  constructor (message, emojiToEvent, { users, time, remove }) {
     super()
     this.message = message
     this.events = emojiToEvent
@@ -14,14 +14,14 @@ class ReactionKeyboard extends EventEmitter {
     this.react().then(() => this.listen())
   }
 
-  async react() {
+  async react () {
     for (const emoji of this.emojis) {
       this.reactions.push(await this.message.react(emoji))
     }
     return this.message
   }
 
-  listen() {
+  listen () {
     const { emojis, users, time } = this
 
     this.collector = this.message.createReactionCollector(
@@ -61,14 +61,14 @@ class ReactionKeyboard extends EventEmitter {
     })
   }
 
-  removeReactions() {
+  removeReactions () {
     for (const reaction of this.reactions) {
       // TODO: Try to remove all reactions
       if (reaction.me) reaction.users.remove()
     }
   }
 
-  stop() {
+  stop () {
     this.collector.stop()
   }
 }

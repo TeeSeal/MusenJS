@@ -3,7 +3,7 @@ const Embed = require('../../struct/MusenEmbed')
 const { Guild } = require('../../db')
 
 class GuildInfoCommand extends Command {
-  constructor() {
+  constructor () {
     super('guild', {
       aliases: ['guild', 'guild-info', 'server', 'server-info'],
       description: 'Get information about the current server.',
@@ -11,7 +11,7 @@ class GuildInfoCommand extends Command {
     })
   }
 
-  exec(msg) {
+  exec (msg) {
     const { songLimit, defaultVolume, maxVolume } = Guild.get(msg.guild.id)
     const configs = [
       `Maximum amount of songs in playlist: **${songLimit}**`,

@@ -1,7 +1,7 @@
 const MusicProvider = require('../../MusicProvider')
 
 class SoundCloud extends MusicProvider {
-  constructor() {
+  constructor () {
     super({
       baseURL: 'https://api.soundcloud.com/',
       params: { client_id: process.env.SOUNDCLOUD_CLIENT_ID }
@@ -12,7 +12,7 @@ class SoundCloud extends MusicProvider {
     this.REGEXP = /^https:\/\/soundcloud\.com\//
   }
 
-  generatePlayable(track, opts) {
+  generatePlayable (track, opts) {
     return new MusicProvider.Playable(
       {
         id: track.id,
@@ -27,7 +27,7 @@ class SoundCloud extends MusicProvider {
     )
   }
 
-  async fetchFromURL(url) {
+  async fetchFromURL (url) {
     const { data: resource } = await this.get('resolve.json', {
       params: { url }
     })
@@ -39,13 +39,13 @@ class SoundCloud extends MusicProvider {
     return resource.kind === 'track' ? [resource] : resource.tracks
   }
 
-  async search(query) {
+  async search (query) {
     const { data: [track] } = await this.get('tracks', { params: { q: query } })
     if (!track) return null
     return [track]
   }
 
-  async resolvePlayables(query, opts) {
+  async resolvePlayables (query, opts) {
     const tracks = this.REGEXP.test(query)
       ? await this.fetchFromURL(query)
       : await this.search(query)

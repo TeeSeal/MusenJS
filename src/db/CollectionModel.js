@@ -2,14 +2,14 @@ const Collection = require('../struct/Collection.js')
 const { deepFreeze } = require('../util')
 
 // ---- HOOKS ----
-async function cacheAll() {
+async function cacheAll () {
   const rows = await this.all()
   for (const row of rows) {
     this.collection.set(row[this.pk], row)
   }
 }
 
-async function setDefaults() {
+async function setDefaults () {
   const attrs = await this.describe()
   this.defaultValues = {}
 
@@ -29,7 +29,7 @@ async function setDefaults() {
 }
 
 // ---- HELPERS ----
-function get(id, key, defaultValue) {
+function get (id, key, defaultValue) {
   if (!key) {
     return this.collection.get(id) || this.defaultValues
   }
@@ -46,7 +46,7 @@ function get(id, key, defaultValue) {
   return defaultValue
 }
 
-async function fetch(id, key, defaultValue) {
+async function fetch (id, key, defaultValue) {
   if (!this.collection.has(id)) {
     const [row] = await this.findCreateFind({ where: { [this.pk]: id } })
     this.collection.set(id, row)
@@ -59,7 +59,7 @@ async function fetch(id, key, defaultValue) {
   return this.get(id, key, defaultValue)
 }
 
-async function set(id, key, value) {
+async function set (id, key, value) {
   const instance = await this.fetch(id)
 
   if (typeof key === 'string') {
@@ -73,7 +73,7 @@ async function set(id, key, value) {
   return instance.save()
 }
 
-function remove(id, key) {
+function remove (id, key) {
   const data = this.collection.get(id) || {}
   delete data[key]
 
@@ -83,12 +83,12 @@ function remove(id, key) {
   })
 }
 
-function clear(id) {
+function clear (id) {
   this.collection.delete(id)
   return this.destroy({ where: { [this.pk]: id } })
 }
 
-function extend(model, cacheTimeout = 0) {
+function extend (model, cacheTimeout = 0) {
   Object.assign(model, {
     pk: model.primaryKeyAttributes[0],
     get,

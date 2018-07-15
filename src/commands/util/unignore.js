@@ -9,7 +9,7 @@ const permCheck = {
 }
 
 class UnignoreCommand extends Command {
-  constructor() {
+  constructor () {
     super('unignore', {
       aliases: ['unignore', 'whitelist'],
       channelRestriction: 'guild',
@@ -36,7 +36,7 @@ class UnignoreCommand extends Command {
     })
   }
 
-  exec(msg, args) {
+  exec (msg, args) {
     const { member, scope } = args
     if (!member) {
       return msg.util.error('you need to specfy a member to unignore.')
@@ -50,8 +50,8 @@ class UnignoreCommand extends Command {
     }
 
     const model = db[modelName]
-    const blacklist
-      = modelName === 'Setting'
+    const blacklist =
+      modelName === 'Setting'
         ? model.get('blacklist')
         : model.get(id, 'blacklist')
 
