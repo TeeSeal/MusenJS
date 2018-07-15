@@ -11,8 +11,8 @@ class PlaylistCommand extends Command {
       args: [
         {
           id: 'page',
-          match: 'prefix',
-          prefix: ['page=', 'p='],
+          match: 'options',
+          flag: ['page=', 'p='],
           type: parserInRange(0),
           default: 0
         },

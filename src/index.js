@@ -10,7 +10,7 @@ client.init()
 process.on('unhandledRejection', err => {
   logr.error(err)
 
-  const owner = client.users.get(client.akairoOptions.ownerID)
+  const owner = client.users.get(client.options.ownerID)
   if (!owner) return
 
   owner.send(`Got an unhandledRejection:\n\`\`\`${err.stack}\`\`\``)

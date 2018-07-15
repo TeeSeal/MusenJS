@@ -15,7 +15,7 @@ class PlayCommand extends Command {
         {
           id: 'rand',
           match: 'flag',
-          prefix: '-shuffle'
+          flag: '-shuffle'
         },
         {
           id: 'queries',
@@ -25,8 +25,8 @@ class PlayCommand extends Command {
         },
         {
           id: 'volume',
-          match: 'prefix',
-          prefix: ['volume=', 'vol=', 'v='],
+          match: 'option',
+          flag: ['volume=', 'vol=', 'v='],
           type (word, msg) {
             const parse = parserInRange(0, Guild.get(msg.guild.id).maxVolume)
             return parse(word)

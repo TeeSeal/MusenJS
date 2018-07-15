@@ -12,26 +12,26 @@ class SetCommand extends Command {
       args: [
         {
           id: 'maxSongDuration',
-          match: 'prefix',
-          prefix: ['duration=', 'length=', 'd='],
+          match: 'options',
+          flag: ['duration=', 'length=', 'd='],
           type: parserInRange(1, 240)
         },
         {
           id: 'defaultVolume',
-          match: 'prefix',
-          prefix: ['volume=', 'vol='],
+          match: 'options',
+          flag: ['volume=', 'vol='],
           type: parserInRange(1, 100)
         },
         {
           id: 'maxVolume',
-          match: 'prefix',
-          prefix: ['maxVolume=', 'maxVol=', 'mv='],
+          match: 'options',
+          flag: ['maxVolume=', 'maxVol=', 'mv='],
           type: parserInRange(1, 100)
         },
         {
           id: 'songLimit',
-          match: 'prefix',
-          prefix: ['songLimit=', 'songs=', 'maxSongs=', 'sl='],
+          match: 'options',
+          flag: ['songLimit=', 'songs=', 'maxSongs=', 'sl='],
           type: parserInRange(1, 100)
         }
       ],

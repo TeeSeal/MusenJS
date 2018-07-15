@@ -12,7 +12,7 @@ class EvalCommand extends Command {
         {
           id: 'noOutput',
           match: 'flag',
-          prefix: ['-no', '-noOutput']
+          flag: ['-no', '-noOutput']
         },
         {
           id: 'code',

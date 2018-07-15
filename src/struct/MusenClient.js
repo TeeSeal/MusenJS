@@ -1,5 +1,5 @@
-const { sequelize, Guild } = require('./db')
-const { ownerID } = require('./config')
+const { sequelize, Guild } = require('../db')
+const { ownerID } = require('../config')
 const logr = require('logr')
 const {
   AkairoClient,
@@ -14,29 +14,33 @@ class MusenClient extends AkairoClient {
 
     this.commandHandler = new CommandHandler(this, {
       prefix: msg => Guild.get(msg.guild ? msg.guild.id : 'dm', 'prefix'),
-      commandDirectory: 'src/commands/',
+      commandUtil: true,
+      directory: 'src/commands/',
+      automateCategories: true
+    })
+
+    this.listenerHandler = new ListenerHandler(this, {
+      directory: 'src/listeners/',
       automateCategories: true
     })
 
     this.inhibitorHandler = new InhibitorHandler(this, {
-      inhibitorDirectory: 'src/inhibitors/',
+      directory: 'src/inhibitors/',
       automateCategories: true
     })
-    this.commandHandler.useInhibitorHandler(this.inhibitorHandler)
-    this.inhibitorHandler.loadAll()
-
-    this.listenerHandler = new ListenerHandler(this, {
-      listenerDirectory: 'src/listeners/',
-      automateCategories: true
-    })
-    this.commandHandler.useListenerHandler(this.listenerHandler)
-    this.listenerHandler.loadAll()
 
     this.listenerHandler.setEmitters({
       commandHandler: this.commandHandler,
       inhibitorHandler: this.inhibitorHandler,
       listenerHandler: this.listenerHandler
     })
+
+    this.commandHandler.useListenerHandler(this.listenerHandler)
+    this.commandHandler.useInhibitorHandler(this.inhibitorHandler)
+
+    this.commandHandler.loadAll()
+    this.inhibitorHandler.loadAll()
+    this.listenerHandler.loadAll()
   }
 
   async init () {

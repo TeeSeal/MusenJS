@@ -21,7 +21,7 @@ class RepeatCommand extends Command {
         {
           id: 'end',
           match: 'flag',
-          prefix: '-end'
+          flag: '-end'
         }
       ],
       description: stripIndents`

@@ -1,5 +1,5 @@
 module.exports = {
-  prefix: '>>',
+  prefix: '??',
   ownerID: '117270616595365890',
   pageItemCount: 10,
   defaultMusicProvider: 'youtube',
