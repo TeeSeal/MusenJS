@@ -12,25 +12,25 @@ class SetCommand extends Command {
       args: [
         {
           id: 'maxSongDuration',
-          match: 'options',
+          match: 'option',
           flag: ['duration=', 'length=', 'd='],
           type: parserInRange(1, 240)
         },
         {
           id: 'defaultVolume',
-          match: 'options',
+          match: 'option',
           flag: ['volume=', 'vol='],
           type: parserInRange(1, 100)
         },
         {
           id: 'maxVolume',
-          match: 'options',
+          match: 'option',
           flag: ['maxVolume=', 'maxVol=', 'mv='],
           type: parserInRange(1, 100)
         },
         {
           id: 'songLimit',
-          match: 'options',
+          match: 'option',
           flag: ['songLimit=', 'songs=', 'maxSongs=', 'sl='],
           type: parserInRange(1, 100)
         }
@@ -74,7 +74,7 @@ class SetCommand extends Command {
           'default volume can\'t be bigger than the maximum one.'
         )
       }
-      if (playlist) playlist.defaultVolume = playlist.convert(defaultVolume)
+      if (playlist) playlist.defaultVolume = playlist.convertVolume(defaultVolume)
       obj.defaultVolume = defaultVolume
     }
 
