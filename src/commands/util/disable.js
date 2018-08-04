@@ -81,8 +81,8 @@ class DisableCommand extends Command {
       filtered = [toDisable.id]
     } else {
       filtered = toDisable
-        .filter(c => [disabled, reserved].every(arr => !arr.includes(c.id)))
         .map(c => c.id)
+        .filter(id => [disabled, reserved].every(arr => !arr.includes(id)))
       if (filtered.size === 0) {
         return msg.util.error(
           `all commands in **${toDisable.id}** are already disabled.`

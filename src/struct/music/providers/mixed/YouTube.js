@@ -73,13 +73,14 @@ class YouTube extends MusicProvider {
       query = YouTube.extractVideoID(query)
     }
 
-    if (!/^[a-zA-Z0-9-_]{11}$/.test(query)) {
-      const { data: { items } } = await this.search(query)
-      query = items.length ? items[0].id.videoId : null
-    }
-    if (!query) return null
+    let { data: { items: [video] } } = await this.getByID(query)
 
-    const { data: { items: [video] } } = await this.getByID(query)
+    if (!video) {
+      const { data: { items } } = await this.search(query)
+      if (items.length === 0) return null
+      video = (await this.getByID(items[0].id.videoId)).data.items[0]
+    }
+
     return [video]
   }
 
@@ -88,13 +89,13 @@ class YouTube extends MusicProvider {
       query = YouTube.extractPlaylistID(query)
     }
 
-    const { data: { items: playlistItems } } = await this.getPlaylistItems(
-      query
-    )
-    if (!playlistItems) return this.resolveVideo(query)
-
-    const id = playlistItems.map(video => video.contentDetails.videoId).join()
-    return this.getByID(id).then(res => res.data.items)
+    try {
+      const { data: { items: playlistItems } } = await this.getPlaylistItems(query)
+      const id = playlistItems.map(video => video.contentDetails.videoId).join()
+      return this.getByID(id).then(res => res.data.items)
+    } catch (err) {
+      return this.resolveVideo(query)
+    }
   }
 
   async resolvePlayables (query, opts) {
