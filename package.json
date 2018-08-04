@@ -5,6 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
+    "dev": "node -r dotenv/config src/index.js",
     "lint": "npx eslint ."
   },
   "repository": {
