@@ -1,5 +1,3 @@
-require('dotenv').config()
-
 const { CommandUtil } = require('discord-akairo')
 const MusenClient = require('./struct/MusenClient')
 const logr = require('logr')
