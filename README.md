@@ -1,5 +1,5 @@
 # Musen
-<p align="center"><a href=https://github.com/TeeSeal/Musen><img src="https://a.safe.moe/PeYK9.png" style="width: 100%;"></a></p>
+<p align="center"><a href=https://github.com/TeeSeal/Musen><img src="https://i.imgur.com/WLrEiQB.png" style="width: 100%;"></a></p>
 <p align="center">A discord radio bot built with the <a href=https://github.com/1Computer1/discord-akairo>discord-akairo</a> framework.</p>
 
 ### Setting up
