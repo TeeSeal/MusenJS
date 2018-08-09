@@ -26,11 +26,11 @@
     "axios": "^0.18.0",
     "common-tags": "^1.5.1",
     "discord-akairo": "1computer1/discord-akairo",
-    "discord.js": "hydrabolt/discord.js",
+    "discord.js": "discordjs/discord.js",
     "logr": "teeseal/logr",
     "moment": "^2.19.3",
     "moment-duration-format": "^2.2.1",
-    "opusscript": "^0.0.6",
+    "node-opus": "^0.3.0",
     "sequelize": "^4.28.7",
     "sqlite3": "^4.0.1",
     "ytdl-core": "^0.20.1"
