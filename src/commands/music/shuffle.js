@@ -22,8 +22,9 @@ class ShuffleCommand extends Command {
     }
 
     playlist.shuffle()
-    const items = [`**Now playing:** ${playlist.song.linkString}`].concat(
-      playlist.queue.map(s => `• ${s.linkString}`)
+    const { playable, queue } = playlist
+    const items = [`🔊 ${playable.formattedTitle}`].concat(
+      queue.map(s => `• ${s.formattedTitle}`)
     )
 
     return new Embed(msg.channel)
