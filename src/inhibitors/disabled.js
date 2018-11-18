@@ -7,7 +7,7 @@ class DisabledInhibitor extends Inhibitor {
     super('disabled', { reason: 'disabled' })
   }
 
-  exec (msg) {
+  exec (msg, command) {
     if (msg.author.id === this.client.user.id) return false
     const scopes = ['globally']
     if (msg.guild) scopes.push('guild', 'channel')
@@ -20,9 +20,9 @@ class DisabledInhibitor extends Inhibitor {
           ? model.get('disabled')
           : model.get(id, 'disabled')
 
-      if (disabled.includes(msg.util.command.id)) {
+      if (disabled.includes(command.id)) {
         msg.util.error(
-          `**${msg.util.command.id}** is disabled ${formattedScope}.`
+          `**${command.id}** is disabled ${formattedScope}.`
         )
         return true
       }
