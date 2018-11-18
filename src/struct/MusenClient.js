@@ -15,8 +15,9 @@ class MusenClient extends AkairoClient {
     this.commandHandler = new CommandHandler(this, {
       prefix: msg => Guild.get(msg.guild ? msg.guild.id : 'dm', 'prefix'),
       commandUtil: true,
-      directory: 'src/commands/',
-      automateCategories: true
+      handleEdits: true,
+      automateCategories: true,
+      directory: 'src/commands/'
     })
 
     this.listenerHandler = new ListenerHandler(this, {
