@@ -10,7 +10,7 @@ class InviteCommand extends Command {
 
   exec (msg) {
     return msg.channel.send(
-      'https://discordapp.com/api/oauth2/authorize?client_id=307913579883921410&scope=bot&permissions=37080128'
+      `https://discordapp.com/api/oauth2/authorize?client_id=${this.client.user.id}&scope=bot&permissions=37080128`
     )
   }
 }
