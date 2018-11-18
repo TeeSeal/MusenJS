@@ -24,13 +24,13 @@ class StopCommand extends Command {
       return msg.util.success('alright, crashing the party.')
     }
 
-    if (msg.member.voiceChannel.id !== msg.guild.me.voiceChannel.id) {
+    if (msg.member.voice.channel.id !== msg.guild.me.voice.channel.id) {
       return msg.util.error(
         'you have to be in the voice channel I\'m currently in.'
       )
     }
 
-    if (msg.member.voiceChannel.members.size === 2) {
+    if (msg.member.voice.channel.members.size === 2) {
       return msg.util.success('stopped playback.').then(() => playlist.stop())
     }
 
@@ -39,7 +39,7 @@ class StopCommand extends Command {
     }
     voteStops.add(msg.guild.id)
 
-    const members = msg.member.voiceChannel.members.filter(
+    const members = msg.member.voice.channel.members.filter(
       member => ![this.client.user.id, msg.author.id].includes(member.id)
     )
     const votesNeeded = Math.ceil(members.size / 2)

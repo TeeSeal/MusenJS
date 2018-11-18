@@ -43,7 +43,7 @@ class RepeatCommand extends Command {
     const playlist = Music.playlists.get(msg.guild.id)
 
     if (!playlist) return msg.util.error('nothing is currently playing.')
-    if (msg.member.voiceChannel.id !== msg.guild.me.voiceChannel.id) {
+    if (msg.member.voice.channel.id !== msg.guild.me.voice.channel.id) {
       return msg.util.error(
         'you have to be in the voice channel I\'m currently in.'
       )

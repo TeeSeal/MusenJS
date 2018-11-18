@@ -68,12 +68,12 @@ class PlayCommand extends Command {
     if (queries.length === 0) {
       return msg.util.error('give me something to look for.')
     }
-    if (!msg.member.voiceChannel) {
+    if (!msg.member.voice.channel) {
       return msg.util.error('you need to be in a voice channel.')
     }
     if (
-      msg.guild.me.voiceChannel &&
-      msg.member.voiceChannel.id !== msg.guild.me.voiceChannel.id
+      msg.guild.me.voice.channel &&
+      msg.member.voice.channel.id !== msg.guild.me.voice.channel.id
     ) {
       return msg.util.error(
         'you have to be in the voice channel I\'m currently in.'
@@ -125,7 +125,7 @@ class PlayCommand extends Command {
 
     if (!playlist.started) {
       this.attachEventHandlers(playlist, msg.channel)
-      await playlist.connect(msg.member.voiceChannel)
+      await playlist.connect(msg.member.voice.channel)
       playlist.play()
     }
   }

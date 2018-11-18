@@ -18,7 +18,7 @@ class SkipCommand extends Command {
     const playlist = Music.playlists.get(msg.guild.id)
 
     if (!playlist) return msg.util.error('nothing is currently playing.')
-    if (msg.member.voiceChannel.id !== msg.guild.me.voiceChannel.id) {
+    if (msg.member.voice.channel.id !== msg.guild.me.voice.channel.id) {
       return msg.util.error(
         'you have to be in the voice channel I\'m currently in.'
       )
@@ -29,7 +29,7 @@ class SkipCommand extends Command {
     if (
       msg.member.permissions.has('MANAGE_GUILD') ||
       playable.member.id === msg.member.id ||
-      msg.member.voiceChannel.members.size === 2
+      msg.member.voice.channel.members.size === 2
     ) {
       await playlist.fadeVolume(0)
       await new Embed(msg.channel)
@@ -49,7 +49,7 @@ class SkipCommand extends Command {
     }
     voteSkips.add(msg.guild.id)
 
-    const members = msg.member.voiceChannel.members.filter(
+    const members = msg.member.voice.channel.members.filter(
       member => ![this.client.user.id, msg.author.id].includes(member.id)
     )
     const votesNeeded = Math.ceil(members.size / 2)
