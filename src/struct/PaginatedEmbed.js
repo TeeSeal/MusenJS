@@ -148,13 +148,14 @@ class PaginatedEmbed extends MessageEmbed {
       })
   }
 
-  // Paginatino checks
+  // Pagination checks
   checkDescription () {
     if (!this._description) return
     if (Array.isArray(this._description)) {
       this.pagination = PaginatedEmbed.parsePagination({
         items: this._description,
-        page: this.page
+        page: this.page,
+        by: 1
       })
       return
     }
