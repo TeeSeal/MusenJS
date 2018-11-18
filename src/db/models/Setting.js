@@ -48,7 +48,7 @@ module.exports = (sequelize, DataTypes) => {
 
     async getAll () {
       const res = {}
-      for (const setting of await this.all()) {
+      for (const setting of await this.findAll()) {
         res[setting.name] = setting.parsedValue()
       }
       return res

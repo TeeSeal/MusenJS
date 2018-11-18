@@ -3,7 +3,7 @@ const { deepFreeze } = require('../util')
 
 // ---- HOOKS ----
 async function cacheAll () {
-  const rows = await this.all()
+  const rows = await this.findAll()
   for (const row of rows) {
     this.collection.set(row[this.pk], row)
   }
