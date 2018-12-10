@@ -15,10 +15,6 @@ class PlaylistCommand extends Command {
           flag: ['page=', 'p='],
           type: parserInRange(0),
           default: 0
-        },
-        {
-          id: 'name',
-          type: 'lowercase'
         }
       ],
       description: 'Shows the current playlist.'
