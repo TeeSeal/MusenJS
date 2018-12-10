@@ -15,8 +15,8 @@ class GuildInfoCommand extends Command {
     const { songLimit, defaultVolume, maxVolume } = Guild.get(msg.guild.id)
     const configs = [
       `Maximum amount of songs in playlist: **${songLimit}**`,
-      `Default volume: **${defaultVolume}**`,
-      `Maximum volume: **${maxVolume}**`
+      `Default volume: **${defaultVolume}%**`,
+      `Maximum volume: **${maxVolume}%**`
     ]
 
     const roles = msg.guild.roles.sort((a, b) => b.comparePositionTo(a))
