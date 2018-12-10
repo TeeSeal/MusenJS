@@ -1,18 +1,9 @@
 const { CommandUtil } = require('discord-akairo')
 const MusenClient = require('./struct/MusenClient')
-const logr = require('logr')
 const client = new MusenClient()
 
 client.init()
-
-process.on('unhandledRejection', err => {
-  logr.error(err)
-
-  const owner = client.users.get(client.options.ownerID)
-  if (!owner) return
-
-  owner.send(`Got an unhandledRejection:\n\`\`\`${err.stack}\`\`\``)
-})
+process.on('unhandledRejection', err => client.logError(err))
 
 Object.assign(CommandUtil.prototype, {
   info (content, opts) {

@@ -56,6 +56,15 @@ class MusenClient extends AkairoClient {
       throw err
     }
   }
+
+  logError (error) {
+    logr.error(error)
+
+    const owner = this.users.get(this.options.ownerID)
+    if (!owner) return
+
+    owner.send(`Got an unhandledRejection:\n\`\`\`${error.stack}\`\`\``)
+  }
 }
 
 module.exports = MusenClient

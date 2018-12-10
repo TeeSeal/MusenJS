@@ -162,6 +162,7 @@ class PlayCommand extends Command {
           .setColor(Embed.colors.CYAN)
           .send()
       )
+      .on('error', error => this.client.logError(error))
   }
 }
 

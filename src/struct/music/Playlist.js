@@ -61,13 +61,18 @@ class Playlist extends EventEmitter {
     this.playable = playable
     this._volume = this.convertVolume(playable.volume) || this.defaultVolume
 
-    const dispatcher = await playable.play(this.connection, {
-      volume: this._volume
-    })
+    let dispatcher
+    try {
+      dispatcher = await playable.play(this.connection, {
+        volume: this._volume
+      })
+    } catch (err) {
+      this.emit('error', err)
+    }
 
     if (!dispatcher) {
       this.emit('unavailable', playable)
-      this.playNext(this.queue.shift())
+      return this.playNext(this.queue.shift())
     }
 
     this.emit('playing', playable)
