@@ -45,16 +45,12 @@ class MusenClient extends AkairoClient {
   }
 
   async init () {
-    try {
-      logr.info('Connecting to database...')
-      await sequelize.sync()
-      logr.success('OK')
+    logr.info('Connecting to database...')
+    await sequelize.sync()
+    logr.success('OK')
 
-      logr.info('Logging in...')
-      this.login(process.env.TOKEN)
-    } catch (err) {
-      throw err
-    }
+    logr.info('Logging in...')
+    this.login(process.env.TOKEN)
   }
 
   logError (error) {
