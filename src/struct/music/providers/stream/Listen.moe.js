@@ -13,7 +13,7 @@ class ListenMoe extends MusicProvider {
       {
         id: 'listenmoe',
         title: 'Listen.Moe',
-        thumbnail: 'https://a.safe.moe/B2q07.png',
+        thumbnail: 'https://pbs.twimg.com/profile_images/792630035832266752/mmry-djk_400x400.jpg',
         url: 'https://listen.moe',
         live: true,
         stream: 'async:https://listen.moe/stream'
