@@ -154,8 +154,7 @@ class PaginatedEmbed extends MessageEmbed {
     if (Array.isArray(this._description)) {
       this.pagination = PaginatedEmbed.parsePagination({
         items: this._description,
-        page: this.page,
-        by: 1
+        page: this.page
       })
       return
     }
