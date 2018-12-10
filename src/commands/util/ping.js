@@ -13,7 +13,7 @@ class PingCommand extends Command {
       const timeDiff =
         (sent.editedAt || sent.createdAt) - (msg.editedAt || msg.createdAt)
       const text = `🔂\u2000**RTT**: ${timeDiff} ms\n💟\u2000**Heartbeat**: ${Math.round(
-        this.client.ping
+        this.client.ws.ping
       )} ms`
       return msg.util.info(`Pong!\n${text}`)
     })
