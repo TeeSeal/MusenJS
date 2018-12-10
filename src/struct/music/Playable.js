@@ -48,8 +48,8 @@ class Playable {
 
   get time () {
     const total = Playable.formatDuration(this.duration)
-    const current = Playable.formatDuration(this.dispatcher.time)
-    const left = Playable.formatDuration(this.duration - this.dispatcher.time + 1000)
+    const current = Playable.formatDuration(this.dispatcher.streamTime)
+    const left = Playable.formatDuration(this.duration - this.dispatcher.streamTime + 1000)
 
     return `${current} / ${total}  |  ${left} left`
   }
