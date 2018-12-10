@@ -53,7 +53,7 @@ class VolumeCommand extends Command {
     }
 
     const icon =
-      newVolume < volume ? Embed.icons.VOLUME_UP : Embed.icons.VOLUME_DOWN
+      newVolume < volume ? Embed.icons.VOLUME_DOWN : Embed.icons.VOLUME_UP
 
     playlist.fadeVolume(newVolume)
 
