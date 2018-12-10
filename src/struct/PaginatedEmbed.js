@@ -17,6 +17,7 @@ class PaginatedEmbed extends MessageEmbed {
     this._fields = []
     this.textLimit = textLimit
     this.fieldLimit = fieldLimit
+    this.itemsPerPage = null
   }
 
   // Message actions
@@ -55,6 +56,11 @@ class PaginatedEmbed extends MessageEmbed {
   setFieldLimit (number) {
     if (number > 20 || number < 1) return this
     this.fieldLimit = number
+    return this
+  }
+
+  setItemsPerPage (number) {
+    this.itemsPerPage = number
     return this
   }
 
@@ -154,7 +160,8 @@ class PaginatedEmbed extends MessageEmbed {
     if (Array.isArray(this._description)) {
       this.pagination = PaginatedEmbed.parsePagination({
         items: this._description,
-        page: this.page
+        page: this.page,
+        by: this.itemsPerPage
       })
       return
     }

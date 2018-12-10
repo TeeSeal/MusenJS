@@ -28,6 +28,7 @@ class HelpCommand extends Command {
     return new Embed(msg.channel)
       .setTitle('Help')
       .setDescription(pages)
+      .setItemsPerPage(1)
       .setIcon(Embed.icons.LIST)
       .setColor(Embed.colors.BLUE)
       .send()
