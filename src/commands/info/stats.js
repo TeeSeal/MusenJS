@@ -16,7 +16,7 @@ class StatsCommand extends Command {
   exec (msg) {
     const uptime = moment
       .duration(this.client.uptime)
-      .format('d[ days], h[ hours], m[ minutes, and ]s[ seconds]')
+      .format('d[ days], h[ hours], m[ minutes and ]s[ seconds]')
     const memUsage = Object.entries(process.memoryUsage())
       .map(
         ([key, value]) =>
