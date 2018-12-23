@@ -4,7 +4,7 @@ const { version } = require('../../package')
 class HTTPClient extends Axios {
   constructor (opts) {
     opts.headers = {
-      'User-Agent': `Haku bot v${version} (https://github.com/TeeSeal/Haku)`,
+      'User-Agent': `Musen v${version} (https://github.com/TeeSeal/Musen)`,
       ...opts.headers
     }
     super(opts)
