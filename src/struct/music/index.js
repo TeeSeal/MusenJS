@@ -19,13 +19,13 @@ class Music {
     )
   }
 
-  static getPlaylist (msg, opts) {
-    if (playlists.has(msg.guild.id)) {
-      return playlists.get(msg.guild.id)
+  static getPlaylist (id, opts) {
+    if (playlists.has(id)) {
+      return playlists.get(id)
     }
 
-    const playlist = new Playlist(msg, opts, this)
-    playlists.set(msg.guild.id, playlist)
+    const playlist = new Playlist(id, opts, this)
+    playlists.set(id, playlist)
     return playlist
   }
 

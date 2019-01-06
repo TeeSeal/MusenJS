@@ -81,7 +81,7 @@ class PlayCommand extends Command {
     }
 
     const guildOptions = Guild.get(msg.guild.id)
-    const playlist = Music.getPlaylist(msg, guildOptions)
+    const playlist = Music.getPlaylist(msg.guild.id, guildOptions)
 
     const playables = await Music.resolvePlayables(queries, {
       member: msg.member,

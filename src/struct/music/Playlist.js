@@ -2,13 +2,12 @@ const { shuffle } = require('../../util')
 const { EventEmitter } = require('events')
 
 class Playlist extends EventEmitter {
-  constructor ({ guild: { id }, channel }, guildOptions, handler) {
+  constructor (id, guildOptions, handler) {
     super()
     this.id = id
     this.handler = handler
 
     this.queue = []
-    this.channel = channel
 
     this.playable = null
     this.connection = null
@@ -17,7 +16,7 @@ class Playlist extends EventEmitter {
     this.started = false
 
     this._volume = this.convertVolume(guildOptions.defaultVolume)
-    this.itemLimit = guildOptions.songLimit
+    this.playableLimit = guildOptions.songLimit
   }
 
   async connect (voiceChannel) {
@@ -35,13 +34,13 @@ class Playlist extends EventEmitter {
     const removed = []
     const added = playables
 
-    const diff = this.queue.length + added.length - this.itemLimit
+    const diff = this.queue.length + added.length - this.playableLimit
     if (diff > 0) {
       for (const playable of added.splice(added.length - diff, diff)) {
         removed.push({
           playable,
           reason: `playlist item limit reached. (max. **${
-            this.itemLimit
+            this.playableLimit
           }** items)`
         })
       }
