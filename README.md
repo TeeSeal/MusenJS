@@ -4,12 +4,19 @@
 
 ### Setting up
 
----
-
+#### Base
 1. `git clone https://github.com/TeeSeal/Musen.git`
 2. `cd Musen`
-3. `mv keychain.example.json keychain.json`
-4. Replace the entries in `keychain.json` with your keys.
-5. `npm i`
-6. Make desired modifications to the source code. (Optional)
-7. `npm start`
+
+#### Dev
+
+1. `npm i`
+2. `mv .env.example .env`
+3. Fill the .env file with all necessary values
+4. `npm run dev`
+
+#### Prod
+
+1. `npm i --only=prod`
+2. Export the environment variables specified in `.env.example` (otherwise they can be specified when running the app)
+3. `npm start`
