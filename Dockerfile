@@ -1,6 +1,6 @@
 FROM node:alpine
 
-WORKDIR /usr/src/Musen
+WORKDIR /usr/src/app
 
 COPY package.json yarn.lock ./
 RUN apk add --update \
