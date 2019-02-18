@@ -116,11 +116,12 @@ class Playlist extends EventEmitter {
   }
 
   fadeVolume (volume) {
-    let current = this._volume
-    this._volume = this.convertVolume(volume)
-    const modifier = current < this._volume ? 0.05 : -0.05
-
     return new Promise(resolve => {
+      if (volume === this.volume) return resolve(volume)
+      let current = this._volume
+      this._volume = this.convertVolume(volume)
+      const modifier = current < this._volume ? 0.05 : -0.05
+
       const interval = setInterval(() => {
         current += modifier
         this.playable.dispatcher.setVolume(current)
@@ -160,11 +161,11 @@ class Playlist extends EventEmitter {
   }
 
   convertVolume (volume) {
-    return volume / 50
+    return volume / 100
   }
 
   get volume () {
-    return this._volume * 50
+    return this._volume * 100
   }
 }
 

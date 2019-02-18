@@ -28,8 +28,7 @@ class VolumeCommand extends Command {
     })
   }
 
-  exec (msg, args) {
-    const { newVolume } = args
+  exec (msg, { newVolume }) {
     const playlist = Music.playlists.get(msg.guild.id)
 
     if (!playlist) return msg.util.error('nothing is currently playing.')
