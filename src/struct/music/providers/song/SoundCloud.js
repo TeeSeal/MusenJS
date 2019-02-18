@@ -8,9 +8,10 @@ class SoundCloud extends MusicProvider {
     })
 
     this.clientID = process.env.SOUNDCLOUD_CLIENT_ID
-    this.aliases = ['soundcloud', 'sc']
-    this.REGEXP = /^https:\/\/soundcloud\.com\//
   }
+
+  get aliases () { return ['soundcloud', 'sc'] }
+  get REGEXP () { return /^https:\/\/soundcloud\.com\// }
 
   generatePlayable (track, opts) {
     return new MusicProvider.Playable(

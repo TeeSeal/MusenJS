@@ -13,12 +13,16 @@ class MusicProvider extends HTTPClient {
     return Playable
   }
 
-  static get REGEXP () {
+  get REGEXP () {
     throw new Error('not implemented.')
   }
 
-  static get aliases () {
+  get aliases () {
     throw new Error('not implemented.')
+  }
+
+  get defaultOptions () {
+    return {}
   }
 
   static loadAll () {

@@ -6,10 +6,10 @@ class Twitch extends MusicProvider {
       baseURL: 'https://api.twitch.tv/helix/',
       headers: { 'Client-Id': process.env.TWITCH_CLIENT_ID }
     })
-
-    this.aliases = ['twitch', 'tw']
-    this.REGEXP = /(https?:\/\/)?(www\.)?twitch\.tv\//
   }
+
+  get aliases () { return ['twitch', 'tw'] }
+  get REGEXP () { return /(https?:\/\/)?(www\.)?twitch\.tv\// }
 
   generatePlayable (data, opts) {
     return new MusicProvider.Playable(

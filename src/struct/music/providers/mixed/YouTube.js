@@ -1,6 +1,6 @@
 const MusicProvider = require('../../MusicProvider')
 const moment = require('moment')
-const ytdl = require('ytdl-core')
+const ytdl = require('ytdl-core-discord')
 
 class YouTube extends MusicProvider {
   constructor () {
@@ -8,10 +8,11 @@ class YouTube extends MusicProvider {
       baseURL: 'https://www.googleapis.com/youtube/v3/',
       params: { key: process.env.GOOGLE_API_KEY }
     })
-
-    this.aliases = ['youtube', 'yt', 'tube']
-    this.REGEXP = /(https?:\/\/)?(www\.)?youtu(be\.com|\.be)\//
   }
+
+  get aliases () { return ['youtube', 'yt', 'tube'] }
+  get REGEXP () { return /(https?:\/\/)?(www\.)?youtu(be\.com|\.be)\// }
+  get defaultOptions () { return { type: 'opus' } }
 
   generatePlayable (video, opts) {
     const duration = moment
@@ -109,24 +110,8 @@ class YouTube extends MusicProvider {
     return videos.map(video => this.generatePlayable(video, opts))
   }
 
-  async fetchStream (playable) {
-    const [opts, eventName] = playable.live
-      ? [undefined, 'data']
-      : [{ filter: 'audioonly' }, 'response']
-
-    return new Promise(resolve => {
-      const stream = ytdl(playable.id, opts)
-        .once(eventName, () => {
-          playable.stream = stream
-          stream.removeAllListeners('error')
-          resolve(stream)
-        })
-        .once('error', () => {
-          playable.stream = null
-          stream.removeAllListeners(eventName)
-          resolve(null)
-        })
-    })
+  fetchStream (playable) {
+    return ytdl(playable.id)
   }
 
   static extractVideoID (url) {

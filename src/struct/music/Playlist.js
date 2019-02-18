@@ -75,10 +75,12 @@ class Playlist extends EventEmitter {
     }
 
     this.emit('playing', playable)
-    dispatcher.on('finish', () => {
-      this.emit('end', playable)
-      return setTimeout(() => this.playNext(this.queue.shift()), 10)
-    })
+    dispatcher
+      .on('error', console.error)
+      .on('finish', () => {
+        this.emit('end', playable)
+        return setTimeout(() => this.playNext(this.queue.shift()), 10)
+      })
   }
 
   add (playables) {

@@ -3,10 +3,10 @@ const MusicProvider = require('../../MusicProvider.js')
 class ListenMoe extends MusicProvider {
   constructor () {
     super({ baseURL: 'https://listen.moe/api' })
-
-    this.aliases = ['listenmoe', 'listen', 'lm']
-    this.REGEXP = /listen\.moe/i
   }
+
+  get aliases () { return ['listenmoe', 'listen', 'lm'] }
+  get REGEXP () { return /listen\.moe/i }
 
   generatePlayable (opts) {
     return new MusicProvider.Playable(

@@ -22,7 +22,7 @@ class Playable {
     const stream = await this.fetchStream()
     if (!stream) return null
 
-    this.dispatcher = connection.play(stream, opts)
+    this.dispatcher = connection.play(stream, { ...this.provider.defaultOptions, ...opts })
     return this.dispatcher
   }
 
