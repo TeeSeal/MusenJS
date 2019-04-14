@@ -152,11 +152,12 @@ class PlayCommand extends Command {
           .setColor(Embed.colors.RED)
           .send()
       )
-      .on('unavailable', playable =>
+      .on('unavailable', (playable, err) =>
         new Embed(channel)
           .setTitle(playable.title)
           .setURL(playable.url)
-          .addField('An issue occured playing this playable.', 'Skipping it.')
+          .addField('An issue occured playing this song.', 'Skipping it.')
+          .addField('Details', err.message)
           .setAuthor(playable.member)
           .setIcon(Embed.icons.SKIP)
           .setColor(Embed.colors.CYAN)

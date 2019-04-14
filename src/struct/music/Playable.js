@@ -20,7 +20,7 @@ class Playable {
 
   async play (connection, opts) {
     const stream = await this.fetchStream()
-    if (!stream) return null
+    if (!stream) throw new Error('Failed to fetch stream.')
 
     this.dispatcher = connection.play(stream, { ...this.provider.defaultOptions, ...opts })
     return this.dispatcher

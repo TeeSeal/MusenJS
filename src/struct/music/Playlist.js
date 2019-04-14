@@ -66,11 +66,7 @@ class Playlist extends EventEmitter {
         volume: this._volume
       })
     } catch (err) {
-      this.emit('error', err)
-    }
-
-    if (!dispatcher) {
-      this.emit('unavailable', playable)
+      this.emit('unavailable', playable, err)
       return this.playNext(this.queue.shift())
     }
 
