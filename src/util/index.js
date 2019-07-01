@@ -91,16 +91,6 @@ class Util {
     return array[Math.floor(Math.random() * array.length)]
   }
 
-  static parserInRange (min, max) {
-    return word => {
-      if (!word || isNaN(word)) return null
-      const num = parseInt(word)
-      if (!isNaN(min) && num < min) return min
-      if (!isNaN(max) && num > max) return max
-      return num
-    }
-  }
-
   static paginate (arr, countOverwrite) {
     const count = countOverwrite || pageItemCount
     return arr

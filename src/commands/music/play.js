@@ -1,5 +1,5 @@
-const { Command } = require('discord-akairo')
-const { stripIndents, shuffle, parserInRange } = require('../../util')
+const { Command, Argument } = require('discord-akairo')
+const { stripIndents, shuffle } = require('../../util')
 const { Guild } = require('../../db')
 const Embed = require('../../struct/MusenEmbed')
 const Music = require('../../struct/music')
@@ -15,21 +15,22 @@ class PlayCommand extends Command {
         {
           id: 'rand',
           match: 'flag',
-          flag: '-shuffle'
+          flag: '--shuffle'
         },
         {
           id: 'queries',
           match: 'rest',
-          type: line => line.split(';').map(q => q.trim()),
+          type: (_, line) => line.split(';').map(q => q.trim()),
           default: []
         },
         {
           id: 'volume',
           match: 'option',
-          flag: ['volume=', 'vol=', 'v='],
-          type (word, msg) {
-            const parse = parserInRange(0, Guild.get(msg.guild.id).maxVolume)
-            return parse(word)
+          flag: ['--volume', '--vol', '-v'],
+          type (msg, word) {
+            return Argument
+              .range('integer', 0, Guild.get(msg.guild.id).maxVolume, true)
+              .bind(this)(msg, word)
           },
           default: msg => Guild.get(msg.guild.id).defaultVolume
         }
@@ -40,10 +41,10 @@ class PlayCommand extends Command {
         \`query\` - something to use as a source.
 
         **Optional arguments:**
-        \`volume\` - play the song(s) at the given volume rather than the default one.
+        \`--volume\` - play the song(s) at the given volume rather than the default one.
 
         **Optional flags:**
-        \`-shuffle\` - shuffle the songs before adding to playlist.
+        \`--shuffle\` - shuffle the songs before adding to playlist.
 
         **Usage:**
         \`play something\` => searches youtube for 'something' and adds the first result to the queue.

@@ -1,5 +1,5 @@
-const { Command } = require('discord-akairo')
-const { stripIndents, parserInRange } = require('../../util')
+const { Command, Argument } = require('discord-akairo')
+const { stripIndents } = require('../../util')
 const Music = require('../../struct/music')
 const { Guild } = require('../../db')
 
@@ -13,26 +13,26 @@ class SetCommand extends Command {
         {
           id: 'maxSongDuration',
           match: 'option',
-          flag: ['duration=', 'length=', 'd='],
-          type: parserInRange(1, 240)
+          flag: ['--duration', '--length', '-d'],
+          type: Argument.range('integer', 1, 240, true)
         },
         {
           id: 'defaultVolume',
           match: 'option',
-          flag: ['volume=', 'vol='],
-          type: parserInRange(1, 100)
+          flag: ['--default-volume', '--volume', '-v'],
+          type: Argument.range('integer', 1, 100, true)
         },
         {
           id: 'maxVolume',
           match: 'option',
-          flag: ['maxVolume=', 'maxVol=', 'mv='],
-          type: parserInRange(1, 100)
+          flag: ['--max-volume', '--max-vol=', '-V'],
+          type: Argument.range('integer', 1, 100, true)
         },
         {
           id: 'songLimit',
           match: 'option',
-          flag: ['songLimit=', 'songs=', 'maxSongs=', 'sl='],
-          type: parserInRange(1, 100)
+          flag: ['--song-limit=', '--songs', '--max-songs', '-l'],
+          type: Argument.range('integer', 1, 100, true)
         }
       ],
       description: stripIndents`
@@ -44,8 +44,8 @@ class SetCommand extends Command {
         \`songLimit\` - the maximum amount of songs one can have in a playlist.
 
         **Usage:**
-        \`set duration=20 volume=30 maxVolume=70\` => sets the values.
-        \`set duration=20 v=30 mv=70\` => shortcuts.
+        \`set --duration 20 --default-volume 30 --max-volume 70\` => sets the values.
+        \`set --duration 20 -v 30 -V 70\` => shortcuts.
       `
     })
   }

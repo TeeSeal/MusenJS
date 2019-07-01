@@ -1,4 +1,4 @@
-const { Command } = require('discord-akairo')
+const { Command, Argument } = require('discord-akairo')
 const { stripIndents } = require('../../util')
 const Music = require('../../struct/music')
 
@@ -10,18 +10,12 @@ class RepeatCommand extends Command {
       args: [
         {
           id: 'times',
-          type: word => {
-            if (!word || isNaN(word)) return null
-            const num = parseInt(word)
-            if (num < 1) return 1
-            if (num > 100) return 100
-            return num
-          }
+          type: Argument.range('integer', 1, 50, true)
         },
         {
           id: 'end',
           match: 'flag',
-          flag: '-end'
+          flag: '--end'
         }
       ],
       description: stripIndents`
@@ -34,7 +28,7 @@ class RepeatCommand extends Command {
 
         **Usage:**
         \`repeat 5\` => will repeat the currently playing track 5 times.
-        \`repeat 5 -end\` => will add the currently playing track to the end of the queue 5 times.
+        \`repeat 5 --end\` => will add the currently playing track to the end of the queue 5 times.
       `
     })
   }

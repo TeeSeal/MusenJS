@@ -1,5 +1,4 @@
-const { Command } = require('discord-akairo')
-const { parserInRange } = require('../../util')
+const { Command, Argument } = require('discord-akairo')
 const Embed = require('../../struct/MusenEmbed')
 const Music = require('../../struct/music')
 
@@ -12,8 +11,8 @@ class PlaylistCommand extends Command {
         {
           id: 'page',
           match: 'option',
-          flag: ['page=', 'p='],
-          type: parserInRange(0),
+          flag: ['--page', '-p'],
+          type: Argument.range('integer', 0, Infinity),
           default: 0
         }
       ],
