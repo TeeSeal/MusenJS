@@ -26,25 +26,23 @@ class Twitch extends MusicProvider {
   }
 
   async fetchChannelData (login) {
-    const { data: res } = await this.get('users', { params: { login } })
-    if (res.data.length === 0) {
-      return null
-    }
+    const res = await this.get('users', { params: { login } })
+    if (res.data.length === 0) return null
     return res.data[0]
   }
 
   fetchStreamData (user_id) { // eslint-disable-line camelcase
-    return this.get('streams', { params: { user_id } }).then(res => res.data.data[0])
+    return this.get('streams', { params: { user_id } }).then(res => res.data[0])
   }
 
   async fetchStream (playable) {
     const channel = playable.id
-    const { data: accessToken } = await this.get(
+    const accessToken = await this.get(
       `http://api.twitch.tv/api/channels/${channel}/access_token`
     )
     if (!accessToken) return null
 
-    const { data: streams } = await this.get(
+    const streams = await this.get(
       `http://usher.twitch.tv/api/channel/hls/${channel}.m3u8`,
       {
         params: {

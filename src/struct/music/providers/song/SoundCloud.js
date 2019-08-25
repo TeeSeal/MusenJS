@@ -29,7 +29,7 @@ class SoundCloud extends MusicProvider {
   }
 
   async fetchFromURL (url) {
-    const { data: resource } = await this.get('resolve.json', {
+    const resource = await this.get('resolve.json', {
       params: { url }
     })
 
@@ -41,7 +41,7 @@ class SoundCloud extends MusicProvider {
   }
 
   async search (query) {
-    const { data: [track] } = await this.get('tracks', { params: { q: query } })
+    const [track] = await this.get('tracks', { params: { q: query } })
     if (!track) return null
     return [track]
   }
