@@ -16,7 +16,7 @@ class EnableCommand extends Command {
       args: [
         {
           id: 'toEnable',
-          type (word) {
+          type (msg, word) {
             if (word.startsWith('!')) {
               word = word.slice(1)
               const result = this.handler.categories.get(word)

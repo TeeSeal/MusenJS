@@ -25,7 +25,7 @@ class SetCommand extends Command {
         {
           id: 'maxVolume',
           match: 'option',
-          flag: ['--max-volume', '--max-vol=', '-V'],
+          flag: ['--max-volume', '--max-vol', '-V'],
           type: Argument.range('integer', 1, 100, true)
         },
         {

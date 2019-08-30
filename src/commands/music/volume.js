@@ -1,5 +1,5 @@
-const { Command } = require('discord-akairo')
-const { stripIndents, parserInRange } = require('../../util')
+const { Command, Argument } = require('discord-akairo')
+const { stripIndents } = require('../../util')
 const Embed = require('../../struct/MusenEmbed')
 const Music = require('../../struct/music')
 const { Guild } = require('../../db')
@@ -12,9 +12,10 @@ class VolumeCommand extends Command {
       args: [
         {
           id: 'newVolume',
-          type (word, msg) {
-            const parse = parserInRange(0, Guild.get(msg.guild.id).maxVolume)
-            return parse(word)
+          type (msg, word) {
+            return Argument
+              .range('integer', 0, Guild.get(msg.guild.id).maxVolume, true)
+              .bind(this)(msg, word)
           }
         }
       ],

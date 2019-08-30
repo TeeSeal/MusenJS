@@ -17,7 +17,7 @@ class DisableCommand extends Command {
       args: [
         {
           id: 'toDisable',
-          type (word) {
+          type (msg, word) {
             if (word.startsWith('!')) {
               word = word.slice(1)
               const result = this.handler.categories.get(word)
