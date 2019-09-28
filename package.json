@@ -31,16 +31,16 @@
     "moment-duration-format": "^2.2.1",
     "node-fetch": "^2.6.0",
     "node-opus": "^0.3.1",
-    "sequelize": "^5.18.0",
+    "sequelize": "^5.19.1",
     "sqlite3": "^4.1.0",
     "ytdl-core-discord": "amishshah/ytdl-core-discord"
   },
   "devDependencies": {
     "dotenv": "^8.1.0",
-    "eslint": "^6.3.0",
+    "eslint": "^6.4.0",
     "eslint-config-standard": "^14.1.0",
     "eslint-plugin-import": "^2.18.2",
-    "eslint-plugin-node": "^9.2.0",
+    "eslint-plugin-node": "^10.0.0",
     "eslint-plugin-promise": "^4.0.1",
     "eslint-plugin-standard": "^4.0.1"
   }
