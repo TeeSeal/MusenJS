@@ -77,19 +77,15 @@ class PaginatedEmbed extends MessageEmbed {
     return this
   }
 
-  addField (name, value, inline = false) {
-    if (!this.channel) super.addField(name, value, inline)
+  addField (name, value, inline = false, sup = false) {
+    if (sup || !this.channel) super.addField(name, value, inline)
     else this._fields.push([name, value, inline])
     return this
   }
 
   // Util methods
   addFields (fields, sup = false) {
-    for (const field of fields) {
-      if (sup) super.addField(...field)
-      else this.addField(...field)
-    }
-
+    for (const field of fields) this.addField(field[0], field[1], field[2], sup)
     return this
   }
 

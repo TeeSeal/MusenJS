@@ -88,7 +88,7 @@ class SkipCommand extends Command {
 
       embed
         .clearFields()
-        .addField(success ? '✅ Skipped.' : '❌ Voteskip failed.', '\u200b')
+        .addField(success ? '✅ Skipped.' : '❌ Voteskip failed.', '\u200b', false, true)
 
       if (success) {
         await playlist.fadeVolume(0)
