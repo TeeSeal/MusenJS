@@ -69,20 +69,20 @@ class PlayCommand extends Command {
     if (queries.length === 0) {
       return msg.util.error('give me something to look for.')
     }
+
     if (!msg.member.voice.channel) {
       return msg.util.error('you need to be in a voice channel.')
-    }
-    if (
-      msg.guild.me.voice.channel &&
-      msg.member.voice.channel.id !== msg.guild.me.voice.channel.id
-    ) {
-      return msg.util.error(
-        'you have to be in the voice channel I\'m currently in.'
-      )
     }
 
     const guildOptions = Guild.get(msg.guild.id)
     const playlist = Music.getPlaylist(msg.guild.id, guildOptions)
+
+    const memberChannelID = (msg.member.voice.channel || {}).id
+    if (playlist.connection && memberChannelID !== playlist.connection.channel.id) {
+      return msg.util.error(
+        'you have to be in the voice channel I\'m currently in.'
+      )
+    }
 
     const playables = await Music.resolvePlayables(queries, {
       member: msg.member,
