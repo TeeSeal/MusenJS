@@ -77,10 +77,7 @@ class StopCommand extends Command {
 
       embed
         .clearFields()
-        .addField(
-          success ? '✅ Playback stopped.' : '❌ Votestop failed.',
-          '\u200b'
-        )
+        .addField(success ? '✅ Playback stopped.' : '❌ Votestop failed.', '\u200b', false, true)
 
       if (success) playlist.stop()
       return embed.edit()
