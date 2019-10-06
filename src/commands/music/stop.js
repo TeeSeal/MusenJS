@@ -24,11 +24,8 @@ class StopCommand extends Command {
       return msg.util.success('alright, crashing the party.')
     }
 
-    if (!msg.member.voice.channel) {
-      return msg.util.error('you need to be in a voice channel.')
-    }
-
-    if (msg.member.voice.channel.id !== msg.guild.me.voice.channel.id) {
+    const memberChannelID = (msg.member.voice.channel || {}).id
+    if (memberChannelID !== playlist.connection.channel.id) {
       return msg.util.error(
         'you have to be in the voice channel I\'m currently in.'
       )
@@ -53,8 +50,7 @@ class StopCommand extends Command {
       .setTitle(playable.title)
       .addField(
         'VOTESTOP',
-        `Click the ✅ to vote.\n${votesNeeded +
-          1} votes needed.\nVote will end in 30 seconds.`
+        `Click the ✅ to vote.\n${votesNeeded + 1} votes needed.\nVote will end in 30 seconds.`
       )
       .setURL(playable.url)
       .setAuthor(msg.member)

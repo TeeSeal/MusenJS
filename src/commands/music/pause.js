@@ -15,11 +15,14 @@ class PauseCommand extends Command {
     const playlist = Music.playlists.get(msg.guild.id)
 
     if (!playlist) return msg.util.error('nothing is currently playing.')
-    if (msg.member.voice.channel.id !== msg.guild.me.voice.channel.id) {
+
+    const memberChannelID = (msg.member.voice.channel || {}).id
+    if (memberChannelID !== playlist.connection.channel.id) {
       return msg.util.error(
         'you have to be in the voice channel I\'m currently in.'
       )
     }
+
     if (playlist.paused) return msg.util.error('playback is already paused.')
 
     playlist.pause()

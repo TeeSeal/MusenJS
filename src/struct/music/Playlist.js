@@ -145,7 +145,7 @@ class Playlist extends EventEmitter {
   stop () {
     this.queue = []
     this.stopped = true
-    this.playable.dispatcher.end('stop')
+    if (this.playable) this.playable.dispatcher.end('stop')
     this.destroy()
     return this
   }
