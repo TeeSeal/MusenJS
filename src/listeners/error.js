@@ -10,10 +10,10 @@ class ErrorListener extends Listener {
     })
   }
 
-  exec (err, msg, cmd) {
+  async exec (err, msg, cmd) {
     logr.error(err)
 
-    const owner = this.client.users.get(this.client.options.ownerID)
+    const owner = await this.client.users.fetch(this.client.options.ownerID)
     if (!owner) return
 
     owner.send(stripIndents`

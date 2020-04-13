@@ -84,14 +84,9 @@ class PaginatedEmbed extends MessageEmbed {
   }
 
   // Util methods
-  addFields (fields, sup = false) {
-    for (const field of fields) this.addField(field[0], field[1], field[2], sup)
-    return this
-  }
-
   setFields (fields, sup = false) {
     this.clearFields()
-    this.addFields(fields, sup)
+    for (const field of fields) this.addField(field[0], field[1], field[2], sup)
     return this
   }
 

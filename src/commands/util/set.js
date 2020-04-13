@@ -69,7 +69,7 @@ class SetCommand extends Command {
     }
 
     if (defaultVolume) {
-      if (maxVolume || dbMaxVolume < defaultVolume) {
+      if (maxVolume < defaultVolume || dbMaxVolume < defaultVolume) {
         return msg.util.error(
           'default volume can\'t be bigger than the maximum one.'
         )
@@ -79,7 +79,7 @@ class SetCommand extends Command {
     }
 
     if (maxVolume) {
-      if (defaultVolume || dbDefaultVolume > maxVolume) {
+      if (defaultVolume > maxVolume || dbDefaultVolume > maxVolume) {
         return msg.util.error(
           'maximum volume can\'t be smaller than the default one.'
         )

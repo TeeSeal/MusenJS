@@ -53,10 +53,10 @@ class MusenClient extends AkairoClient {
     this.login(process.env.TOKEN)
   }
 
-  logError (error) {
+  async logError (error) {
     logr.error(error)
 
-    const owner = this.users.get(this.options.ownerID)
+    const owner = await this.users.fetch(this.options.ownerID)
     if (!owner) return
 
     owner.send(`Got an unhandledRejection:\n\`\`\`${error.stack}\`\`\``)

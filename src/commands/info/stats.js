@@ -25,8 +25,8 @@ class StatsCommand extends Command {
       .join('\n')
 
     const general = stripIndents`
-      Guilds: ${this.client.guilds.size}
-      Channels: ${this.client.channels.size}
+      Guilds: ${this.client.guilds.cache.size}
+      Channels: ${this.client.channels.cache.size}
     `
 
     return new Embed(msg.channel)

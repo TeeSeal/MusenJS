@@ -19,7 +19,7 @@ class GuildInfoCommand extends Command {
       `Maximum volume: **${maxVolume}%**`
     ]
 
-    const roles = msg.guild.roles.sort((a, b) => b.comparePositionTo(a))
+    const roles = msg.guild.roles.cache.sort((a, b) => b.comparePositionTo(a))
     return new Embed(msg.channel)
       .setTitle(msg.guild.name)
       .setFields([
