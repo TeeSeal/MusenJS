@@ -2,10 +2,10 @@ FROM node:lts-alpine
 
 WORKDIR /usr/src/app
 RUN apk add --update
-RUN apk add python make g++ ffmpeg
+RUN apk add git python make g++ ffmpeg
 
-COPY package.json yarn.lock ./
-RUN yarn install --production
+COPY package.json package-lock.json ./
+RUN npm install --production
 
 COPY . .
-CMD ["yarn", "start"]
+CMD ["npm", "start"]
