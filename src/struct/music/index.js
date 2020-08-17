@@ -1,7 +1,7 @@
 const Playlist = require('./Playlist')
 const Playable = require('./Playable')
 const { Node } = require('lavalink')
-// const logr = require('logr')
+const logr = require('logr')
 
 class MusicManager {
   constructor (client, config) {
@@ -24,9 +24,21 @@ class MusicManager {
       }
     })
 
+    this.lavalink.on('error', err => {
+      if (['ECONNREFUSED', 'ECONNRESET'].includes(err.code)) {
+        return logr.error("Couldn't connect to lavalink. Retrying...")
+      }
+
+      this.client.logError(err)
+    })
+
     this.client.on('raw', pk => {
       if (pk.t === 'VOICE_STATE_UPDATE') this.lavalink.voiceStateUpdate(pk.d)
       if (pk.t === 'VOICE_SERVER_UPDATE') this.lavalink.voiceServerUpdate(pk.d)
+    })
+
+    return new Promise(resolve => {
+      this.lavalink.on('open', resolve)
     })
   }
 
