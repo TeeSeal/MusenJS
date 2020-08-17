@@ -15,8 +15,7 @@ class MusenEmbed extends PaginatedEmbed {
   }
 
   setIcon (icon) {
-    if (!this.icons.includes(icon)) this.attachIcon(icon)
-    this.setThumbnail(`attachment://${icon}`)
+    this.setThumbnail(icon)
     return this
   }
 
@@ -47,18 +46,17 @@ class MusenEmbed extends PaginatedEmbed {
 
   static get icons () {
     return {
-      CLEAR: 'clear.png',
-      GAME: 'game.png',
-      LIST: 'list.png',
-      PAUSE: 'pause.png',
-      PLAY: 'play.png',
-      PLAYLIST_ADD: 'playlistAdd.png',
-      SKIP: 'skip.png',
-      TIME: 'time.png',
-      VOLUME_UP: 'volumeUp.png',
-      VOLUME_DOWN: 'volumeDown.png',
-      POLL: 'poll.png',
-      STOP: 'stop.png'
+      CLEAR: 'https://i.imgur.com/6zfkTll.png',
+      LIST: 'https://i.imgur.com/jcBpjId.png',
+      PAUSE: 'https://i.imgur.com/1NylFqr.png',
+      PLAY: 'https://i.imgur.com/idzsnYK.png',
+      PLAYLIST_ADD: 'https://i.imgur.com/I9iP7v6.png',
+      SKIP: 'https://i.imgur.com/TrNzg5u.png',
+      TIME: 'https://i.imgur.com/XEQNaEy.png',
+      VOLUME_UP: 'https://i.imgur.com/mfRmQBu.png',
+      VOLUME_DOWN: 'https://i.imgur.com/L1su2Ry.png',
+      POLL: 'https://i.imgur.com/AR44KeY.png',
+      STOP: 'https://i.imgur.com/HVArfu0.png'
     }
   }
 }
