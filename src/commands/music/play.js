@@ -111,8 +111,6 @@ class PlayCommand extends Command {
       .setIcon(Embed.icons.PLAYLIST_ADD)
       .setColor(Embed.colors.BLUE)
 
-    if (added.length === 1) embed.setImage(added[0].thumbnail)
-
     await embed.send()
 
     if (!playlist.started) {
