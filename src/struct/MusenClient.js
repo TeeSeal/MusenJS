@@ -1,5 +1,5 @@
 const { sequelize, Guild } = require('../db')
-const { ownerID, lavalinkNodes } = require('../config')
+const { ownerID, lavalink } = require('../config')
 const logr = require('logr')
 const MusicManager = require('./music')
 const {
@@ -44,7 +44,7 @@ class MusenClient extends AkairoClient {
     this.inhibitorHandler.loadAll()
     this.listenerHandler.loadAll()
 
-    this.music = new MusicManager(this, lavalinkNodes)
+    this.music = new MusicManager(this, lavalink)
   }
 
   async init () {

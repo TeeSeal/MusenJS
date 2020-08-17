@@ -10,13 +10,12 @@ class PauseCommand extends Command {
     })
   }
 
-  exec (msg) {
+  async exec (msg) {
     const playlist = this.client.music.getPlaylist(msg.guild.id)
 
     if (!playlist) return msg.util.error('nothing is currently playing.')
 
-    const memberChannelID = (msg.member.voice.channel || {}).id
-    if (memberChannelID !== playlist.player.channel) {
+    if (msg.member.voice?.channel?.id !== playlist.channel.id) {
       return msg.util.error(
         'you have to be in the voice channel I\'m currently in.'
       )
@@ -24,7 +23,7 @@ class PauseCommand extends Command {
 
     if (playlist.paused) return msg.util.error('playback is already paused.')
 
-    playlist.pause()
+    await playlist.pause()
     const { playable } = playlist
 
     return new Embed(msg.channel)

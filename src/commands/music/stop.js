@@ -19,19 +19,19 @@ class StopCommand extends Command {
     if (!playlist) return msg.util.error('nothing is currently playing.')
 
     if (msg.member.permissions.has('MANAGE_GUILD')) {
-      playlist.stop()
+      await playlist.stop()
       return msg.util.success('alright, crashing the party.')
     }
 
-    const memberChannelID = (msg.member.voice.channel || {}).id
-    if (memberChannelID !== playlist.player.channel) {
+    if (msg.member.voice?.channel?.id !== playlist.channel.id) {
       return msg.util.error(
         'you have to be in the voice channel I\'m currently in.'
       )
     }
 
     if (msg.member.voice.channel.members.size === 2) {
-      return msg.util.success('stopped playback.').then(() => playlist.stop())
+      await playlist.stop()
+      return msg.util.success('stopped playback.')
     }
 
     if (voteStops.has(msg.guild.id)) {
@@ -70,7 +70,7 @@ class StopCommand extends Command {
       if (poll.votes.get('yes').size >= votesNeeded) poll.stop()
     })
 
-    poll.once('end', votes => {
+    poll.once('end', async votes => {
       const success = votes.get('yes').size >= votesNeeded
       voteStops.delete(msg.guild.id)
 
@@ -78,7 +78,7 @@ class StopCommand extends Command {
         .clearFields()
         .addField(success ? '✅ Playback stopped.' : '❌ Votestop failed.', '\u200b', false, true)
 
-      if (success) playlist.stop()
+      if (success) await playlist.stop()
       return embed.edit()
     })
   }

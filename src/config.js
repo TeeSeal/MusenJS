@@ -7,12 +7,9 @@ module.exports = {
     textLimit: 1000,
     fieldLimit: 10
   },
-  lavalinkNodes: [
-    {
-      id: 'main',
-      host: 'localhost',
-      port: 2333,
-      password: 'password'
-    }
-  ]
+  lavalink: {
+    host: 'localhost',
+    port: 2333,
+    password: 'password'
+  }
 }

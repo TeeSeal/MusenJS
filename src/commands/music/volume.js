@@ -29,13 +29,12 @@ class VolumeCommand extends Command {
     })
   }
 
-  exec (msg, { newVolume }) {
+  async exec (msg, { newVolume }) {
     const playlist = this.client.music.getPlaylist(msg.guild.id)
 
     if (!playlist) return msg.util.error('nothing is currently playing.')
 
-    const memberChannelID = (msg.member.voice.channel || {}).id
-    if (memberChannelID !== playlist.player.channel) {
+    if (msg.member.voice?.channel?.id !== playlist.channel.id) {
       return msg.util.error(
         'you have to be in the voice channel I\'m currently in.'
       )
@@ -57,7 +56,7 @@ class VolumeCommand extends Command {
     const icon =
       newVolume < volume ? Embed.icons.VOLUME_DOWN : Embed.icons.VOLUME_UP
 
-    playlist.fadeVolume(newVolume)
+    await playlist.fadeVolume(newVolume)
 
     return new Embed(msg.channel)
       .setTitle(playable.title)

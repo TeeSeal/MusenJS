@@ -18,8 +18,7 @@ class SkipCommand extends Command {
 
     if (!playlist) return msg.util.error('nothing is currently playing.')
 
-    const memberChannelID = (msg.member.voice.channel || {}).id
-    if (memberChannelID !== playlist.player.channel) {
+    if (msg.member.voice?.channel?.id !== playlist.channel.id) {
       return msg.util.error(
         'you have to be in the voice channel I\'m currently in.'
       )
@@ -32,8 +31,8 @@ class SkipCommand extends Command {
       playable.member.id === msg.member.id ||
       msg.member.voice.channel.members.size === 2
     ) {
-      await playlist.fadeVolume(0)
-      await new Embed(msg.channel)
+      await playlist.skip()
+      new Embed(msg.channel)
         .setTitle(playable.title)
         .addField('✅ Skipped.', '\u200b')
         .setURL(playable.url)
@@ -41,8 +40,6 @@ class SkipCommand extends Command {
         .setIcon(Embed.icons.SKIP)
         .setColor(Embed.colors.CYAN)
         .send()
-
-      return playlist.skip()
     }
 
     if (voteSkips.has(msg.guild.id)) {
@@ -91,7 +88,7 @@ class SkipCommand extends Command {
 
       if (success) {
         await playlist.fadeVolume(0)
-        playlist.skip()
+        await playlist.skip()
       }
       return embed.edit()
     })

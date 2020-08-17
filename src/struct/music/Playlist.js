@@ -10,6 +10,7 @@ class Playlist extends EventEmitter {
     this.queue = []
 
     this.player = null
+    this.channel = null
     this.playable = null
     this.paused = false
     this.stopped = false
@@ -20,15 +21,23 @@ class Playlist extends EventEmitter {
   }
 
   async connect (voiceChannel) {
-    this.player = await this.manager.lavalink.create(this.id)
-    await this.player.connect(voiceChannel)
+    this.channel = voiceChannel
+    this.player = await this.manager.lavalink.players.get(this.id)
+    await this.player.join(voiceChannel.id)
 
-    this.player.on('end', _event => {
-      this.emit('end', this.playable)
-      return setTimeout(() => this.playNext(this.queue.shift()), 10)
+    this.player.on('playerUpdate', ({ state: { position } }) => {
+      this.player.position = position
     })
 
-    this.player.on('error', console.error)
+    this.player.on('event', data => {
+      if (data.type === 'TrackEndEvent') {
+        this.emit('end', this.playable)
+        return setTimeout(() => this.playNext(this.queue.shift()), 10)
+      }
+
+      if (data.type === 'TrackExceptionEvent') console.error(data)
+    })
+
     return this
   }
 
@@ -131,7 +140,10 @@ class Playlist extends EventEmitter {
   }
 
   async destroy () {
-    if (this.player) await this.player.destroy(true)
+    if (this.player) {
+      await this.player.leave()
+      await this.player.destroy()
+    }
     this.manager.playlists.delete(this.id)
     this.emit('destroy')
   }

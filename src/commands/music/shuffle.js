@@ -15,8 +15,7 @@ class ShuffleCommand extends Command {
 
     if (!playlist) return msg.util.error('nothing is currently playing.')
 
-    const memberChannelID = (msg.member.voice.channel || {}).id
-    if (memberChannelID !== playlist.player.channel) {
+    if (msg.member.voice?.channel?.id !== playlist.channel.id) {
       return msg.util.error(
         'you have to be in the voice channel I\'m currently in.'
       )

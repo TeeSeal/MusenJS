@@ -1,34 +1,37 @@
 const Playlist = require('./Playlist')
 const Playable = require('./Playable')
-const { Manager: LavaManager } = require('lavaclient')
-const logr = require('logr')
+const { Node } = require('lavalink')
+// const logr = require('logr')
 
 class MusicManager {
-  constructor (client, nodes) {
+  constructor (client, config) {
     this.playlists = new Map()
     this.client = client
-    this.lavalink = new LavaManager(nodes, {
-      shards: client.ws.shards.size,
-      send (id, data) {
-        const guild = client.guilds.cache.get(id)
-        if (!guild) return
-        guild.shard.send(data)
-      }
-    })
+    this.config = config
+    this.lavalink = null
   }
 
   init () {
-    this.lavalink.on('socketError', ({ _id }, error) => this.client.logError(error))
-    this.lavalink.on('socketReady', (node) => logr.success(`${node.id} connected.`))
+    this.lavalink = new Node({
+      host: `${this.config.host}:${this.config.port}`,
+      password: this.config.password,
+      userID: this.client.user.id,
+      shards: this.client.ws.shards.size,
+      send: (id, packet) => {
+        const guild = this.client.guilds.cache.get(id)
+        if (!guild) return
+        guild.shard.send(packet)
+      }
+    })
 
-    this.client.ws.on('VOICE_STATE_UPDATE', (upd) => this.lavalink.stateUpdate(upd))
-    this.client.ws.on('VOICE_SERVER_UPDATE', (upd) => this.lavalink.serverUpdate(upd))
-
-    return this.lavalink.init(this.client.user.id)
+    this.client.on('raw', pk => {
+      if (pk.t === 'VOICE_STATE_UPDATE') this.lavalink.voiceStateUpdate(pk.d)
+      if (pk.t === 'VOICE_SERVER_UPDATE') this.lavalink.voiceServerUpdate(pk.d)
+    })
   }
 
   async resolvePlayables (query, opts) {
-    const results = await this.lavalink.search(`ytsearch:${query}`)
+    const results = await this.lavalink.load(`ytsearch:${query}`)
     return (results?.tracks?.slice(0, 1) || []).map(track => new Playable(track, opts))
   }
 
