@@ -12,7 +12,8 @@ const sequelize = new Sequelize({
 
 const models = fs.readdirSync(path.join(__dirname, 'models'))
 for (const file of models) {
-  const model = sequelize.import(path.join(__dirname, 'models', file))
+  const builder = require(path.join(__dirname, 'models', file))
+  const model = builder(sequelize, Sequelize)
   db[model.name] = model
 }
 
