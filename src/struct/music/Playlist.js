@@ -2,15 +2,15 @@ const { shuffle } = require('../../util')
 const { EventEmitter } = require('events')
 
 class Playlist extends EventEmitter {
-  constructor (id, guildOptions, handler) {
+  constructor (id, guildOptions, musicManager) {
     super()
     this.id = id
-    this.handler = handler
+    this.manager = musicManager
 
     this.queue = []
 
+    this.player = null
     this.playable = null
-    this.connection = null
     this.paused = false
     this.stopped = false
     this.started = false
@@ -20,7 +20,15 @@ class Playlist extends EventEmitter {
   }
 
   async connect (voiceChannel) {
-    this.connection = await voiceChannel.join()
+    this.player = await this.manager.lavalink.create(this.id)
+    await this.player.connect(voiceChannel)
+
+    this.player.on('end', _event => {
+      this.emit('end', this.playable)
+      return setTimeout(() => this.playNext(this.queue.shift()), 10)
+    })
+
+    this.player.on('error', console.error)
     return this
   }
 
@@ -60,9 +68,8 @@ class Playlist extends EventEmitter {
     this.playable = playable
     this._volume = this.convertVolume(playable.volume) || this.defaultVolume
 
-    let dispatcher
     try {
-      dispatcher = await playable.play(this.connection, {
+      await playable.play(this.player, {
         volume: this._volume
       })
     } catch (err) {
@@ -71,12 +78,6 @@ class Playlist extends EventEmitter {
     }
 
     this.emit('playing', playable)
-    dispatcher
-      .on('error', console.error)
-      .on('finish', () => {
-        this.emit('end', playable)
-        return setTimeout(() => this.playNext(this.queue.shift()), 10)
-      })
   }
 
   add (playables) {
@@ -90,78 +91,57 @@ class Playlist extends EventEmitter {
     return this.queue
   }
 
-  pause () {
-    this.playable.dispatcher.pause()
+  async pause () {
+    await this.player.pause(true)
     this.paused = true
     this.emit('pause')
     return this
   }
 
-  resume () {
-    this.playable.dispatcher.resume()
+  async resume () {
+    await this.player.pause(false)
     this.paused = false
     this.emit('resume')
     return this
   }
 
-  setVolume (volume) {
+  async setVolume (volume) {
     this._volume = this.convertVolume(volume)
-    this.playable.dispatcher.setVolume(this._volume)
+    await this.player.setVolume(this._volume)
     this.emit('volume', this.volume)
     return this.volume
   }
 
   fadeVolume (volume) {
-    return new Promise(resolve => {
-      if (volume === this.volume) return resolve(volume)
-      let current = this._volume
-      this._volume = this.convertVolume(volume)
-      const modifier = current < this._volume ? 0.05 : -0.05
-
-      const interval = setInterval(() => {
-        current += modifier
-        this.playable.dispatcher.setVolume(current)
-
-        if (current > this._volume - 0.05 && current < this._volume + 0.05) {
-          this.playable.dispatcher.setVolume(this._volume)
-          clearInterval(interval)
-
-          setTimeout(() => {
-            this.emit('volume', this.volume)
-            resolve(this.volume)
-          }, 800)
-        }
-      }, 35)
-    })
+    return this.setVolume(volume)
   }
 
-  skip () {
-    const playable = this.playable
-    playable.dispatcher.end('skip')
-    this.emit('skip', playable)
-    return playable
+  async skip () {
+    await this.player.stop()
+    this.emit('skip', this.playable)
+    return this.playable
   }
 
-  stop () {
+  async stop () {
     this.queue = []
     this.stopped = true
-    if (this.playable) this.playable.dispatcher.end('stop')
+    await this.player.stop()
     this.destroy()
     return this
   }
 
-  destroy () {
-    if (this.connection) this.connection.channel.leave()
-    this.handler.playlists.delete(this.id)
+  async destroy () {
+    if (this.player) await this.player.destroy(true)
+    this.manager.playlists.delete(this.id)
     this.emit('destroy')
   }
 
   convertVolume (volume) {
-    return volume / 100
+    return volume
   }
 
   get volume () {
-    return this._volume * 100
+    return this._volume
   }
 }
 

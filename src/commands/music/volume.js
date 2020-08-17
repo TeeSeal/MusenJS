@@ -1,7 +1,7 @@
 const { Command, Argument } = require('discord-akairo')
 const { stripIndents } = require('../../util')
 const Embed = require('../../struct/MusenEmbed')
-const Music = require('../../struct/music')
+
 const { Guild } = require('../../db')
 
 class VolumeCommand extends Command {
@@ -30,12 +30,12 @@ class VolumeCommand extends Command {
   }
 
   exec (msg, { newVolume }) {
-    const playlist = Music.playlists.get(msg.guild.id)
+    const playlist = this.client.music.getPlaylist(msg.guild.id)
 
     if (!playlist) return msg.util.error('nothing is currently playing.')
 
     const memberChannelID = (msg.member.voice.channel || {}).id
-    if (memberChannelID !== playlist.connection.channel.id) {
+    if (memberChannelID !== playlist.player.channel) {
       return msg.util.error(
         'you have to be in the voice channel I\'m currently in.'
       )

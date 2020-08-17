@@ -1,6 +1,6 @@
 const { Command, Argument } = require('discord-akairo')
 const { stripIndents } = require('../../util')
-const Music = require('../../struct/music')
+
 const { Guild } = require('../../db')
 
 class SetCommand extends Command {
@@ -60,7 +60,7 @@ class SetCommand extends Command {
       defaultVolume: dbDefaultVolume,
       maxVolume: dbMaxVolume
     } = Guild.get(msg.guild.id)
-    const playlist = Music.playlists.get(msg.guild.id)
+    const playlist = this.client.music.getPlaylist(msg.guild.id)
     const obj = {}
 
     if (maxSongDuration) {

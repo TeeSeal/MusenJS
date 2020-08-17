@@ -1,6 +1,7 @@
 const { sequelize, Guild } = require('../db')
-const { ownerID } = require('../config')
+const { ownerID, lavalinkNodes } = require('../config')
 const logr = require('logr')
+const MusicManager = require('./music')
 const {
   AkairoClient,
   CommandHandler,
@@ -42,6 +43,8 @@ class MusenClient extends AkairoClient {
     this.commandHandler.loadAll()
     this.inhibitorHandler.loadAll()
     this.listenerHandler.loadAll()
+
+    this.music = new MusicManager(this, lavalinkNodes)
   }
 
   async init () {
@@ -59,7 +62,7 @@ class MusenClient extends AkairoClient {
     const owner = await this.users.fetch(this.options.ownerID)
     if (!owner) return
 
-    owner.send(`Got an unhandledRejection:\n\`\`\`${error.stack}\`\`\``)
+    owner.send(`Got an error:\n\`\`\`${error.stack}\`\`\``)
   }
 }
 

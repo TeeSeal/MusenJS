@@ -2,28 +2,25 @@ const moment = require('moment')
 require('moment-duration-format')
 
 class Playable {
-  constructor (data, provider, opts = {}) {
-    this.provider = provider
-
-    this.id = data.id
-    this.title = data.title
-    this.thumbnail = data.thumbnail
-    this.live = data.live || false
-    this.duration = this.live ? Infinity : data.duration
-    this.url = data.url
-    this.stream = data.stream
+  constructor ({ track, info }, opts = {}) {
+    this.track = track
+    this.id = info.identifier
+    this.title = info.title
+    this.live = info.isStream || false
+    this.duration = this.isStream ? Infinity : info.length
+    this.url = info.uri
 
     this.member = opts.member
     this.volume = opts.volume
-    this.dispatcher = null
+    this.player = null
   }
 
-  async play (connection, opts) {
-    const stream = await this.fetchStream()
-    if (!stream) throw new Error('Failed to fetch stream.')
+  async play (player, opts) {
+    this.player = player
+    if (opts.volume) await player.setVolume(opts.volume)
+    await this.player.play(this.track)
 
-    this.dispatcher = connection.play(stream, { ...this.provider.defaultOptions, ...opts })
-    return this.dispatcher
+    return this.player
   }
 
   toString () {
@@ -48,15 +45,10 @@ class Playable {
 
   get time () {
     const total = Playable.formatDuration(this.duration)
-    const current = Playable.formatDuration(this.dispatcher.streamTime)
-    const left = Playable.formatDuration(this.duration - this.dispatcher.streamTime + 1000)
+    const current = Playable.formatDuration(this.player.position)
+    const left = Playable.formatDuration(this.duration - this.player.position)
 
     return `${current} / ${total}  |  ${left} left`
-  }
-
-  fetchStream () {
-    if (this.stream) return this.stream
-    return this.provider.fetchStream(this)
   }
 
   static formatDuration (time) {

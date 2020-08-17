@@ -9,7 +9,10 @@ class ReadyListener extends Listener {
     })
   }
 
-  exec () {
+  async exec () {
+    logr.success('OK')
+    logr.info('Initializing Lavalink...')
+    await this.client.music.init()
     logr.success(`All systems online! Logged in as ${this.client.user.tag}.`)
   }
 }

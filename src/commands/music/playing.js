@@ -1,6 +1,5 @@
 const { Command } = require('discord-akairo')
 const Embed = require('../../struct/MusenEmbed')
-const Music = require('../../struct/music')
 
 class PlayingCommand extends Command {
   constructor () {
@@ -12,7 +11,7 @@ class PlayingCommand extends Command {
   }
 
   exec (msg) {
-    const playlist = Music.playlists.get(msg.guild.id)
+    const playlist = this.client.music.getPlaylist(msg.guild.id)
 
     if (!playlist) return msg.util.error('nothing is currently playing.')
     const { playable } = playlist

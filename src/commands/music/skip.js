@@ -1,7 +1,6 @@
 const { Command } = require('discord-akairo')
 const Embed = require('../../struct/MusenEmbed')
 const ReactionPoll = require('../../struct/reaction/ReactionPoll')
-const Music = require('../../struct/music')
 
 const voteSkips = new Set()
 
@@ -15,12 +14,12 @@ class SkipCommand extends Command {
   }
 
   async exec (msg) {
-    const playlist = Music.playlists.get(msg.guild.id)
+    const playlist = this.client.music.getPlaylist(msg.guild.id)
 
     if (!playlist) return msg.util.error('nothing is currently playing.')
 
     const memberChannelID = (msg.member.voice.channel || {}).id
-    if (memberChannelID !== playlist.connection.channel.id) {
+    if (memberChannelID !== playlist.player.channel) {
       return msg.util.error(
         'you have to be in the voice channel I\'m currently in.'
       )

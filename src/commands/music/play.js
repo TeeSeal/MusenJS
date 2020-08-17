@@ -2,7 +2,6 @@ const { Command, Argument } = require('discord-akairo')
 const { stripIndents, shuffle } = require('../../util')
 const { Guild } = require('../../db')
 const Embed = require('../../struct/MusenEmbed')
-const Music = require('../../struct/music')
 
 class PlayCommand extends Command {
   constructor () {
@@ -53,14 +52,6 @@ class PlayCommand extends Command {
         **A query can be:**
         - Link to the YouTube/SoundCloud resource. (song or playlist)
         - Simple search query.
-
-        **NOTE:**
-        Search queries will default to YouTube.
-        To specify a provider to search on use \`~<PROVIDER_NAME>\` anywhere in your query.
-        Example: \`play otter pop ~soundcloud\` => will search for \`otter pop\` on soundcloud.
-
-        You may also input multiple queries in a single command by separating them with \`;\`.
-        Example: \`play <YOUTUBE_VIDEO>; <SOUNDCLOUD_PLAYLIST>; some search query; other search query ~soundcloud\`
       `
     })
   }
@@ -75,16 +66,16 @@ class PlayCommand extends Command {
     }
 
     const guildOptions = Guild.get(msg.guild.id)
-    const playlist = Music.getPlaylist(msg.guild.id, guildOptions)
+    const playlist = this.client.music.getOrCreatePlaylist(msg.guild.id, guildOptions)
 
     const memberChannelID = (msg.member.voice.channel || {}).id
-    if (playlist.connection && memberChannelID !== playlist.connection.channel.id) {
+    if (playlist.connection && memberChannelID !== playlist.player.channel) {
       return msg.util.error(
         'you have to be in the voice channel I\'m currently in.'
       )
     }
 
-    const playables = await Music.resolvePlayables(queries, {
+    const playables = await this.client.music.resolvePlayables(queries, {
       member: msg.member,
       volume
     })

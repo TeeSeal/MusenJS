@@ -1,54 +1,49 @@
-const MusicProvider = require('./MusicProvider')
 const Playlist = require('./Playlist')
-const { Setting } = require('../../db')
+const Playable = require('./Playable')
+const { Manager: LavaManager } = require('lavaclient')
+const logr = require('logr')
 
-const providers = MusicProvider.loadAll()
-const playlists = new Map()
-
-class Music {
-  static resolvePlayables (queries, opts) {
-    const promises = queries.map(async query => {
-      const words = query.split(' ')
-      const provider = Music.resolveProvider(words)
-      const playables = await provider.resolvePlayables(words.join(' '), opts)
-      return playables || []
-    })
-
-    return Promise.all(promises).then(arr =>
-      arr.reduce((a1, a2) => a1.concat(a2), [])
-    )
-  }
-
-  static getPlaylist (id, opts) {
-    if (playlists.has(id)) {
-      return playlists.get(id)
-    }
-
-    const playlist = new Playlist(id, opts, this)
-    playlists.set(id, playlist)
-    return playlist
-  }
-
-  static get playlists () {
-    return playlists
-  }
-
-  static resolveProvider (words) {
-    const found = providers.find(provider => {
-      if (words.some(word => word.startsWith('~'))) {
-        const alias = words.find(word => word.startsWith('~'))
-
-        if (provider.aliases.includes(alias.slice(1))) {
-          words.splice(words.indexOf(alias), 1)
-          return true
-        }
+class MusicManager {
+  constructor (client, nodes) {
+    this.playlists = new Map()
+    this.client = client
+    this.lavalink = new LavaManager(nodes, {
+      shards: client.ws.shards.size,
+      send (id, data) {
+        const guild = client.guilds.cache.get(id)
+        if (!guild) return
+        guild.shard.send(data)
       }
-
-      return provider.REGEXP.test(words)
     })
+  }
 
-    return found || providers.get(Setting.get('defaultMusicProvider'))
+  init () {
+    this.lavalink.on('socketError', ({ _id }, error) => this.client.logError(error))
+    this.lavalink.on('socketReady', (node) => logr.success(`${node.id} connected.`))
+
+    this.client.ws.on('VOICE_STATE_UPDATE', (upd) => this.lavalink.stateUpdate(upd))
+    this.client.ws.on('VOICE_SERVER_UPDATE', (upd) => this.lavalink.serverUpdate(upd))
+
+    return this.lavalink.init(this.client.user.id)
+  }
+
+  async resolvePlayables (query, opts) {
+    const results = await this.lavalink.search(`ytsearch:${query}`)
+    return (results?.tracks?.slice(0, 1) || []).map(track => new Playable(track, opts))
+  }
+
+  getPlaylist (id, opts) {
+    return this.playlists.get(id)
+  }
+
+  getOrCreatePlaylist (id, opts) {
+    let playlist = this.getPlaylist(id, opts)
+    if (playlist) return playlist
+
+    playlist = new Playlist(id, opts, this)
+    this.playlists.set(id, playlist)
+    return playlist
   }
 }
 
-module.exports = Music
+module.exports = MusicManager

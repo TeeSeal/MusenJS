@@ -24,7 +24,6 @@ class HelpCommand extends Command {
       return `__**${cat.id}**__\n${commands.map(formatCommand).join('\n\n')}`
     })
 
-    console.log(pages.length)
     return new Embed(msg.channel)
       .setTitle('Help')
       .setDescription(pages)
