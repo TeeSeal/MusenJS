@@ -1,8 +1,8 @@
-FROM node:lts-alpine
+FROM node:alpine
 
 WORKDIR /usr/src/app
 RUN apk add --update
-RUN apk add git python make g++ ffmpeg
+RUN apk add git
 
 COPY package.json package-lock.json ./
 RUN npm install --production

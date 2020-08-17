@@ -1,0 +1,18 @@
+version: '3.8'
+services:
+  bot:
+    image: teeseal/musen
+    container_name: musen
+    restart: unless-stopped
+    depends_on: [lavalink]
+    environment:
+      - TOKEN
+      - LAVALINK_HOST=lavalink
+      - LAVALINK_PORT=2333
+      - LAVALINK_PASSWORD=password
+  lavalink:
+    image: fredboat/lavalink:master
+    container_name: lavalink
+    expose: [2333]
+    volumes:
+      - ./lavalink-config.yml:/opt/Lavalink/application.yml

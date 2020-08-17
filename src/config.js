@@ -8,8 +8,8 @@ module.exports = {
     fieldLimit: 10
   },
   lavalink: {
-    host: 'localhost',
-    port: 2333,
-    password: 'password'
+    host: process.env.LAVALINK_HOST || 'localhost',
+    port: process.env.LAVALINK_PORT || 2333,
+    password: process.env.LAVALINK_PASSWORD || 'password'
   }
 }
