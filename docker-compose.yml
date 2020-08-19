@@ -4,7 +4,7 @@ services:
     image: teeseal/musen
     container_name: musen
     restart: unless-stopped
-    depends_on: [lavalink]
+    depends_on: [lavalink, postgres]
     environment:
       - TOKEN
       - LAVALINK_HOST=lavalink
