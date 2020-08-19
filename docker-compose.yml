@@ -10,9 +10,21 @@ services:
       - LAVALINK_HOST=lavalink
       - LAVALINK_PORT=2333
       - LAVALINK_PASSWORD=password
+      - DB_HOST=postgres
+      - DB_NAME=musen
+      - DB_USER=musen
+      - DB_PASSWORD
   lavalink:
     image: fredboat/lavalink:master
     container_name: lavalink
     expose: [2333]
     volumes:
       - ./lavalink-config.yml:/opt/Lavalink/application.yml
+  postgres:
+    image: postgres:alpine
+    container_name: musen-postgres
+    expose: [8080]
+    environment:
+      - POSTGRES_DB=musen
+      - POSTGRES_USER=musen
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
