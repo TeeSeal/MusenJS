@@ -25,8 +25,8 @@ class PlaylistCommand extends Command {
       return msg.util.error('nothing is currently playing.')
     }
 
-    const { playable, queue } = playlist
-    const items = [`🔊 ${playable.formattedTitle}`].concat(
+    const { track, queue } = playlist
+    const items = [`🔊 ${track.formattedTitle}`].concat(
       queue.map(s => `• ${s.formattedTitle}`)
     )
 

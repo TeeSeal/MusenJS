@@ -40,17 +40,17 @@ class PlayCommand extends Command {
         \`query\` - something to use as a source.
 
         **Optional arguments:**
-        \`--volume\` - play the song(s) at the given volume rather than the default one.
+        \`--volume\` - play the track(s) at the given volume rather than the default one.
 
         **Optional flags:**
-        \`--shuffle\` - shuffle the songs before adding to playlist.
+        \`--shuffle\` - shuffle the tracks before adding to playlist.
 
         **Usage:**
         \`play something\` => searches youtube for 'something' and adds the first result to the queue.
         \`play one two vol=35\` => searches youtube for 'one two' and adds the first result to the queue with the volume at 35%.
 
         **A query can be:**
-        - Link to the YouTube/SoundCloud resource. (song or playlist)
+        - Link to the YouTube/SoundCloud resource. (track or playlist)
         - Simple search query.
       `
     })
@@ -74,19 +74,19 @@ class PlayCommand extends Command {
       )
     }
 
-    const playables = await this.client.music.resolvePlayables(queries, {
+    const tracks = await this.client.music.resolveTracks(queries, {
       member: msg.member,
       volume
     })
 
-    if (!playables) return msg.util.error('couldn\'t find resource.')
-    if (rand) shuffle(playables)
-    const { added, removed } = playlist.add(playables)
+    if (!tracks) return msg.util.error('couldn\'t find resource.')
+    if (rand) shuffle(tracks)
+    const { added, removed } = playlist.add(tracks)
 
     if (removed.length) {
       const items = removed.map(
-        ({ playable, reason }) =>
-          `• ${playable.formattedTitle}\n**Reason:** ${reason}`
+        ({ track, reason }) =>
+          `• ${track.formattedTitle}\n**Reason:** ${reason}`
       )
 
       await new Embed(msg.channel)
@@ -105,7 +105,7 @@ class PlayCommand extends Command {
 
     const embed = new Embed(msg.channel)
       .setTitle('Added to playlist:')
-      .setDescription(added.map(playable => `• ${playable.formattedTitle}`))
+      .setDescription(added.map(track => `• ${track.formattedTitle}`))
       .setAuthor(msg.member)
       .setIcon(Embed.icons.PLAYLIST_ADD)
       .setColor(Embed.colors.BLUE)
@@ -121,33 +121,33 @@ class PlayCommand extends Command {
 
   attachEventHandlers (playlist, channel) {
     playlist
-      .on('playing', playable =>
+      .on('playing', track =>
         new Embed(channel)
-          .setTitle(playable.title)
-          .setURL(playable.url)
+          .setTitle(track.title)
+          .setURL(track.url)
           .addField(
             'Now playing.',
-            `${playable.formattedDuration} | Volume: ${playable.volume}%`
+            `${track.formattedDuration} | Volume: ${track.volume}%`
           )
-          .setAuthor(playable.member)
+          .setAuthor(track.member)
           .setIcon(Embed.icons.PLAY)
           .setColor(Embed.colors.GREEN)
           .send()
       )
       .on('out', () =>
         new Embed(channel)
-          .addField('We\'re out of songs.', 'Better queue up some more!')
+          .addField('We\'re out of tracks.', 'Better queue up some more!')
           .setIcon(Embed.icons.CLEAR)
           .setColor(Embed.colors.RED)
           .send()
       )
-      .on('unavailable', (playable, err) =>
+      .on('unavailable', (track, err) =>
         new Embed(channel)
-          .setTitle(playable.title)
-          .setURL(playable.url)
-          .addField('An issue occured playing this song.', 'Skipping it.')
+          .setTitle(track.title)
+          .setURL(track.url)
+          .addField('An issue occured playing this track.', 'Skipping it.')
           .addField('Details', err.message)
-          .setAuthor(playable.member)
+          .setAuthor(track.member)
           .setIcon(Embed.icons.SKIP)
           .setColor(Embed.colors.CYAN)
           .send()

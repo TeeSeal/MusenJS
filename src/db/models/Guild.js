@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         defaultValue: 100
       },
-      songLimit: {
+      trackLimit: {
         type: DataTypes.INTEGER,
         defaultValue: 100
       }

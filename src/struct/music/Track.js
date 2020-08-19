@@ -1,7 +1,7 @@
 const moment = require('moment')
 require('moment-duration-format')
 
-class Playable {
+class Track {
   constructor ({ track, info }, opts = {}) {
     this.track = track
     this.id = info.identifier
@@ -28,7 +28,7 @@ class Playable {
   }
 
   get durationString () {
-    return this.live ? 'live' : Playable.formatDuration(this.duration)
+    return this.live ? 'live' : Track.formatDuration(this.duration)
   }
 
   get link () {
@@ -44,9 +44,9 @@ class Playable {
   }
 
   get time () {
-    const total = Playable.formatDuration(this.duration)
-    const current = Playable.formatDuration(this.player.position)
-    const left = Playable.formatDuration(this.duration - this.player.position)
+    const total = Track.formatDuration(this.duration)
+    const current = Track.formatDuration(this.player.position)
+    const left = Track.formatDuration(this.duration - this.player.position)
 
     return `${current} / ${total}  |  ${left} left`
   }
@@ -58,4 +58,4 @@ class Playable {
   }
 }
 
-module.exports = Playable
+module.exports = Track

@@ -29,19 +29,19 @@ class SetCommand extends Command {
           type: Argument.range('integer', 1, 100, true)
         },
         {
-          id: 'songLimit',
+          id: 'trackLimit',
           match: 'option',
-          flag: ['--song-limit=', '--songs', '--max-songs', '-l'],
+          flag: ['--track-limit=', '--tracks', '--max-tracks', '-l'],
           type: Argument.range('integer', 1, 100, true)
         }
       ],
       description: stripIndents`
         Set some default values for the guild.
         **Optional arguments:** (must have at least 1)
-        \`duration\` - the maximum song duration for this guild (in minutes).
-        \`volume\` - the default song volume for this guild (in %).
-        \`maxVolume\` - the maximum song volume for this guild (in %).
-        \`songLimit\` - the maximum amount of songs one can have in a playlist.
+        \`duration\` - the maximum track duration for this guild (in minutes).
+        \`volume\` - the default track volume for this guild (in %).
+        \`maxVolume\` - the maximum track volume for this guild (in %).
+        \`trackLimit\` - the maximum amount of tracks one can have in a playlist.
 
         **Usage:**
         \`set --duration 20 --default-volume 30 --max-volume 70\` => sets the values.
@@ -51,7 +51,7 @@ class SetCommand extends Command {
   }
 
   exec (msg, args) {
-    const { maxSongDuration, defaultVolume, maxVolume, songLimit } = args
+    const { maxSongDuration, defaultVolume, maxVolume, trackLimit } = args
     if (!Object.keys(args).some(key => args[key])) {
       return msg.util.error('what are you trying to update?')
     }
@@ -92,9 +92,9 @@ class SetCommand extends Command {
       obj.maxVolume = maxVolume
     }
 
-    if (songLimit) {
-      if (playlist) playlist.songLimit = songLimit
-      obj.songLimit = songLimit
+    if (trackLimit) {
+      if (playlist) playlist.trackLimit = trackLimit
+      obj.trackLimit = trackLimit
     }
 
     const expression = getExpression(obj)

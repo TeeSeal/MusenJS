@@ -11,13 +11,13 @@ class Playlist extends EventEmitter {
 
     this.player = null
     this.channel = null
-    this.playable = null
+    this.track = null
     this.paused = false
     this.stopped = false
     this.started = false
 
     this._volume = this.convertVolume(guildOptions.defaultVolume)
-    this.playableLimit = guildOptions.songLimit
+    this.trackLimit = guildOptions.trackLimit
   }
 
   async connect (voiceChannel) {
@@ -31,7 +31,7 @@ class Playlist extends EventEmitter {
 
     this.player.on('event', data => {
       if (data.type === 'TrackEndEvent') {
-        this.emit('end', this.playable)
+        this.emit('end', this.track)
         return setTimeout(() => this.playNext(this.queue.shift()), 10)
       }
 
@@ -47,17 +47,17 @@ class Playlist extends EventEmitter {
     return this
   }
 
-  filter (playables) {
+  filter (tracks) {
     const removed = []
-    const added = playables
+    const added = tracks
 
-    const diff = this.queue.length + added.length - this.playableLimit
+    const diff = this.queue.length + added.length - this.trackLimit
     if (diff > 0) {
-      for (const playable of added.splice(added.length - diff, diff)) {
+      for (const track of added.splice(added.length - diff, diff)) {
         removed.push({
-          playable,
+          track,
           reason: `playlist item limit reached. (max. **${
-            this.playableLimit
+            this.trackLimit
           }** items)`
         })
       }
@@ -66,31 +66,31 @@ class Playlist extends EventEmitter {
     return { added, removed }
   }
 
-  async playNext (playable) {
+  async playNext (track) {
     if (this.stopped) return
 
-    if (!playable) {
+    if (!track) {
       this.emit('out')
       return this.destroy()
     }
 
-    this.playable = playable
-    this._volume = this.convertVolume(playable.volume) || this.defaultVolume
+    this.track = track
+    this._volume = this.convertVolume(track.volume) || this.defaultVolume
 
     try {
-      await playable.play(this.player, {
+      await track.play(this.player, {
         volume: this._volume
       })
     } catch (err) {
-      this.emit('unavailable', playable, err)
+      this.emit('unavailable', track, err)
       return this.playNext(this.queue.shift())
     }
 
-    this.emit('playing', playable)
+    this.emit('playing', track)
   }
 
-  add (playables) {
-    const result = this.filter(playables)
+  add (tracks) {
+    const result = this.filter(tracks)
     this.queue.push(...result.added)
     return result
   }
@@ -127,8 +127,8 @@ class Playlist extends EventEmitter {
 
   async skip () {
     await this.player.stop()
-    this.emit('skip', this.playable)
-    return this.playable
+    this.emit('skip', this.track)
+    return this.track
   }
 
   async stop () {

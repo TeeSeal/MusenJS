@@ -24,12 +24,12 @@ class PauseCommand extends Command {
     if (playlist.paused) return msg.util.error('playback is already paused.')
 
     await playlist.pause()
-    const { playable } = playlist
+    const { track } = playlist
 
     return new Embed(msg.channel)
-      .setTitle(playable.title)
+      .setTitle(track.title)
       .addField('Playback paused.', '\u200b')
-      .setURL(playable.url)
+      .setURL(track.url)
       .setAuthor(msg.member)
       .setIcon(Embed.icons.PAUSE)
       .setColor(Embed.colors.YELLOW)

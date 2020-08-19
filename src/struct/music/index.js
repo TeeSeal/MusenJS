@@ -1,5 +1,5 @@
 const Playlist = require('./Playlist')
-const Playable = require('./Playable')
+const Track = require('./Track')
 const { Node } = require('lavalink')
 const logr = require('logr')
 
@@ -42,12 +42,12 @@ class MusicManager {
     })
   }
 
-  async resolvePlayables (query, opts) {
+  async resolveTracks (query, opts) {
     const tracks = /^https?:\/\/|^([A-Za-z0-9_-]{11}|[A-Za-z0-9_-]{34})$/.test(query)
       ? await this.loadExact(query)
       : await this.search(query)
 
-    return tracks.map(track => new Playable(track, opts))
+    return tracks.map(track => new Track(track, opts))
   }
 
   async loadExact (query) {

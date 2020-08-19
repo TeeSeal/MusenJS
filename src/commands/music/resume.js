@@ -24,11 +24,11 @@ class ResumeCommand extends Command {
     if (!playlist.paused) return msg.util.error('playback is not paused.')
 
     await playlist.resume()
-    const { playable } = playlist
+    const { track } = playlist
 
     return new Embed(msg.channel)
-      .setTitle(playable.title)
-      .setURL(playable.url)
+      .setTitle(track.title)
+      .setURL(track.url)
       .setAuthor(msg.member)
       .addField('Playback resumed.', '\u200b')
       .setIcon(Embed.icons.PLAY)

@@ -12,9 +12,9 @@ class GuildInfoCommand extends Command {
   }
 
   exec (msg) {
-    const { songLimit, defaultVolume, maxVolume } = Guild.get(msg.guild.id)
+    const { trackLimit, defaultVolume, maxVolume } = Guild.get(msg.guild.id)
     const configs = [
-      `Maximum amount of songs in playlist: **${songLimit}**`,
+      `Maximum amount of tracks in playlist: **${trackLimit}**`,
       `Default volume: **${defaultVolume}%**`,
       `Maximum volume: **${maxVolume}%**`
     ]

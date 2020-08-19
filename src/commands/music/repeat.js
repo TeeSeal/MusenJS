@@ -23,7 +23,7 @@ class RepeatCommand extends Command {
         \`times\` - the amount of times to replay the track.
 
         **Optional flags:**
-        \`-end\` - add the song to the end of the queue rather than the beginning.
+        \`-end\` - add the track to the end of the queue rather than the beginning.
 
         **Usage:**
         \`repeat 5\` => will repeat the currently playing track 5 times.
@@ -43,11 +43,11 @@ class RepeatCommand extends Command {
       )
     }
 
-    if (times + playlist.queue.length > playlist.songLimit) {
-      times = playlist.songLimit - playlist.queue.length - 1
+    if (times + playlist.queue.length > playlist.trackLimit) {
+      times = playlist.trackLimit - playlist.queue.length - 1
     }
 
-    const arr = Array(times).fill(playlist.playable)
+    const arr = Array(times).fill(playlist.track)
     playlist.queue = end
       ? playlist.queue.concat(arr)
       : arr.concat(playlist.queue)

@@ -40,13 +40,13 @@ class VolumeCommand extends Command {
       )
     }
 
-    const { volume, playable } = playlist
+    const { volume, track } = playlist
 
     if (!newVolume) {
       return new Embed(msg.channel)
-        .setTitle(playable.title)
+        .setTitle(track.title)
         .addField(`Volume: ${volume}%`, '\u200b')
-        .setURL(playable.url)
+        .setURL(track.url)
         .setAuthor(msg.member)
         .setIcon(Embed.icons.VOLUME_UP)
         .setColor(Embed.colors.YELLOW)
@@ -59,8 +59,8 @@ class VolumeCommand extends Command {
     await playlist.fadeVolume(newVolume)
 
     return new Embed(msg.channel)
-      .setTitle(playable.title)
-      .setURL(playable.url)
+      .setTitle(track.title)
+      .setURL(track.url)
       .setAuthor(msg.member)
       .addField(`Volume: ${newVolume}%`, '\u200b')
       .setIcon(icon)

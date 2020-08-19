@@ -22,8 +22,8 @@ class ShuffleCommand extends Command {
     }
 
     playlist.shuffle()
-    const { playable, queue } = playlist
-    const items = [`🔊 ${playable.formattedTitle}`].concat(
+    const { track, queue } = playlist
+    const items = [`🔊 ${track.formattedTitle}`].concat(
       queue.map(s => `• ${s.formattedTitle}`)
     )
 

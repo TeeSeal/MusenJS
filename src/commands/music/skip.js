@@ -9,7 +9,7 @@ class SkipCommand extends Command {
     super('skip', {
       aliases: ['skip'],
       channelRestriction: 'guild',
-      description: 'Skip the currently palying song.'
+      description: 'Skip the currently palying track.'
     })
   }
 
@@ -24,18 +24,18 @@ class SkipCommand extends Command {
       )
     }
 
-    const { playable } = playlist
+    const { track } = playlist
 
     if (
       msg.member.permissions.has('MANAGE_GUILD') ||
-      playable.member.id === msg.member.id ||
+      track.member.id === msg.member.id ||
       msg.member.voice.channel.members.size === 2
     ) {
       await playlist.skip()
       new Embed(msg.channel)
-        .setTitle(playable.title)
+        .setTitle(track.title)
         .addField('✅ Skipped.', '\u200b')
-        .setURL(playable.url)
+        .setURL(track.url)
         .setAuthor(msg.member)
         .setIcon(Embed.icons.SKIP)
         .setColor(Embed.colors.CYAN)
@@ -53,13 +53,13 @@ class SkipCommand extends Command {
     const votesNeeded = Math.ceil(members.size / 2)
 
     const embed = await new Embed(msg.channel)
-      .setTitle(playable.title)
+      .setTitle(track.title)
       .addField(
         'VOTESKIP',
         `Click the ✅ to vote.\n${votesNeeded +
           1} votes needed.\nVote will end in 30 seconds.`
       )
-      .setURL(playable.url)
+      .setURL(track.url)
       .setAuthor(msg.member)
       .setIcon(Embed.icons.SKIP)
       .setColor(Embed.colors.CYAN)
