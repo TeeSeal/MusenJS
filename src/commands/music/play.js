@@ -99,7 +99,7 @@ class PlayCommand extends Command {
     }
 
     if (!added.length) {
-      playlist.destroy()
+      if (!playlist.started) playlist.destroy()
       return msg.util.error('nothing was added to the playlist.')
     }
 
