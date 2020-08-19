@@ -25,7 +25,7 @@ class SetCommand extends Command {
         {
           id: 'maxVolume',
           match: 'option',
-          flag: ['--max-volume', '--max-vol', '-V'],
+          flag: ['--max-volume', '--max-vol', '-m'],
           type: Argument.range('integer', 1, 100, true)
         },
         {
@@ -45,7 +45,7 @@ class SetCommand extends Command {
 
         **Usage:**
         \`set --duration 20 --default-volume 30 --max-volume 70\` => sets the values.
-        \`set --duration 20 -v 30 -V 70\` => shortcuts.
+        \`set --duration 20 -v 30 -m 70\` => shortcuts.
       `
     })
   }
@@ -69,7 +69,7 @@ class SetCommand extends Command {
     }
 
     if (defaultVolume) {
-      if (maxVolume < defaultVolume || dbMaxVolume < defaultVolume) {
+      if ((maxVolume ?? Infinity) < defaultVolume || dbMaxVolume < defaultVolume) {
         return msg.util.error(
           'default volume can\'t be bigger than the maximum one.'
         )
@@ -79,7 +79,7 @@ class SetCommand extends Command {
     }
 
     if (maxVolume) {
-      if (defaultVolume > maxVolume || dbDefaultVolume > maxVolume) {
+      if ((defaultVolume ?? 0) > maxVolume || dbDefaultVolume > maxVolume) {
         return msg.util.error(
           'maximum volume can\'t be smaller than the default one.'
         )
