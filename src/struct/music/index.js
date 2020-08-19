@@ -38,13 +38,26 @@ class MusicManager {
     })
 
     return new Promise(resolve => {
-      this.lavalink.on('open', resolve)
+      this.lavalink.once('open', resolve)
     })
   }
 
   async resolvePlayables (query, opts) {
-    const results = await this.lavalink.load(`ytsearch:${query}`)
-    return (results?.tracks?.slice(0, 1) || []).map(track => new Playable(track, opts))
+    const tracks = /^https?:\/\/|^([A-Za-z0-9_-]{11}|[A-Za-z0-9_-]{34})$/.test(query)
+      ? await this.loadExact(query)
+      : await this.search(query)
+
+    return tracks.map(track => new Playable(track, opts))
+  }
+
+  async loadExact (query) {
+    const response = await this.lavalink.load(query)
+    return response?.tracks ?? []
+  }
+
+  async search (query) {
+    const response = await this.lavalink.load(`ytsearch:${query}`)
+    return response?.tracks?.slice(0, 1) ?? []
   }
 
   getPlaylist (id, opts) {
