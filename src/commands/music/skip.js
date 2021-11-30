@@ -32,7 +32,7 @@ class SkipCommand extends Command {
       msg.member.voice.channel.members.size === 2
     ) {
       await playlist.skip()
-      new Embed(msg.channel)
+      return new Embed(msg.channel)
         .setTitle(track.title)
         .addField('✅ Skipped.', '\u200b')
         .setURL(track.url)
