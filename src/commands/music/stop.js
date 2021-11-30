@@ -1,6 +1,7 @@
 const { Command } = require('discord-akairo')
 const Embed = require('../../struct/MusenEmbed')
 const ReactionPoll = require('../../struct/reaction/ReactionPoll')
+const { canAdmin } = require('../../util')
 
 const voteStops = new Set()
 
@@ -18,7 +19,7 @@ class StopCommand extends Command {
 
     if (!playlist) return msg.util.error('nothing is currently playing.')
 
-    if (msg.member.permissions.has('MANAGE_GUILD')) {
+    if (canAdmin(msg.member)) {
       await playlist.stop()
       return msg.util.success('alright, crashing the party.')
     }

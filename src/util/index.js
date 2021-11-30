@@ -1,6 +1,7 @@
 const tags = require('common-tags')
 const fs = require('fs')
 const { join } = require('path')
+const { ownerID } = require('../config')
 
 const Color = require('./Color')
 const { pageItemCount } = require('../config')
@@ -99,6 +100,10 @@ class Util {
         return arr.slice(index, index + count)
       })
       .filter(page => page)
+  }
+
+  static canAdmin (member) {
+    return member.id === ownerID || member.permissions.has('MANAGE_GUILD')
   }
 }
 

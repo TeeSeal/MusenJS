@@ -1,11 +1,11 @@
 const { Command } = require('discord-akairo')
-const { stripIndents, getDBData } = require('../../util')
+const { stripIndents, getDBData, canAdmin } = require('../../util')
 const db = require('../../db')
 
 const permCheck = {
   globally: member => member.id === member.client.ownerID,
-  guild: member => member.permissions.has('MANAGE_GUILD'),
-  channel: member => member.permissions.has('MANAGE_CHANNLES')
+  guild: canAdmin,
+  channel: member => canAdmin(member) || member.permissions.has('MANAGE_CHANNLES')
 }
 
 class UnignoreCommand extends Command {

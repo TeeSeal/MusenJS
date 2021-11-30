@@ -1,6 +1,7 @@
 const { Command } = require('discord-akairo')
 const Embed = require('../../struct/MusenEmbed')
 const ReactionPoll = require('../../struct/reaction/ReactionPoll')
+const { canAdmin } = require('../../util')
 
 const voteSkips = new Set()
 
@@ -27,7 +28,7 @@ class SkipCommand extends Command {
     const { track } = playlist
 
     if (
-      msg.member.permissions.has('MANAGE_GUILD') ||
+      canAdmin(msg.member) ||
       track.member.id === msg.member.id ||
       msg.member.voice.channel.members.size === 2
     ) {
