@@ -49,6 +49,7 @@ class Playlist extends EventEmitter {
     this.cancelDestroy()
     this.playNext(this.queue.shift())
     this.started = true
+    this.playing = true
     return this
   }
 
