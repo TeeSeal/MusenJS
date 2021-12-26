@@ -144,13 +144,13 @@ class Playlist extends EventEmitter {
 
   delayedDestroy () {
     this.playing = false
-    this.destroyTimeout = setTimeout(() => this.destroy(), DESTROY_TIMEOUT)
+    this.destroyTimeout = setTimeout(() => {
+      if (!this.playing) this.destroy()
+    }, DESTROY_TIMEOUT)
   }
 
   cancelDestroy () {
-    if (!this.destroyTimeout) return
-    clearTimeout(this.destroyTimeout)
-    this.destroyTimeout = null
+    if (typeof this.destroyTimeout === 'number') clearTimeout(this.destroyTimeout)
   }
 
   async destroy () {
