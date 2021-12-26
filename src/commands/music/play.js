@@ -115,8 +115,9 @@ class PlayCommand extends Command {
     if (!playlist.started) {
       this.attachEventHandlers(playlist, msg.channel)
       await playlist.connect(msg.member.voice.channel)
-      playlist.play()
     }
+
+    if (!playlist.playing) playlist.play()
   }
 
   attachEventHandlers (playlist, channel) {

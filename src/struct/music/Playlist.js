@@ -1,6 +1,8 @@
 const { shuffle } = require('../../util')
 const { EventEmitter } = require('events')
 
+const DESTROY_TIMEOUT = 180000
+
 class Playlist extends EventEmitter {
   constructor (id, guildOptions, musicManager) {
     super()
@@ -13,8 +15,10 @@ class Playlist extends EventEmitter {
     this.channel = null
     this.track = null
     this.paused = false
-    this.stopped = false
     this.started = false
+    this.playing = false
+
+    this.destroyTimeout = null
 
     this._volume = this.convertVolume(guildOptions.defaultVolume)
     this.trackLimit = guildOptions.trackLimit
@@ -42,6 +46,7 @@ class Playlist extends EventEmitter {
   }
 
   play () {
+    this.cancelDestroy()
     this.playNext(this.queue.shift())
     this.started = true
     return this
@@ -67,11 +72,9 @@ class Playlist extends EventEmitter {
   }
 
   async playNext (track) {
-    if (this.stopped) return
-
     if (!track) {
       this.emit('out')
-      return this.destroy()
+      return this.delayedDestroy()
     }
 
     this.track = track
@@ -133,10 +136,20 @@ class Playlist extends EventEmitter {
 
   async stop () {
     this.queue = []
-    this.stopped = true
     await this.player.stop()
-    this.destroy()
+    this.delayedDestroy()
     return this
+  }
+
+  delayedDestroy () {
+    this.playing = false
+    this.destroyTimeout = setTimeout(() => this.destroy(), DESTROY_TIMEOUT)
+  }
+
+  cancelDestroy () {
+    if (!this.destroyTimeout) return
+    clearTimeout(this.destroyTimeout)
+    this.destroyTimeout = null
   }
 
   async destroy () {
