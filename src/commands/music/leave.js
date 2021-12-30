@@ -17,7 +17,7 @@ class LeaveCommand extends Command {
 
     if (canAdmin(msg.member)) {
       await playlist.stop({ instant: true })
-      return msg.util.success('alright, crashing the party.')
+      return msg.util.success('bye bye 👋')
     }
 
     if (msg.member.voice?.channel?.id !== playlist.channel.id) {
@@ -33,7 +33,7 @@ class LeaveCommand extends Command {
     }
 
     await playlist.stop({ instant: true })
-    return msg.util.success('stopped playback.')
+    return msg.util.success('bye bye 👋')
   }
 }
 

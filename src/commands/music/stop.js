@@ -21,7 +21,7 @@ class StopCommand extends Command {
 
     if (canAdmin(msg.member)) {
       await playlist.stop()
-      return msg.util.success('alright, crashing the party.')
+      return msg.util.success('stopped playback.')
     }
 
     if (msg.member.voice?.channel?.id !== playlist.channel.id) {
