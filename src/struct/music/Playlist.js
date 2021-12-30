@@ -135,10 +135,13 @@ class Playlist extends EventEmitter {
     return this.track
   }
 
-  async stop () {
+  async stop ({ instant = false } = {}) {
     this.queue = []
     await this.player.stop()
-    this.delayedDestroy()
+
+    if (instant) this.destroy()
+    else this.delayedDestroy()
+
     return this
   }
 

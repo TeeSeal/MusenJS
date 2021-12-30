@@ -10,7 +10,7 @@ class StopCommand extends Command {
     super('stop', {
       aliases: ['stop', 'stfu'],
       channelRestriction: 'guild',
-      description: 'Stop playback and disconnect.'
+      description: 'Stop playback.'
     })
   }
 
