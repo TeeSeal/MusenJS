@@ -17,7 +17,7 @@ class StopCommand extends Command {
   async exec (msg) {
     const playlist = this.client.music.getPlaylist(msg.guild.id)
 
-    if (!playlist) return msg.util.error('nothing is currently playing.')
+    if (!playlist?.playing) return msg.util.error('nothing is currently playing.')
 
     if (canAdmin(msg.member)) {
       await playlist.stop()
