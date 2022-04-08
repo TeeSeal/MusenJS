@@ -28,7 +28,7 @@
     "discord.js": "^12.3.1",
     "lavalink": "^2.10.0",
     "logr": "teeseal/logr",
-    "moment": "^2.27.0",
+    "moment": "^2.29.2",
     "moment-duration-format": "^2.3.2",
     "node-fetch": "^2.6.1",
     "pg": "^8.3.2",
