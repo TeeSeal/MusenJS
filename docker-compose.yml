@@ -1,4 +1,7 @@
 version: '3.8'
+volumes:
+  pgdata:
+    name: musen-pgdata
 services:
   bot:
     image: teeseal/musen
@@ -24,6 +27,8 @@ services:
     image: postgres:alpine
     container_name: musen-postgres
     expose: [8080]
+    volumes:
+      - pgdata:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=musen
       - POSTGRES_USER=musen
