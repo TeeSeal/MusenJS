@@ -59,6 +59,8 @@ class MusenClient extends AkairoClient {
   async logError (error) {
     logr.error(error)
 
+    if (!this.readyTimestamp) throw error
+
     const owner = await this.users.fetch(this.options.ownerID)
     if (!owner) return
 
